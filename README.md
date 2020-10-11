@@ -1,5 +1,11 @@
 ### Hi there 👋
 
+![tachibanayu24's github stats](https://github-readme-stats.vercel.app/api?username=tachibanayu24&show_icons=true&theme=react&count_private=true)
+
+<p  align="center">
+<img src="https://visitor-badge.laobi.icu/badge?page_id=tachibanayu24.tachibanayu24" alt="visitor badge"/>       
+</p>
+
 <!--
 **tachibanayu24/tachibanayu24** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
