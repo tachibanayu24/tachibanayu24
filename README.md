@@ -3,11 +3,15 @@
   <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=tachibanayu24&layout=compact&theme=react"/>
 </p>
 
+<p style="height: 32px" />
+
 <p align="center">
   <a href="https://twitter.com/tachibanayu24"><img height="24px" src="https://www.flaticon.com/svg/static/icons/svg/733/733579.svg" /></a>
   <a href="https://www.facebook.com/100012646356122"><img height="24px" src="https://www.flaticon.com/svg/static/icons/svg/174/174848.svg" /></a>
   <a href="https://www.linkedin.com/in/yuto-tachibana/"><img height="24px" src="https://www.flaticon.com/svg/static/icons/svg/174/174857.svg" /></a>
 </p>
+
+<p style="height: 16px" />
 
 <p align="center">
   <img src="https://visitor-badge.laobi.icu/badge?page_id=tachibanayu24.tachibanayu24" alt="visitor badge"/>
