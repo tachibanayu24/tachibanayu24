@@ -1,4 +1,4 @@
-;<p align="center">
+<p align="center">
   <img src="https://github-readme-stats.vercel.app/api?username=tachibanayu24&show_icons=true&theme=react&count_private=true&include_all_commits=true&hide=contribs" />
   <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=tachibanayu24&layout=compact&theme=react"/>
 </p>
@@ -17,7 +17,7 @@
 
 * Internship at NTT DATA Japan / IP-Partners Co., Ltd.
 * Business Developer at NTT COMWARE Corporation
-* 
+* Software Engineer at pring Inc. / RevComm,Inc. / Techtouch, Inc. / Workside, Inc.
 
 <p align="center">
   <img src="https://visitor-badge.laobi.icu/badge?page_id=tachibanayu24.tachibanayu24" alt="visitor badge"/>
