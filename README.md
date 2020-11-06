@@ -17,7 +17,8 @@
 
 * Internship at NTT DATA Japan / IP-Partners Co., Ltd.
 * Business Developer at NTT COMWARE Corporation
-* Software Engineer at pring Inc. / RevComm,Inc. / Techtouch, Inc. / Workside, Inc.
+* Software Engineer at pring Inc. / RevComm,Inc. / Techtouch, Inc.
+* Lead Engineer at Workside, Inc.
 
 <p align="center">
   <img src="https://visitor-badge.laobi.icu/badge?page_id=tachibanayu24.tachibanayu24" alt="visitor badge"/>
