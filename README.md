@@ -17,7 +17,7 @@
 
 * Internship at NTT DATA Japan / IP-Partners Co., Ltd.
 * Business Developer at NTT COMWARE Corporation
-* Software Engineer at pring Inc. / RevComm,Inc. / Techtouch, Inc.
+* Software Engineer at pring Inc. / Metals Inc. / RevComm,Inc. / Techtouch, Inc.
 * Lead Engineer at Workside, Inc.
 
 <p align="center">
