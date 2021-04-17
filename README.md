@@ -8,6 +8,7 @@
 * Business Developer at NTT COMWARE Corporation
 * Software Engineer at pring Inc. / Metaps Inc. / RevComm,Inc. / Techtouch, Inc.
 * Lead Engineer at Workside, Inc.
+* Engineering Manager at First Automation, Inc.
 
 <p align="center">
   <a href="https://twitter.com/tachibanayu24"><img height="24px" src="https://www.flaticon.com/svg/static/icons/svg/733/733579.svg" /></a>
