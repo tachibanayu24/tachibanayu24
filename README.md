@@ -13,7 +13,7 @@
 <p align="center">
   <a href="https://twitter.com/tachibanayu24"><img height="24px" src="https://www.flaticon.com/svg/static/icons/svg/733/733579.svg" /></a>
   <a href="https://www.facebook.com/100012646356122"><img height="24px" src="https://www.flaticon.com/svg/static/icons/svg/174/174848.svg" /></a>
-  <a href="https://www.linkedin.com/in/yuto-tachibana/"><img height="24px" src="https://www.flaticon.com/svg/static/icons/svg/174/174857.svg" /</a>
+  <a href="https://www.linkedin.com/in/yuto-tachibana/"><img height="24px" src="https://www.flaticon.com/svg/static/icons/svg/174/174857.svg" /></a>
 </p>
   
 <p />
