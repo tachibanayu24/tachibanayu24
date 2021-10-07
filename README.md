@@ -10,7 +10,7 @@
   I'm Yuto<br />
   a Web Developer 🤟<br />
   from Tokyo 🇯🇵<br />
-  working at <a href="https://onn-hr.com/">Workside, Inc.</a> and <a href="https://roboin-fa.com/">First Automation, Inc.</a>
+  working at <a href="https://onn-hr.com/">Workside, Inc.</a> and <a href="https://roboin-fa.com/">First Automation, Inc.</a> 😉
 </h5>
 
 <p>
