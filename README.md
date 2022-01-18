@@ -2,9 +2,6 @@
   <img src="https://github-readme-stats.vercel.app/api?username=tachibanayu24&show_icons=true&theme=react&count_private=true&include_all_commits=true&hide=contribs" />
 </p>
 
-
----
-
 ## Hi there👋
 
 <h5>
@@ -22,8 +19,6 @@
   or
   <a href="https://www.linkedin.com/in/yuto-tachibana/"><img height="20px" src="https://raw.githubusercontent.com/tachibanayu24/tachibanayu24/main/images/linkedin.png" /></a>
 </p>
-
----
 
 <p align="center" style="height: 80px;">
   <img src="https://visitor-badge.laobi.icu/badge?page_id=tachibanayu24.tachibanayu24" alt="visitor badge"/>
