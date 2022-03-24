@@ -1,6 +1,4 @@
-<p align="center" style="height: 176px">
-  <img src="https://github-readme-stats.vercel.app/api?username=tachibanayu24&show_icons=true&theme=react&count_private=true&include_all_commits=true&hide=contribs" />
-</p>
+
 
 ## Hi there👋
 
