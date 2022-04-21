@@ -1,6 +1,4 @@
-
-
-## Hi there <img width="28" src="https://user-images.githubusercontent.com/50891407/148686885-0fefeb76-4cf6-473a-9e3e-889ce5513450.gif" /> 
+## <span style="color:limegreen">$ whoami</span>
 
 <h5>
   I'm Yuto<br />
@@ -10,7 +8,7 @@
 </h5>
 
 <h6>
-  You can find me on <br />
+  You can find me on <img width="18" src="https://user-images.githubusercontent.com/50891407/148686885-0fefeb76-4cf6-473a-9e3e-889ce5513450.gif" /> <br />
   <a href="https://github.com/tachibanayu24">GitHub</a>
   <a href="https://twitter.com/tachibanayu24">Twitter</a>
   <a href="https://www.facebook.com/100012646356122">Facebook</a>
