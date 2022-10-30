@@ -4,7 +4,7 @@
 **I'm Yuto  
 a Web Developer 🤟  
 from Tokyo 🇯🇵  
-working at <a href="https://onn-hr.com/">Workside, Inc.</a> and <a href="https://first-automation.jp/">First Automation, Inc.</a> 😉**
+working at <a href="https://dena.com/jp/company/overview.html">DeNA Co., Ltd.</a> and <a href="https://onn-hr.com/">Workside, Inc.</a> , <a href="https://first-automation.jp/">First Automation, Inc.</a> 😉**
 
 
 
