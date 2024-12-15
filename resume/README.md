@@ -7,7 +7,9 @@
             display: none;
         }
     }
-
+    thead {
+      ##f6f8fa;
+    }
     table th:first-child, table td:first-child {
         width: 100px;
     }
