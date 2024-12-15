@@ -13,10 +13,16 @@
     table th:first-child, table td:first-child {
         width: 100px;
     }
+    button {
+      border: none;
+      padding: 2px 8px;
+      font-size: 0.75rem;
+      border-radius: 4px;
+    }
 </style>
 
-<button style="border: none; padding: 2px 8px; font-size: 0.75rem; border-radius: 4px;" onclick="window.print()" class="no-print">Download as PDF</button>
-<button style="border: none; padding: 2px 8px; font-size: 0.75rem; border-radius: 4px;" href="https://raw.githubusercontent.com/tachibanayu24/tachibanayu24/refs/heads/main/resume/README.md" class="no-print">Download as Markdown</button>
+<button onclick="window.print()" class="no-print">Download as PDF</button>
+<button onclick="loction.href='https://raw.githubusercontent.com/tachibanayu24/tachibanayu24/refs/heads/main/resume/README.md'" class="no-print">Download as Markdown</button>
 
 # 職務経歴書 
 
