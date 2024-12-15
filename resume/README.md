@@ -1,4 +1,14 @@
-# 職務経歴書
+<style>
+    @media print {
+        .no-print {
+            display: none;
+        }
+    }
+</style>
+
+<button onclick="window.print()" class="no-print">Download PDF</button>
+
+# 職務経歴書 
 
 * 更新日: 2024-12-15
 * 氏名: 立花優斗
