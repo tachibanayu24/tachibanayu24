@@ -7,7 +7,7 @@
             display: none;
         }
     }
-    table thead {
+    th {
      background-color: #f6f8fa;
     }
     table th:first-child, table td:first-child {
