@@ -22,7 +22,7 @@
 </style>
 
 <button onclick="window.print()" class="no-print">Download as PDF</button>
-<button onclick="loction.href='https://raw.githubusercontent.com/tachibanayu24/tachibanayu24/refs/heads/main/resume/README.md'" class="no-print">Download as Markdown</button>
+<button onclick="location.href='https://raw.githubusercontent.com/tachibanayu24/tachibanayu24/refs/heads/main/resume/README.md'" class="no-print">Download as Markdown</button>
 
 # 職務経歴書 
 
