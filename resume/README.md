@@ -1,12 +1,19 @@
 <style>
     @media print {
+        h1:not([id]) {
+            display: none;
+        }
         .no-print {
             display: none;
         }
     }
+
+    table th:first-child, table td:first-child {
+        width: 100px;
+    }
 </style>
 
-<button onclick="window.print()" class="no-print">Download PDF</button>
+<button style="border: none; padding: 2px 8px; font-size: 0.75rem; border-radius: 4px;" onclick="window.print()" class="no-print">Download PDF</button>
 
 # 職務経歴書 
 
