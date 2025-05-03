@@ -17,3 +17,4 @@ You can find me on <img width="20" src="https://raw.githubusercontent.com/tachib
 - [Wantedly](https://www.wantedly.com/id/tachibanayu24)
 - [Qiita](https://qiita.com/tachibanayu24)
 - [Zenn](https://zenn.dev/tachibanayu24)
+- [Resume](https://resume.tachibanayu24.workers.dev/)
