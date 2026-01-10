@@ -171,8 +171,55 @@ export class RabbitCharacter {
     this.width = window.innerWidth;
     /** @type {number} */
     this.height = window.innerHeight;
+    /** @type {HTMLElement|null} */
+    this.hitArea = null;
 
     this.updatePosition();
+    this.createHitArea();
+  }
+
+  /**
+   * Create invisible hit area element to block touch events
+   */
+  createHitArea() {
+    this.hitArea = document.createElement("div");
+    this.hitArea.id = "rabbit-hit-area";
+    this.hitArea.style.cssText = `
+      position: fixed;
+      z-index: 100;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    `;
+    document.body.appendChild(this.hitArea);
+    this.updateHitAreaPosition();
+
+    // Handle click/touch on hit area
+    this.hitArea.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      this.onClick();
+    });
+  }
+
+  /**
+   * Update hit area position and size
+   */
+  updateHitAreaPosition() {
+    if (!this.hitArea) return;
+
+    const padding = 15;
+    const w = this.getSpriteWidth() + padding * 2;
+    const h = this.getSpriteHeight() + padding * 2;
+
+    const { RABBIT } = CONFIG.EFFECTS;
+    const { MOBILE_BREAKPOINT } = CONFIG.SCREEN;
+    const isMobile = this.width < MOBILE_BREAKPOINT;
+    const pos = isMobile ? RABBIT.POSITION.mobile : RABBIT.POSITION.desktop;
+
+    this.hitArea.style.left = `${pos.left - padding}px`;
+    this.hitArea.style.bottom = `${pos.bottom - padding}px`;
+    this.hitArea.style.width = `${w}px`;
+    this.hitArea.style.height = `${h}px`;
   }
 
   /**
@@ -201,6 +248,7 @@ export class RabbitCharacter {
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     this.updatePosition();
+    this.updateHitAreaPosition();
   }
 
   /**

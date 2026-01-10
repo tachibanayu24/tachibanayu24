@@ -67,7 +67,6 @@ export class BackgroundRenderer {
     this.animate = this.animate.bind(this);
     this.handleResize = this.handleResize.bind(this);
     this.handleVisibility = this.handleVisibility.bind(this);
-    this.handleClick = this.handleClick.bind(this);
   }
 
   /**
@@ -121,31 +120,6 @@ export class BackgroundRenderer {
   setupEventListeners() {
     window.addEventListener("resize", this.handleResize);
     document.addEventListener("visibilitychange", this.handleVisibility);
-    // Use document-level events since canvas has pointer-events: none
-    document.addEventListener("click", this.handleClick);
-    document.addEventListener("touchend", this.handleClick);
-  }
-
-  /**
-   * Handle click/touch for rabbit interaction
-   * @param {MouseEvent|TouchEvent} event
-   */
-  handleClick(event) {
-    if (!this.rabbitCharacter) return;
-
-    let x, y;
-    if (event.type === "touchend") {
-      const touch = event.changedTouches[0];
-      x = touch.clientX;
-      y = touch.clientY;
-    } else {
-      x = event.clientX;
-      y = event.clientY;
-    }
-
-    if (this.rabbitCharacter.isPointInside(x, y)) {
-      this.rabbitCharacter.onClick();
-    }
   }
 
   /**
@@ -306,10 +280,6 @@ export class BackgroundRenderer {
     this.pause();
     window.removeEventListener("resize", this.handleResize);
     document.removeEventListener("visibilitychange", this.handleVisibility);
-
-    // Remove document-level event listeners
-    document.removeEventListener("click", this.handleClick);
-    document.removeEventListener("touchend", this.handleClick);
 
     if (this.canvas && this.canvas.parentNode) {
       this.canvas.parentNode.removeChild(this.canvas);
