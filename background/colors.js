@@ -186,6 +186,14 @@ export function getColorPalette(
 }
 
 /**
+ * Convert hex color to rgba with opacity
+ */
+function hexToRgba(hex, opacity) {
+  const rgb = hexToRgb(hex);
+  return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity})`;
+}
+
+/**
  * Apply color palette to CSS variables
  */
 export function applyPaletteToCss(palette) {
@@ -193,9 +201,14 @@ export function applyPaletteToCss(palette) {
 
   root.style.setProperty("--bg", palette.bg);
   root.style.setProperty("--card-bg", palette.cardBg);
+  root.style.setProperty("--card-bg-glass", hexToRgba(palette.cardBg, 0.4));
   root.style.setProperty("--text", palette.text);
   root.style.setProperty("--text-muted", palette.textMuted);
   root.style.setProperty("--accent", palette.accent);
   root.style.setProperty("--shadow-light", palette.shadows.light);
   root.style.setProperty("--shadow-dark", palette.shadows.dark);
+
+  // Glass border - subtle edge that matches the theme
+  const glassBorder = hexToRgba(palette.cardBg, 0.3);
+  root.style.setProperty("--glass-border", glassBorder);
 }

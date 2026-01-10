@@ -6,6 +6,7 @@
  */
 
 import { ParticleSystem } from "./particles.js";
+import { FogLayer, FireflySystem } from "./effects.js";
 
 /**
  * Background Renderer
@@ -16,14 +17,20 @@ export class BackgroundRenderer {
     this.canvas = null;
     this.ctx = null;
     this.particleSystem = null;
+    this.fogLayer = null;
+    this.fireflySystem = null;
     this.animationId = null;
     this.lastTime = 0;
     this.isRunning = false;
     this.currentPalette = null;
+    this.currentTimePeriod = null;
 
     // Geometric shapes for abstract art effect
     this.shapes = [];
     this.shapeTime = 0;
+
+    // Gradient breathing effect
+    this.gradientTime = 0;
 
     // Bind methods
     this.animate = this.animate.bind(this);
@@ -75,6 +82,10 @@ export class BackgroundRenderer {
 
     // Initialize particle system
     this.particleSystem = new ParticleSystem(this.canvas);
+
+    // Initialize special effects
+    this.fogLayer = new FogLayer(this.canvas);
+    this.fireflySystem = new FireflySystem(this.canvas);
   }
 
   /**
@@ -103,6 +114,9 @@ export class BackgroundRenderer {
     this.resize();
     if (this.particleSystem) {
       this.particleSystem.resize();
+    }
+    if (this.fireflySystem) {
+      this.fireflySystem.resize();
     }
     this.initShapes();
   }
@@ -147,9 +161,18 @@ export class BackgroundRenderer {
    */
   updateConditions(timePeriod, palette) {
     this.currentPalette = palette;
+    this.currentTimePeriod = timePeriod;
 
     if (this.particleSystem) {
       this.particleSystem.init(timePeriod);
+    }
+
+    // Update special effects based on time period
+    if (this.fogLayer) {
+      this.fogLayer.setTimePeriod(timePeriod);
+    }
+    if (this.fireflySystem) {
+      this.fireflySystem.setTimePeriod(timePeriod);
     }
   }
 
@@ -164,14 +187,23 @@ export class BackgroundRenderer {
     const deltaTime = this.lastTime === 0 || rawDelta > 100 ? 16 : rawDelta;
     this.lastTime = currentTime;
 
+    // Update gradient time for breathing effect
+    this.gradientTime += deltaTime;
+
     // Clear canvas
     this.clear();
 
-    // Draw background gradient
+    // Draw background gradient with subtle breathing
     this.drawBackground();
 
     // Draw celestial body (sun/moon)
     this.drawCelestial();
+
+    // Draw fog layer (MORNING/EVENING only)
+    if (this.fogLayer) {
+      this.fogLayer.update(deltaTime);
+      this.fogLayer.draw(this.ctx, this.currentPalette);
+    }
 
     // Draw abstract shapes
     this.drawShapes(deltaTime);
@@ -180,6 +212,12 @@ export class BackgroundRenderer {
     if (this.particleSystem) {
       this.particleSystem.update(deltaTime);
       this.particleSystem.draw(this.ctx);
+    }
+
+    // Draw fireflies (NIGHT only)
+    if (this.fireflySystem) {
+      this.fireflySystem.update(deltaTime);
+      this.fireflySystem.draw(this.ctx);
     }
 
     // Continue animation
@@ -194,7 +232,7 @@ export class BackgroundRenderer {
   }
 
   /**
-   * Draw the background gradient with time-appropriate angle
+   * Draw the background gradient with time-appropriate angle and subtle breathing
    */
   drawBackground() {
     if (!this.currentPalette) return;
@@ -203,8 +241,14 @@ export class BackgroundRenderer {
     const w = window.innerWidth;
     const h = window.innerHeight;
 
+    // Subtle breathing effect - very slow oscillation
+    const breathCycle = this.gradientTime * 0.00008;
+    const breathIntensity = 0.02; // 2% variation
+
     // Calculate gradient start and end points based on angle
-    const angleRad = (gradientAngle * Math.PI) / 180;
+    // Add subtle angle oscillation for organic feel
+    const angleOffset = Math.sin(breathCycle * 0.7) * 2; // ±2 degrees
+    const angleRad = ((gradientAngle + angleOffset) * Math.PI) / 180;
     const cos = Math.cos(angleRad);
     const sin = Math.sin(angleRad);
 
@@ -213,19 +257,53 @@ export class BackgroundRenderer {
     const cy = h / 2;
     const length = Math.sqrt(w * w + h * h) / 2;
 
-    const x0 = cx - cos * length;
-    const y0 = cy - sin * length;
-    const x1 = cx + cos * length;
-    const y1 = cy + sin * length;
+    // Add subtle position drift
+    const driftX = Math.sin(breathCycle * 1.1) * 20;
+    const driftY = Math.cos(breathCycle * 0.9) * 15;
+
+    const x0 = cx - cos * length + driftX;
+    const y0 = cy - sin * length + driftY;
+    const x1 = cx + cos * length + driftX;
+    const y1 = cy + sin * length + driftY;
 
     const bgGradient = this.ctx.createLinearGradient(x0, y0, x1, y1);
 
+    // Apply breathing to gradient colors
     gradient.forEach((color, index) => {
-      bgGradient.addColorStop(index / (gradient.length - 1), color);
+      const adjustedColor = this.breatheColor(
+        color,
+        breathCycle,
+        index,
+        breathIntensity,
+      );
+      bgGradient.addColorStop(index / (gradient.length - 1), adjustedColor);
     });
 
     this.ctx.fillStyle = bgGradient;
     this.ctx.fillRect(0, 0, w, h);
+  }
+
+  /**
+   * Subtly adjust color brightness for breathing effect
+   */
+  breatheColor(hexColor, time, index, intensity) {
+    // Parse hex to RGB
+    const hex = hexColor.replace("#", "");
+    let r = parseInt(hex.slice(0, 2), 16);
+    let g = parseInt(hex.slice(2, 4), 16);
+    let b = parseInt(hex.slice(4, 6), 16);
+
+    // Different phase for each color stop for wave effect
+    const phase = index * 0.5;
+    const adjustment = 1 + Math.sin(time + phase) * intensity;
+
+    // Apply adjustment
+    r = Math.min(255, Math.max(0, Math.round(r * adjustment)));
+    g = Math.min(255, Math.max(0, Math.round(g * adjustment)));
+    b = Math.min(255, Math.max(0, Math.round(b * adjustment)));
+
+    // Convert back to hex
+    return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
   }
 
   /**
@@ -438,5 +516,7 @@ export class BackgroundRenderer {
     this.canvas = null;
     this.ctx = null;
     this.particleSystem = null;
+    this.fogLayer = null;
+    this.fireflySystem = null;
   }
 }

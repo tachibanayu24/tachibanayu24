@@ -1,6 +1,8 @@
 :root {
   --bg: #e8eef3;
   --card-bg: #e8eef3;
+  --card-bg-glass: rgba(232, 238, 243, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.15);
   --text: #2d3748;
   --text-muted: #718096;
   --accent: #4a6fa5;
@@ -37,9 +39,9 @@ body {
   width: 100%;
 }
 
-/* Neumorphic Card */
+/* Neumorphic Card with Glassmorphism */
 .card {
-  background: var(--card-bg);
+  background: var(--card-bg-glass);
   border-radius: 24px;
   padding: 2.5rem 2rem;
   box-shadow:
@@ -50,6 +52,8 @@ body {
   transition:
     background var(--transition-duration) ease,
     box-shadow var(--transition-duration) ease;
+  /* Subtle border for glass edge - uses shadow color for consistency */
+  border: 1px solid var(--glass-border);
 }
 
 /* Language Toggle */
@@ -58,7 +62,7 @@ body {
   top: 1rem;
   right: 1rem;
   border: none;
-  background: var(--card-bg);
+  background: var(--card-bg-glass);
   color: var(--text-muted);
   font-size: 0.65rem;
   font-weight: 600;
@@ -95,7 +99,7 @@ body {
   display: inline-block;
   padding: 6px;
   border-radius: 50%;
-  background: var(--card-bg);
+  background: var(--card-bg-glass);
   box-shadow:
     6px 6px 12px var(--shadow-dark),
     -6px -6px 12px var(--shadow-light);
@@ -203,7 +207,7 @@ body {
   justify-content: center;
   gap: 0.5rem;
   padding: 0.875rem 0.75rem;
-  background: var(--card-bg);
+  background: var(--card-bg-glass);
   border-radius: 14px;
   text-decoration: none;
   color: var(--text);
