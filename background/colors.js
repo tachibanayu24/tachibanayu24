@@ -8,6 +8,41 @@
 import { TIME_PERIOD } from "./time.js";
 import { CONFIG } from "./config.js";
 
+/**
+ * @typedef {Object} CelestialConfig
+ * @property {'sun'|'moon'} type - Type of celestial body
+ * @property {number} x - X position (0-1, can be outside 0-1 for off-screen)
+ * @property {number} y - Y position (0-1, can be outside 0-1 for off-screen)
+ * @property {string} color - Primary color (rgba format)
+ * @property {string} glowColor - Glow color (rgba format)
+ */
+
+/**
+ * @typedef {Object} ShadowConfig
+ * @property {string} light - Light shadow color
+ * @property {string} dark - Dark shadow color
+ */
+
+/**
+ * @typedef {Object} ColorPalette
+ * @property {string[]} gradient - Array of gradient colors (hex)
+ * @property {string} bg - Background color (hex)
+ * @property {string} cardBg - Card background color (hex)
+ * @property {string} text - Text color (hex)
+ * @property {string} textMuted - Muted text color (hex)
+ * @property {string} accent - Accent color (hex)
+ * @property {CelestialConfig} celestial - Celestial body configuration
+ * @property {number} gradientAngle - Gradient angle in degrees
+ * @property {ShadowConfig} shadows - Shadow colors
+ */
+
+/**
+ * @typedef {Object} RGB
+ * @property {number} r - Red (0-255)
+ * @property {number} g - Green (0-255)
+ * @property {number} b - Blue (0-255)
+ */
+
 // Pre-compiled regex for hex color parsing
 const HEX_COLOR_REGEX = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
 
@@ -91,6 +126,8 @@ const TIME_PALETTES = {
 
 /**
  * Parse hex color to RGB
+ * @param {string} hex - Hex color string
+ * @returns {RGB} RGB color object
  */
 function hexToRgb(hex) {
   const result = HEX_COLOR_REGEX.exec(hex);
@@ -105,6 +142,10 @@ function hexToRgb(hex) {
 
 /**
  * Convert RGB to hex
+ * @param {number} r - Red (0-255)
+ * @param {number} g - Green (0-255)
+ * @param {number} b - Blue (0-255)
+ * @returns {string} Hex color string
  */
 function rgbToHex(r, g, b) {
   return (
@@ -120,6 +161,10 @@ function rgbToHex(r, g, b) {
 
 /**
  * Interpolate between two colors
+ * @param {string} color1 - First hex color
+ * @param {string} color2 - Second hex color
+ * @param {number} factor - Interpolation factor (0-1)
+ * @returns {string} Interpolated hex color
  */
 function interpolateColor(color1, color2, factor) {
   const c1 = hexToRgb(color1);

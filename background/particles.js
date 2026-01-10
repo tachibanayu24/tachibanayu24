@@ -8,6 +8,22 @@
 import { TIME_PERIOD } from "./time.js";
 import { CONFIG } from "./config.js";
 
+/**
+ * @typedef {Object} DepthLayerConfig
+ * @property {number} sizeMultiplier - Size multiplier for this layer
+ * @property {number} speedMultiplier - Speed multiplier for this layer
+ * @property {number} opacityMultiplier - Opacity multiplier for this layer
+ * @property {number} count - Fraction of total orbs in this layer
+ */
+
+/**
+ * @typedef {Object} OrbConfig
+ * @property {{min: number, max: number}} size - Size range
+ * @property {number} speed - Base movement speed
+ * @property {string} color - RGBA color string
+ * @property {number} baseOpacity - Base opacity value
+ */
+
 // Pre-compiled regex for opacity adjustment
 const OPACITY_REGEX = /[\d.]+\)$/;
 

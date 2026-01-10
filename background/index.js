@@ -11,7 +11,7 @@
 
 import { getTimePeriod, getTimeTransition } from "./time.js";
 import { getColorPalette, applyPaletteToCss } from "./colors.js";
-import { BackgroundRenderer } from "./renderer.js";
+import { BackgroundRenderer } from "./renderer/index.js";
 
 // Global state
 let renderer = null;

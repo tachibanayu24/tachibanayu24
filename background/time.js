@@ -7,6 +7,21 @@
 
 import { CONFIG } from "./config.js";
 
+/**
+ * @typedef {'MORNING'|'NOON'|'EVENING'|'NIGHT'} TimePeriodKey
+ */
+
+/**
+ * @typedef {Object} TimeTransition
+ * @property {TimePeriodKey} from - The time period transitioning from
+ * @property {TimePeriodKey} to - The time period transitioning to
+ * @property {number} factor - Transition factor (0-1)
+ */
+
+/**
+ * Time period constants
+ * @type {Object<string, TimePeriodKey>}
+ */
 export const TIME_PERIOD = {
   MORNING: "MORNING",
   NOON: "NOON",
