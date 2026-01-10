@@ -185,6 +185,52 @@ function interpolateColor(color1, color2, factor) {
 }
 
 /**
+ * Parse rgba color string to components
+ * @param {string} rgba - RGBA color string (e.g., 'rgba(255, 0, 0, 0.5)' or '#FF0000')
+ * @returns {{r: number, g: number, b: number, a: number}} RGBA components
+ */
+function parseRgbaColor(rgba) {
+  // Handle hex colors
+  if (rgba.startsWith("#")) {
+    const rgb = hexToRgb(rgba);
+    return { ...rgb, a: 1 };
+  }
+
+  // Handle rgba() format
+  const match = rgba.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+  if (match) {
+    return {
+      r: parseInt(match[1], 10),
+      g: parseInt(match[2], 10),
+      b: parseInt(match[3], 10),
+      a: match[4] !== undefined ? parseFloat(match[4]) : 1,
+    };
+  }
+
+  console.warn("[Colors] Could not parse color:", rgba);
+  return { r: 0, g: 0, b: 0, a: 1 };
+}
+
+/**
+ * Interpolate between two rgba colors
+ * @param {string} color1 - First rgba color string
+ * @param {string} color2 - Second rgba color string
+ * @param {number} factor - Interpolation factor (0-1)
+ * @returns {string} Interpolated rgba color string
+ */
+function interpolateRgbaColor(color1, color2, factor) {
+  const c1 = parseRgbaColor(color1);
+  const c2 = parseRgbaColor(color2);
+
+  const r = Math.round(c1.r + (c2.r - c1.r) * factor);
+  const g = Math.round(c1.g + (c2.g - c1.g) * factor);
+  const b = Math.round(c1.b + (c2.b - c1.b) * factor);
+  const a = c1.a + (c2.a - c1.a) * factor;
+
+  return `rgba(${r}, ${g}, ${b}, ${a.toFixed(2)})`;
+}
+
+/**
  * Get the complete color palette for current time with optional transition blending
  * @param {string} timePeriod - Target time period
  * @param {number} transitionFactor - Transition progress (0 = previousTimePeriod, 1 = timePeriod)
@@ -231,12 +277,53 @@ export function getColorPalette(
     };
   }
 
-  // Add shadows based on time
-  palette.shadows = CONFIG.SHADOWS[timePeriod] || CONFIG.SHADOWS.NOON;
+  // Add shadows based on time (with interpolation)
+  if (previousTimePeriod && transitionFactor > 0 && transitionFactor < 1) {
+    const fromShadows =
+      CONFIG.SHADOWS[previousTimePeriod] || CONFIG.SHADOWS.NOON;
+    const toShadows = CONFIG.SHADOWS[timePeriod] || CONFIG.SHADOWS.NOON;
+    palette.shadows = {
+      light: interpolateRgbaColor(
+        fromShadows.light,
+        toShadows.light,
+        transitionFactor,
+      ),
+      dark: interpolateRgbaColor(
+        fromShadows.dark,
+        toShadows.dark,
+        transitionFactor,
+      ),
+    };
 
-  // Ensure celestial and gradientAngle are included
-  palette.celestial = TIME_PALETTES[timePeriod].celestial;
-  palette.gradientAngle = TIME_PALETTES[timePeriod].gradientAngle;
+    // Interpolate gradient angle
+    const fromAngle = TIME_PALETTES[previousTimePeriod].gradientAngle;
+    const toAngle = TIME_PALETTES[timePeriod].gradientAngle;
+    palette.gradientAngle =
+      fromAngle + (toAngle - fromAngle) * transitionFactor;
+
+    // Interpolate celestial position
+    const fromCelestial = TIME_PALETTES[previousTimePeriod].celestial;
+    const toCelestial = TIME_PALETTES[timePeriod].celestial;
+    palette.celestial = {
+      type: toCelestial.type,
+      x: fromCelestial.x + (toCelestial.x - fromCelestial.x) * transitionFactor,
+      y: fromCelestial.y + (toCelestial.y - fromCelestial.y) * transitionFactor,
+      color: interpolateRgbaColor(
+        fromCelestial.color,
+        toCelestial.color,
+        transitionFactor,
+      ),
+      glowColor: interpolateRgbaColor(
+        fromCelestial.glowColor,
+        toCelestial.glowColor,
+        transitionFactor,
+      ),
+    };
+  } else {
+    palette.shadows = CONFIG.SHADOWS[timePeriod] || CONFIG.SHADOWS.NOON;
+    palette.celestial = TIME_PALETTES[timePeriod].celestial;
+    palette.gradientAngle = TIME_PALETTES[timePeriod].gradientAngle;
+  }
 
   return palette;
 }

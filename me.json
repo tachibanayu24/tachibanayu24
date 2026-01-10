@@ -4,6 +4,29 @@
     "en": "Yuto Tachibana",
     "ja": "立花 優斗"
   },
+  "backside": {
+    "whatIDo": {
+      "en": "I specialize in full-stack development for startups, from 0→1 product building to scaling. Comfortable with both frontend and backend.",
+      "ja": "スタートアップの0→1開発からグロースまで、フルスタックで対応できます。フロントエンド・バックエンド両方得意です。"
+    },
+    "techStack": ["TypeScript", "React", "Node.js", "Go", "AWS", "GCP"],
+    "aboutMe": {
+      "en": [
+        "Living with a rabbit named Mochi",
+        "Gym 5x/week, Sauna 3x/week",
+        "Currently into sous vide cooking"
+      ],
+      "ja": [
+        "うさぎ（もち）と暮らしてます",
+        "週5ジム、週3サウナ",
+        "低温調理にハマり中"
+      ]
+    },
+    "cta": {
+      "label": { "en": "Let's chat over coffee!", "ja": "お話しませんか？" },
+      "url": "mailto:me@tachibanayu24.com"
+    }
+  },
   "companies": {
     "label": {
       "en": "Working at",

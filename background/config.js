@@ -126,6 +126,50 @@ export const CONFIG = {
       BLINK_SPEED: { min: 0.001, max: 0.002 },
       BLINK_DURATION: { min: 0.3, max: 0.5 },
     },
+
+    // Rabbit character (always visible)
+    RABBIT: {
+      // Size in pixels (adjusted for mobile)
+      SIZE: { desktop: 60, mobile: 45 },
+      // Position from bottom-left corner
+      POSITION: {
+        desktop: { left: 40, bottom: 40 },
+        mobile: { left: 20, bottom: 20 },
+      },
+      // Animation speeds
+      JUMP_SPEED: 0.003,
+      JUMP_HEIGHT: 8,
+      EAR_TWITCH_SPEED: 0.008,
+      BREATHE_SPEED: 0.001,
+      // Interaction
+      CLICK_JUMP_HEIGHT: 25,
+      CLICK_JUMP_DURATION: 400,
+      HEART_DURATION: 1000,
+      // Colors per time period - Hokori's actual coloring
+      // Body: white/cream, Ears: light gray (subtle), Nose: pink/beige
+      COLORS: {
+        MORNING: {
+          body: "rgba(255, 252, 248, 0.95)",
+          accent: "rgba(210, 205, 200, 0.5)",
+          nose: "rgba(235, 190, 180, 0.85)",
+        },
+        NOON: {
+          body: "rgba(255, 253, 250, 0.9)",
+          accent: "rgba(205, 200, 195, 0.45)",
+          nose: "rgba(230, 185, 175, 0.8)",
+        },
+        EVENING: {
+          body: "rgba(252, 245, 238, 0.9)",
+          accent: "rgba(200, 190, 180, 0.5)",
+          nose: "rgba(225, 175, 165, 0.85)",
+        },
+        NIGHT: {
+          body: "rgba(210, 215, 225, 0.7)",
+          accent: "rgba(180, 185, 195, 0.35)",
+          nose: "rgba(180, 160, 165, 0.6)",
+        },
+      },
+    },
   },
 
   // Screen adaptation

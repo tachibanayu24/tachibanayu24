@@ -107,32 +107,83 @@
   </head>
   <body>
     <div class="container">
-      <div class="card">
-        <button
-          class="lang-toggle"
-          id="lang-toggle"
-          aria-label="Switch language"
-        >
-          EN
-        </button>
-        <div class="profile">
-          <div class="avatar-wrapper">
-            <img
-              src="https://github.com/tachibanayu24.png"
-              alt="Yuto Tachibana (立花 優斗)"
-              class="avatar"
-            />
+      <div class="card-container">
+        <div class="card">
+          <!-- Front Side -->
+          <div class="card-face card-front">
+            <button
+              class="lang-toggle"
+              id="lang-toggle"
+              aria-label="Switch language"
+            >
+              EN
+            </button>
+            <div class="profile">
+              <div class="avatar-wrapper">
+                <img
+                  src="./images/me.jpg"
+                  alt="Yuto Tachibana (立花 優斗)"
+                  class="avatar"
+                />
+              </div>
+              <h1 class="name" id="name">Yuto Tachibana</h1>
+              <div class="bio" id="bio">
+                <span class="loading">Loading...</span>
+              </div>
+              <div class="company" id="company"></div>
+            </div>
+            <div class="divider"></div>
+            <p class="links-title">Connect with me</p>
+            <div class="links-grid" id="links">
+              <span class="loading">Loading...</span>
+            </div>
           </div>
-          <h1 class="name" id="name">Yuto Tachibana</h1>
-          <div class="bio" id="bio">
-            <span class="loading">Loading...</span>
+
+          <!-- Back Side -->
+          <div class="card-face card-back">
+            <button
+              class="lang-toggle"
+              id="lang-toggle-back"
+              aria-label="Switch language"
+            >
+              EN
+            </button>
+
+            <div class="profile">
+              <div class="avatar-wrapper">
+                <img
+                  src="./hokori.jpg"
+                  alt="Hokori the rabbit"
+                  class="avatar"
+                />
+              </div>
+            </div>
+
+            <div class="back-section">
+              <h2 class="back-section-title">What I Do</h2>
+              <p class="back-section-content" id="what-i-do"></p>
+            </div>
+
+            <div class="back-section">
+              <h2 class="back-section-title">Tech Stack</h2>
+              <div class="tech-stack" id="tech-stack"></div>
+            </div>
+
+            <div class="back-section">
+              <h2 class="back-section-title">About Me</h2>
+              <ul class="about-list" id="about-me"></ul>
+            </div>
+
+            <a
+              class="cta-button"
+              id="cta-button"
+              href="#"
+              target="_blank"
+              rel="noopener"
+            >
+              <span id="cta-label"></span>
+            </a>
           </div>
-          <div class="company" id="company"></div>
-        </div>
-        <div class="divider"></div>
-        <p class="links-title">Connect with me</p>
-        <div class="links-grid" id="links">
-          <span class="loading">Loading...</span>
         </div>
       </div>
     </div>

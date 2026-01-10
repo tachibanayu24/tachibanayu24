@@ -18,11 +18,20 @@
  */
 
 /**
+ * @typedef {Object} BacksideData
+ * @property {{en: string, ja: string}} whatIDo - What I do description
+ * @property {string[]} techStack - Tech stack tags
+ * @property {{en: string[], ja: string[]}} aboutMe - About me items
+ * @property {{label: {en: string, ja: string}, url: string}} cta - Call to action
+ */
+
+/**
  * @typedef {Object} ProfileData
  * @property {{en: string, ja: string}} name - Multilingual name
  * @property {{label: {en: string, ja: string}, list: Company[]}} companies - Company info
  * @property {{en: string, ja: string}} bio - Multilingual bio
  * @property {Link[]} links - Social links
+ * @property {BacksideData} backside - Card backside data
  */
 
 /** @type {string} */
@@ -140,6 +149,7 @@ async function loadContent() {
     profileData = await response.json();
     await render();
     setupLanguageToggle();
+    setupFlipToggle();
   } catch (error) {
     const bioEl = document.getElementById("bio");
     const linksEl = document.getElementById("links");
@@ -207,38 +217,130 @@ async function render() {
 
   document.getElementById("links").innerHTML = linksHtml;
 
+  // Render backside content
+  renderBackside(lang);
+
   // Update language toggle active state
   updateLanguageToggleState();
 }
 
 /**
- * Setup language toggle button event listener
+ * Render backside content with current language
+ * @param {'en'|'ja'} lang - Current language
+ */
+function renderBackside(lang) {
+  if (!profileData?.backside) return;
+
+  const { backside } = profileData;
+
+  // What I Do
+  const whatIDoEl = document.getElementById("what-i-do");
+  if (whatIDoEl) {
+    whatIDoEl.textContent = backside.whatIDo[lang];
+  }
+
+  // Tech Stack
+  const techStackEl = document.getElementById("tech-stack");
+  if (techStackEl) {
+    techStackEl.innerHTML = backside.techStack
+      .map((tech) => `<span class="tech-tag">${tech}</span>`)
+      .join("");
+  }
+
+  // About Me
+  const aboutMeEl = document.getElementById("about-me");
+  if (aboutMeEl) {
+    aboutMeEl.innerHTML = backside.aboutMe[lang]
+      .map((item) => `<li>${item}</li>`)
+      .join("");
+  }
+
+  // CTA Button
+  const ctaButton = document.getElementById("cta-button");
+  const ctaLabel = document.getElementById("cta-label");
+  if (ctaButton && ctaLabel) {
+    ctaButton.href = backside.cta.url;
+    ctaLabel.textContent = backside.cta.label[lang];
+  }
+}
+
+/**
+ * Setup language toggle button event listener (both front and back)
  */
 function setupLanguageToggle() {
   const toggleBtn = document.getElementById("lang-toggle");
-  if (!toggleBtn) return;
+  const toggleBtnBack = document.getElementById("lang-toggle-back");
 
-  toggleBtn.addEventListener("click", () => {
+  const handleToggle = (e) => {
+    e.stopPropagation(); // Prevent card flip when clicking language toggle
     currentLang = currentLang === "en" ? "ja" : "en";
     setStoredLang(currentLang);
     render();
-  });
+  };
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener("click", handleToggle);
+  }
+
+  if (toggleBtnBack) {
+    toggleBtnBack.addEventListener("click", handleToggle);
+  }
 
   updateLanguageToggleState();
 }
 
 /**
- * Update language toggle button text and aria-label
+ * Update language toggle button text and aria-label (both front and back)
  */
 function updateLanguageToggleState() {
   const toggleBtn = document.getElementById("lang-toggle");
-  if (toggleBtn) {
-    toggleBtn.textContent = currentLang.toUpperCase();
-    toggleBtn.setAttribute(
-      "aria-label",
-      currentLang === "en" ? "言語を切り替え" : "Switch language",
+  const toggleBtnBack = document.getElementById("lang-toggle-back");
+  const ariaLabel = currentLang === "en" ? "言語を切り替え" : "Switch language";
+
+  [toggleBtn, toggleBtnBack].forEach((btn) => {
+    if (btn) {
+      btn.textContent = currentLang.toUpperCase();
+      btn.setAttribute("aria-label", ariaLabel);
+    }
+  });
+}
+
+/**
+ * Setup card flip functionality (tap anywhere on card to flip)
+ */
+function setupFlipToggle() {
+  const card = document.querySelector(".card");
+  if (!card) return;
+
+  // Flip on card tap/click
+  card.addEventListener("click", (e) => {
+    // Don't flip if clicking on interactive elements
+    if (e.target.closest("a, button")) return;
+    card.classList.toggle("flipped");
+  });
+
+  // Show hint animation on first visit
+  showFlipHint(card);
+}
+
+/**
+ * Show flip hint animation on page load
+ * @param {HTMLElement} card - Card element
+ */
+function showFlipHint(card) {
+  // Start hint after fadeIn animation completes (0.5s)
+  setTimeout(() => {
+    card.classList.add("hint");
+
+    // Remove hint class after animation completes
+    card.addEventListener(
+      "animationend",
+      () => {
+        card.classList.remove("hint");
+      },
+      { once: true },
     );
-  }
+  }, 500);
 }
 
 // Initialize

@@ -12,6 +12,7 @@ import {
   DustParticles,
   EveningClouds,
   FireflySystem,
+  RabbitCharacter,
 } from "../effects/index.js";
 import {
   createCanvas,
@@ -59,10 +60,14 @@ export class BackgroundRenderer {
     this.eveningClouds = null;
     this.fireflySystem = null;
 
+    // Rabbit character (always visible)
+    this.rabbitCharacter = null;
+
     // Bind methods
     this.animate = this.animate.bind(this);
     this.handleResize = this.handleResize.bind(this);
     this.handleVisibility = this.handleVisibility.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   /**
@@ -107,6 +112,7 @@ export class BackgroundRenderer {
     this.dustParticles = new DustParticles();
     this.eveningClouds = new EveningClouds();
     this.fireflySystem = new FireflySystem();
+    this.rabbitCharacter = new RabbitCharacter();
   }
 
   /**
@@ -115,6 +121,31 @@ export class BackgroundRenderer {
   setupEventListeners() {
     window.addEventListener("resize", this.handleResize);
     document.addEventListener("visibilitychange", this.handleVisibility);
+    // Use document-level events since canvas has pointer-events: none
+    document.addEventListener("click", this.handleClick);
+    document.addEventListener("touchend", this.handleClick);
+  }
+
+  /**
+   * Handle click/touch for rabbit interaction
+   * @param {MouseEvent|TouchEvent} event
+   */
+  handleClick(event) {
+    if (!this.rabbitCharacter) return;
+
+    let x, y;
+    if (event.type === "touchend") {
+      const touch = event.changedTouches[0];
+      x = touch.clientX;
+      y = touch.clientY;
+    } else {
+      x = event.clientX;
+      y = event.clientY;
+    }
+
+    if (this.rabbitCharacter.isPointInside(x, y)) {
+      this.rabbitCharacter.onClick();
+    }
   }
 
   /**
@@ -139,6 +170,7 @@ export class BackgroundRenderer {
     this.dustParticles.resize();
     this.eveningClouds.resize();
     this.fireflySystem.resize();
+    this.rabbitCharacter.resize();
     initShapes(this.shapesState, this.width, this.height);
   }
 
@@ -171,6 +203,7 @@ export class BackgroundRenderer {
     this.dustParticles.setTimePeriod(timePeriod);
     this.eveningClouds.setTimePeriod(timePeriod);
     this.fireflySystem.setTimePeriod(timePeriod);
+    this.rabbitCharacter.setTimePeriod(timePeriod);
   }
 
   /**
@@ -227,6 +260,10 @@ export class BackgroundRenderer {
     this.fireflySystem.update(deltaTime);
     this.fireflySystem.draw(this.overlayCtx);
 
+    // Draw rabbit character (always visible)
+    this.rabbitCharacter.update(deltaTime);
+    this.rabbitCharacter.draw(this.overlayCtx);
+
     // Continue animation
     this.animationId = requestAnimationFrame(this.animate);
   }
@@ -270,6 +307,10 @@ export class BackgroundRenderer {
     window.removeEventListener("resize", this.handleResize);
     document.removeEventListener("visibilitychange", this.handleVisibility);
 
+    // Remove document-level event listeners
+    document.removeEventListener("click", this.handleClick);
+    document.removeEventListener("touchend", this.handleClick);
+
     if (this.canvas && this.canvas.parentNode) {
       this.canvas.parentNode.removeChild(this.canvas);
     }
@@ -288,5 +329,6 @@ export class BackgroundRenderer {
     this.dustParticles = null;
     this.eveningClouds = null;
     this.fireflySystem = null;
+    this.rabbitCharacter = null;
   }
 }

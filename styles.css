@@ -39,21 +39,58 @@ body {
   width: 100%;
 }
 
+/* Card Container for 3D Flip */
+.card-container {
+  perspective: 1000px;
+}
+
 /* Neumorphic Card with Glassmorphism */
 .card {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease-in-out;
+  animation: fadeIn 0.5s ease-out;
+  cursor: pointer;
+}
+
+/* Hint animation to show card is flippable */
+.card.hint {
+  animation: flipHint 1.2s ease-in-out;
+}
+
+.card.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
   background: var(--card-bg-glass);
   border-radius: 24px;
   padding: 2.5rem 2rem;
   box-shadow:
     12px 12px 24px var(--shadow-dark),
     -12px -12px 24px var(--shadow-light);
-  animation: fadeIn 0.5s ease-out;
   position: relative;
   transition:
     background var(--transition-duration) ease,
     box-shadow var(--transition-duration) ease;
-  /* Subtle border for glass edge - uses shadow color for consistency */
   border: 1px solid var(--glass-border);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.card-front {
+  position: relative;
+}
+
+.card-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotateY(180deg);
+  overflow-y: auto;
 }
 
 /* Language Toggle */
@@ -87,6 +124,109 @@ body {
   box-shadow:
     inset 2px 2px 4px var(--shadow-dark),
     inset -2px -2px 4px var(--shadow-light);
+}
+
+/* Back Side Styles */
+.back-section {
+  margin-bottom: 1.5rem;
+}
+
+.back-section-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  transition: color var(--transition-duration) ease;
+}
+
+.back-section-content {
+  color: var(--text);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  transition: color var(--transition-duration) ease;
+}
+
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tech-tag {
+  background: var(--card-bg-glass);
+  color: var(--text);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  box-shadow:
+    2px 2px 4px var(--shadow-dark),
+    -2px -2px 4px var(--shadow-light);
+  transition:
+    background var(--transition-duration) ease,
+    color var(--transition-duration) ease,
+    box-shadow var(--transition-duration) ease;
+}
+
+.about-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.about-list li {
+  color: var(--text);
+  font-size: 0.85rem;
+  line-height: 1.8;
+  padding-left: 1.25rem;
+  position: relative;
+  transition: color var(--transition-duration) ease;
+}
+
+.about-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+.cta-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--accent);
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 14px;
+  box-shadow:
+    4px 4px 8px var(--shadow-dark),
+    -4px -4px 8px var(--shadow-light);
+  transition:
+    all 0.2s ease,
+    background var(--transition-duration) ease,
+    box-shadow var(--transition-duration) ease;
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    6px 6px 12px var(--shadow-dark),
+    -6px -6px 12px var(--shadow-light);
+}
+
+.cta-button:active {
+  transform: translateY(0);
+  box-shadow:
+    2px 2px 4px var(--shadow-dark),
+    -2px -2px 4px var(--shadow-light);
 }
 
 /* Profile Section */
@@ -268,7 +408,7 @@ body {
     align-items: flex-start;
   }
 
-  .card {
+  .card-face {
     padding: 2rem 1.5rem;
     border-radius: 20px;
   }
@@ -290,6 +430,28 @@ body {
     padding: 0.75rem 0.5rem;
     font-size: 0.75rem;
   }
+
+  .flip-toggle {
+    right: 3rem;
+  }
+
+  .back-section-content {
+    font-size: 0.8rem;
+  }
+
+  .tech-tag {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .about-list li {
+    font-size: 0.8rem;
+  }
+
+  .cta-button {
+    font-size: 0.85rem;
+    padding: 0.875rem;
+  }
 }
 
 /* Animation */
@@ -301,5 +463,20 @@ body {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes flipHint {
+  0% {
+    transform: rotateY(0deg);
+  }
+  30% {
+    transform: rotateY(25deg);
+  }
+  60% {
+    transform: rotateY(-10deg);
+  }
+  100% {
+    transform: rotateY(0deg);
   }
 }
