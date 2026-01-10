@@ -26,18 +26,19 @@ export const CONFIG = {
   },
 
   // Neumorphism shadow adjustments per time period
+  // Softer shadows that blend with transparent card background
   SHADOWS: {
     MORNING: {
-      light: "#FFFFF8",
-      dark: "#C5C2A8",
+      light: "rgba(255, 255, 248, 0.6)",
+      dark: "rgba(180, 175, 150, 0.35)",
     },
     NOON: {
-      light: "rgba(255, 255, 255, 0.95)",
-      dark: "rgba(180, 195, 210, 0.45)",
+      light: "rgba(255, 255, 255, 0.65)",
+      dark: "rgba(160, 175, 190, 0.35)",
     },
     EVENING: {
-      light: "rgba(255, 220, 200, 0.7)",
-      dark: "rgba(150, 100, 80, 0.5)",
+      light: "rgba(255, 220, 200, 0.5)",
+      dark: "rgba(140, 100, 80, 0.4)",
     },
     NIGHT: {
       light: "rgba(60, 80, 120, 0.4)",
@@ -159,9 +160,9 @@ export const CONFIG = {
           nose: "rgba(225, 175, 165, 0.85)",
         },
         NIGHT: {
-          body: "rgba(210, 215, 225, 0.7)",
-          accent: "rgba(180, 185, 195, 0.35)",
-          nose: "rgba(180, 160, 165, 0.6)",
+          body: "rgba(220, 225, 235, 0.85)",
+          accent: "rgba(190, 195, 205, 0.5)",
+          nose: "rgba(195, 175, 180, 0.75)",
         },
       },
     },

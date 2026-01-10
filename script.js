@@ -108,6 +108,12 @@ let currentLang = getStoredLang() || "en";
 let profileData = null;
 
 /**
+ * Flag to track if card height has been fixed
+ * @type {boolean}
+ */
+let cardHeightFixed = false;
+
+/**
  * Fetch SVG icon from Simple Icons CDN or use fallback
  * @param {string|null} slug - Simple Icons slug
  * @param {string} key - Icon key for fallback lookup
@@ -148,6 +154,7 @@ async function loadContent() {
     if (!response.ok) throw new Error("Failed to fetch");
     profileData = await response.json();
     await render();
+    await fixCardHeight();
     setupLanguageToggle();
     setupFlipToggle();
   } catch (error) {
@@ -232,6 +239,49 @@ async function render() {
 
   // Update language toggle active state
   updateLanguageToggleState();
+}
+
+/**
+ * Fix card height to maximum of both languages
+ * Renders both languages temporarily to calculate max height
+ * @returns {Promise<void>}
+ */
+async function fixCardHeight() {
+  if (cardHeightFixed || !profileData) return;
+
+  const cardFront = document.querySelector(".card-front");
+  const cardBack = document.querySelector(".card-back");
+  if (!cardFront || !cardBack) return;
+
+  // Store original language
+  const originalLang = currentLang;
+
+  // Measure height for English
+  currentLang = "en";
+  await render();
+  const enFrontHeight = cardFront.scrollHeight;
+  const enBackHeight = cardBack.scrollHeight;
+
+  // Measure height for Japanese
+  currentLang = "ja";
+  await render();
+  const jaFrontHeight = cardFront.scrollHeight;
+  const jaBackHeight = cardBack.scrollHeight;
+
+  // Calculate max heights
+  const maxFrontHeight = Math.max(enFrontHeight, jaFrontHeight);
+  const maxBackHeight = Math.max(enBackHeight, jaBackHeight);
+  const maxHeight = Math.max(maxFrontHeight, maxBackHeight);
+
+  // Apply fixed height
+  cardFront.style.minHeight = `${maxHeight}px`;
+  cardBack.style.minHeight = `${maxHeight}px`;
+
+  // Restore original language
+  currentLang = originalLang;
+  await render();
+
+  cardHeightFixed = true;
 }
 
 /**

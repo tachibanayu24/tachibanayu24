@@ -347,14 +347,29 @@ export function applyPaletteToCss(palette) {
 
   root.style.setProperty("--bg", palette.bg);
   root.style.setProperty("--card-bg", palette.cardBg);
-  root.style.setProperty("--card-bg-glass", hexToRgba(palette.cardBg, 0.65));
+  // Slightly visible card background (very transparent)
+  root.style.setProperty("--card-bg-glass", hexToRgba(palette.cardBg, 0.075));
+  // Semi-transparent background for neumorphic buttons (blends with background)
+  root.style.setProperty("--button-bg", hexToRgba(palette.cardBg, 0.45));
   root.style.setProperty("--text", palette.text);
   root.style.setProperty("--text-muted", palette.textMuted);
   root.style.setProperty("--accent", palette.accent);
   root.style.setProperty("--shadow-light", palette.shadows.light);
   root.style.setProperty("--shadow-dark", palette.shadows.dark);
 
-  // Glass border - subtle edge that matches the theme
-  const glassBorder = hexToRgba(palette.cardBg, 0.3);
-  root.style.setProperty("--glass-border", glassBorder);
+  // Glass border - adapt to time period
+  const borderColor = hexToRgba(palette.cardBg, 0.3);
+  root.style.setProperty("--glass-border", borderColor);
+  // Glass shadow - soft drop shadow
+  root.style.setProperty("--glass-shadow", "rgba(0, 0, 0, 0.1)");
+
+  // Card edge colors for plastic thickness effect
+  // More transparent than before, but less than card body (7.5%)
+  const cardBgRgb = hexToRgb(palette.cardBg);
+  const edgeLight = `rgba(${Math.min(255, cardBgRgb.r + 30)}, ${Math.min(255, cardBgRgb.g + 30)}, ${Math.min(255, cardBgRgb.b + 30)}, 0.25)`;
+  const edgeDark = `rgba(${Math.max(0, cardBgRgb.r - 30)}, ${Math.max(0, cardBgRgb.g - 30)}, ${Math.max(0, cardBgRgb.b - 30)}, 0.3)`;
+  const edgeDarker = `rgba(${Math.max(0, cardBgRgb.r - 50)}, ${Math.max(0, cardBgRgb.g - 50)}, ${Math.max(0, cardBgRgb.b - 50)}, 0.35)`;
+  root.style.setProperty("--card-edge-light", edgeLight);
+  root.style.setProperty("--card-edge-dark", edgeDark);
+  root.style.setProperty("--card-edge-darker", edgeDarker);
 }

@@ -1,8 +1,13 @@
 :root {
   --bg: #e8eef3;
   --card-bg: #e8eef3;
-  --card-bg-glass: rgba(232, 238, 243, 0.4);
-  --glass-border: rgba(255, 255, 255, 0.15);
+  --card-bg-glass: rgba(232, 238, 243, 0.075);
+  --button-bg: rgba(232, 238, 243, 0.45);
+  --glass-border: rgba(232, 238, 243, 0.3);
+  --glass-shadow: rgba(0, 0, 0, 0.1);
+  --card-edge-light: rgba(255, 255, 255, 0.5);
+  --card-edge-dark: rgba(200, 205, 215, 0.6);
+  --card-edge-darker: rgba(180, 185, 195, 0.7);
   --text: #2d3748;
   --text-muted: #718096;
   --accent: #4a6fa5;
@@ -77,16 +82,24 @@ button {
   background: var(--card-bg-glass);
   border-radius: 24px;
   padding: 2.5rem 2rem;
-  box-shadow:
-    12px 12px 24px var(--shadow-dark),
-    -12px -12px 24px var(--shadow-light);
   position: relative;
   transition:
     background var(--transition-duration) ease,
     box-shadow var(--transition-duration) ease;
   border: 1px solid var(--glass-border);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  /* Plastic card thickness effect - edges on multiple sides */
+  box-shadow:
+    /* Top highlight */
+    inset 0 1px 0 var(--card-edge-light),
+    /* Left edge */ -2px 0 0 var(--card-edge-dark),
+    /* Bottom edge */ 0 3px 0 var(--card-edge-dark),
+    -2px 3px 0 var(--card-edge-darker),
+    /* Drop shadow */ 0 8px 16px var(--glass-shadow),
+    0 16px 32px var(--glass-shadow);
 }
 
 .card-front {
@@ -119,7 +132,7 @@ button {
   top: 1rem;
   right: 1rem;
   border: none;
-  background: var(--card-bg-glass);
+  background: var(--button-bg);
   color: var(--text-muted);
   font-size: 0.65rem;
   font-weight: 600;
@@ -175,7 +188,7 @@ button {
 }
 
 .favorite-tag {
-  background: var(--card-bg-glass);
+  background: var(--button-bg);
   color: var(--text);
   font-size: 0.75rem;
   font-weight: 500;
@@ -200,7 +213,7 @@ button {
   display: inline-block;
   padding: 6px;
   border-radius: 50%;
-  background: var(--card-bg-glass);
+  background: var(--button-bg);
   box-shadow:
     6px 6px 12px var(--shadow-dark),
     -6px -6px 12px var(--shadow-light);
@@ -308,7 +321,7 @@ button {
   justify-content: center;
   gap: 0.5rem;
   padding: 0.875rem 0.75rem;
-  background: var(--card-bg-glass);
+  background: var(--button-bg);
   border-radius: 14px;
   text-decoration: none;
   color: var(--text);

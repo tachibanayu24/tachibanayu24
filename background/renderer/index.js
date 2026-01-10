@@ -38,6 +38,8 @@ export class BackgroundRenderer {
     this.ctx = null;
     this.overlayCanvas = null;
     this.overlayCtx = null;
+    this.rabbitCanvas = null;
+    this.rabbitCtx = null;
     this.particleSystem = null;
     this.animationId = null;
     this.lastTime = 0;
@@ -86,20 +88,27 @@ export class BackgroundRenderer {
     // Remove existing canvases
     removeExistingCanvas("bg-canvas");
     removeExistingCanvas("overlay-canvas");
+    removeExistingCanvas("rabbit-canvas");
 
     // Create background canvas (behind content)
-    const bg = createCanvas("bg-canvas", -1);
+    const bg = createCanvas("bg-canvas", -2);
     this.canvas = bg.canvas;
     this.ctx = bg.ctx;
 
-    // Create overlay canvas (in front of content)
-    const overlay = createCanvas("overlay-canvas", 10);
+    // Create overlay canvas (behind card but in front of bg-canvas)
+    const overlay = createCanvas("overlay-canvas", -1);
     this.overlayCanvas = overlay.canvas;
     this.overlayCtx = overlay.ctx;
+
+    // Create rabbit canvas (in front of card)
+    const rabbit = createCanvas("rabbit-canvas", 50);
+    this.rabbitCanvas = rabbit.canvas;
+    this.rabbitCtx = rabbit.ctx;
 
     // Insert canvases
     document.body.insertBefore(this.canvas, document.body.firstChild);
     document.body.appendChild(this.overlayCanvas);
+    document.body.appendChild(this.rabbitCanvas);
 
     // Set size
     this.resize();
@@ -156,6 +165,7 @@ export class BackgroundRenderer {
     this.height = window.innerHeight;
     resizeCanvas(this.canvas, this.ctx, this.width, this.height);
     resizeCanvas(this.overlayCanvas, this.overlayCtx, this.width, this.height);
+    resizeCanvas(this.rabbitCanvas, this.rabbitCtx, this.width, this.height);
   }
 
   /**
@@ -194,6 +204,7 @@ export class BackgroundRenderer {
     // Clear canvases
     clearCanvas(this.ctx, this.width, this.height);
     clearCanvas(this.overlayCtx, this.width, this.height);
+    clearCanvas(this.rabbitCtx, this.width, this.height);
 
     // Draw background layers
     drawGradient(
@@ -234,9 +245,9 @@ export class BackgroundRenderer {
     this.fireflySystem.update(deltaTime);
     this.fireflySystem.draw(this.overlayCtx);
 
-    // Draw rabbit character (always visible)
+    // Draw rabbit character (always visible, in front of card)
     this.rabbitCharacter.update(deltaTime);
-    this.rabbitCharacter.draw(this.overlayCtx);
+    this.rabbitCharacter.draw(this.rabbitCtx);
 
     // Continue animation
     this.animationId = requestAnimationFrame(this.animate);
@@ -289,10 +300,16 @@ export class BackgroundRenderer {
       this.overlayCanvas.parentNode.removeChild(this.overlayCanvas);
     }
 
+    if (this.rabbitCanvas && this.rabbitCanvas.parentNode) {
+      this.rabbitCanvas.parentNode.removeChild(this.rabbitCanvas);
+    }
+
     this.canvas = null;
     this.ctx = null;
     this.overlayCanvas = null;
     this.overlayCtx = null;
+    this.rabbitCanvas = null;
+    this.rabbitCtx = null;
     this.particleSystem = null;
     this.morningMist = null;
     this.godRays = null;
