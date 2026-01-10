@@ -17,9 +17,11 @@ const meJson = JSON.parse(readFileSync(join(rootDir, "me.json"), "utf-8"));
 
 // Generate README content for a specific language
 function generateReadme(data, lang) {
-  // Language switch link
+  // Language switch link (always include website link)
   const langSwitch =
-    lang === "ja" ? "[English](./README.md)" : "[日本語](./README.ja.md)";
+    lang === "ja"
+      ? "[English](./README.md) | [Website](https://tachibanayu24.com/)"
+      : "[日本語](./README.ja.md) | [Website](https://tachibanayu24.com/)";
 
   // Bio section
   const bioSection = data.bio[lang].split("\n").join("  \n");

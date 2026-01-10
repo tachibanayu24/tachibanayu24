@@ -330,7 +330,7 @@ function setupFlipToggle() {
  * @param {HTMLElement} card - Card element
  */
 function showFlipHint(card) {
-  // Start hint after fadeIn animation completes (0.5s)
+  // Start hint after fadeIn animation completes (0.3s)
   setTimeout(() => {
     card.classList.add("hint");
 
@@ -342,7 +342,7 @@ function showFlipHint(card) {
       },
       { once: true },
     );
-  }, 500);
+  }, 300);
 }
 
 // Initialize
