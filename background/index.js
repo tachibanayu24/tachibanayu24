@@ -2,7 +2,7 @@
  * Background Animation System - Main Entry Point
  *
  * Orchestrates all modules to create a dynamic, context-aware background.
- * Responds to time of day and season.
+ * Responds to time of day.
  *
  * Usage:
  *   import { initBackground } from './background/index.js';
@@ -10,7 +10,6 @@
  */
 
 import { getTimePeriod, getTimeTransition } from "./time.js";
-import { getSeason } from "./season.js";
 import { getColorPalette, applyPaletteToCss } from "./colors.js";
 import { BackgroundRenderer } from "./renderer.js";
 
@@ -19,7 +18,6 @@ let renderer = null;
 let updateInterval = null;
 let currentState = {
   timePeriod: null,
-  season: null,
   palette: null,
 };
 
@@ -45,7 +43,6 @@ export async function initBackground() {
 
   console.log("[Background] Background system initialized", {
     timePeriod: currentState.timePeriod,
-    season: currentState.season,
   });
 
   // Return public API
@@ -70,25 +67,19 @@ function updateConditions() {
   const timePeriod = getTimePeriod();
   const timeTransition = getTimeTransition();
 
-  // Get season
-  const season = getSeason();
-
-  // Get color palette based on conditions
+  // Get color palette based on time
   const palette = getColorPalette(
     timeTransition.to,
-    season,
     timeTransition.factor,
     timeTransition.from !== timeTransition.to ? timeTransition.from : null,
   );
 
   // Check if anything changed
-  const changed =
-    currentState.timePeriod !== timePeriod || currentState.season !== season;
+  const changed = currentState.timePeriod !== timePeriod;
 
   // Update state
   currentState = {
     timePeriod,
-    season,
     palette,
   };
 
@@ -97,14 +88,11 @@ function updateConditions() {
 
   // Update renderer
   if (renderer) {
-    renderer.updateConditions(timePeriod, season, palette);
+    renderer.updateConditions(timePeriod, palette);
   }
 
   if (changed) {
-    console.log("[Background] Conditions updated", {
-      timePeriod,
-      season,
-    });
+    console.log("[Background] Conditions updated", { timePeriod });
   }
 }
 
@@ -137,26 +125,23 @@ export function setDebugConditions(options = {}) {
     return;
   }
 
-  const { timePeriod = currentState.timePeriod, season = currentState.season } =
-    options;
+  const { timePeriod = currentState.timePeriod } = options;
 
-  const palette = getColorPalette(timePeriod, season);
+  const palette = getColorPalette(timePeriod);
 
   currentState = {
     timePeriod,
-    season,
     palette,
   };
 
   applyPaletteToCss(palette);
-  renderer.updateConditions(timePeriod, season, palette);
+  renderer.updateConditions(timePeriod, palette);
 
   console.log("[Background] Debug conditions set", options);
 }
 
 // Export constants for external use
 export { TIME_PERIOD } from "./time.js";
-export { SEASON } from "./season.js";
 
 // Auto-initialize when script loads (can be disabled by setting window.BACKGROUND_MANUAL_INIT)
 if (typeof window !== "undefined" && !window.BACKGROUND_MANUAL_INIT) {

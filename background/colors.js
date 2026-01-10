@@ -1,72 +1,89 @@
 /**
  * Background Animation System - Colors Module
  *
- * Defines color palettes for different times and seasons.
+ * Defines color palettes for different times of day.
  * Provides smooth color interpolation and CSS variable updates.
  */
 
 import { TIME_PERIOD } from "./time.js";
-import { SEASON } from "./season.js";
 import { CONFIG } from "./config.js";
 
 /**
- * Base color palettes for each time period
- * Each period has gradient colors and accent colors
+ * Color palettes for each time period
  */
 const TIME_PALETTES = {
   [TIME_PERIOD.MORNING]: {
-    gradient: ["#FFF8E7", "#FFE4C4", "#FFDAB9"],
+    // Sunrise: soft pink/peach horizon fading to light blue sky
+    gradient: ["#FFE5D4", "#FFDCC8", "#FFD4B8", "#E8F0F8"],
     bg: "#F5EDE4",
     cardBg: "#F5EDE4",
     text: "#4A4035",
     textMuted: "#7D7165",
     accent: "#C4956A",
+    // Sunrise light from lower left (off-screen)
+    celestial: {
+      type: "sun",
+      x: -0.1,
+      y: 0.9,
+      color: "rgba(255, 200, 130, 0.5)",
+      glowColor: "rgba(255, 180, 120, 0.2)",
+    },
+    gradientAngle: 135,
   },
   [TIME_PERIOD.NOON]: {
-    gradient: ["#E8F4FD", "#D4E8F5", "#C5DFF0"],
+    // Midday: clear blue sky with subtle cloud wisps
+    gradient: ["#87CEEB", "#A8D8F0", "#C5E5F5", "#E8F4FC", "#F5FAFF"],
     bg: "#E8EEF3",
     cardBg: "#E8EEF3",
     text: "#2D3748",
     textMuted: "#718096",
     accent: "#4A6FA5",
+    // Overhead sunlight from above (off-screen top)
+    celestial: {
+      type: "sun",
+      x: 0.5,
+      y: -0.2,
+      color: "rgba(255, 252, 230, 0.35)",
+      glowColor: "rgba(255, 248, 220, 0.18)",
+    },
+    gradientAngle: 180,
   },
   [TIME_PERIOD.EVENING]: {
-    gradient: ["#FFB088", "#FF8C69", "#E8707A", "#C9628F"],
-    bg: "#E8DDD8",
-    cardBg: "#E8DDD8",
-    text: "#3D3535",
-    textMuted: "#6B5959",
-    accent: "#B5656B",
+    // Sunset: muted, nostalgic golden hour
+    gradient: ["#E8C4A8", "#DDBAA0", "#D4A99A", "#C9A0A0", "#B89AA8"],
+    bg: "#E8E0DC",
+    cardBg: "#E8E0DC",
+    text: "#4A4040",
+    textMuted: "#7A6B6B",
+    accent: "#B89080",
+    // Sunset light from lower right (off-screen)
+    celestial: {
+      type: "sun",
+      x: 1.1,
+      y: 0.85,
+      color: "rgba(230, 180, 140, 0.4)",
+      glowColor: "rgba(220, 160, 120, 0.15)",
+    },
+    gradientAngle: 45,
   },
   [TIME_PERIOD.NIGHT]: {
-    gradient: ["#1A1A2E", "#16213E", "#1B2838", "#0F3460"],
+    // Night sky: deep blues and purples
+    gradient: ["#0F1628", "#162035", "#1A2540", "#0D1A30"],
     bg: "#1E2430",
     cardBg: "#252D3A",
     text: "#E0E5EC",
     textMuted: "#8B95A5",
     accent: "#5B7DB1",
+    // Moonlight from upper right (off-screen)
+    celestial: {
+      type: "moon",
+      x: 1.0,
+      y: -0.1,
+      color: "rgba(200, 220, 255, 0.4)",
+      glowColor: "rgba(150, 180, 230, 0.12)",
+    },
+    gradientAngle: 180,
   },
-};
-
-/**
- * Season color modifiers (applied as hue/saturation shifts)
- * More dramatic shifts to make seasons visually distinct
- */
-const SEASON_MODIFIERS = {
-  [SEASON.SPRING]: { hue: -15, saturation: 1.25, lightness: 1.05 },
-  [SEASON.SUMMER]: { hue: 10, saturation: 1.35, lightness: 1.02 },
-  [SEASON.AUTUMN]: { hue: 30, saturation: 1.1, lightness: 0.95 },
-  [SEASON.WINTER]: { hue: -20, saturation: 0.7, lightness: 1.1 },
-};
-
-/**
- * Season-specific gradient tints (blended with base gradients)
- */
-const SEASON_TINTS = {
-  [SEASON.SPRING]: ["#FFE4EC", "#E8F5E9"],
-  [SEASON.SUMMER]: ["#E3F2FD", "#FFF8E1"],
-  [SEASON.AUTUMN]: ["#FBE9E7", "#FFF3E0"],
-  [SEASON.WINTER]: ["#E8EAF6", "#ECEFF1"],
 };
 
 /**
@@ -99,77 +116,6 @@ function rgbToHex(r, g, b) {
 }
 
 /**
- * Convert RGB to HSL
- */
-function rgbToHsl(r, g, b) {
-  r /= 255;
-  g /= 255;
-  b /= 255;
-
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  let h,
-    s,
-    l = (max + min) / 2;
-
-  if (max === min) {
-    h = s = 0;
-  } else {
-    const d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    switch (max) {
-      case r:
-        h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
-        break;
-      case g:
-        h = ((b - r) / d + 2) / 6;
-        break;
-      default:
-        h = ((r - g) / d + 4) / 6;
-        break;
-    }
-  }
-
-  return { h: h * 360, s: s * 100, l: l * 100 };
-}
-
-/**
- * Convert HSL to RGB
- */
-function hslToRgb(h, s, l) {
-  h /= 360;
-  s /= 100;
-  l /= 100;
-
-  let r, g, b;
-
-  if (s === 0) {
-    r = g = b = l;
-  } else {
-    const hue2rgb = (p, q, t) => {
-      if (t < 0) t += 1;
-      if (t > 1) t -= 1;
-      if (t < 1 / 6) return p + (q - p) * 6 * t;
-      if (t < 1 / 2) return q;
-      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-      return p;
-    };
-
-    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-    const p = 2 * l - q;
-    r = hue2rgb(p, q, h + 1 / 3);
-    g = hue2rgb(p, q, h);
-    b = hue2rgb(p, q, h - 1 / 3);
-  }
-
-  return {
-    r: Math.round(r * 255),
-    g: Math.round(g * 255),
-    b: Math.round(b * 255),
-  };
-}
-
-/**
  * Interpolate between two colors
  */
 function interpolateColor(color1, color2, factor) {
@@ -184,39 +130,14 @@ function interpolateColor(color1, color2, factor) {
 }
 
 /**
- * Apply season modifier to a color
- */
-function applySeasonModifier(hex, season) {
-  const modifier = SEASON_MODIFIERS[season] || SEASON_MODIFIERS[SEASON.SUMMER];
-  const rgb = hexToRgb(hex);
-  const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-
-  hsl.h = (hsl.h + modifier.hue + 360) % 360;
-  hsl.s = Math.max(0, Math.min(100, hsl.s * modifier.saturation));
-  hsl.l = Math.max(0, Math.min(100, hsl.l * modifier.lightness));
-
-  const newRgb = hslToRgb(hsl.h, hsl.s, hsl.l);
-  return rgbToHex(newRgb.r, newRgb.g, newRgb.b);
-}
-
-/**
- * Blend two colors with a given ratio
- */
-function blendColors(color1, color2, ratio) {
-  return interpolateColor(color1, color2, ratio);
-}
-
-/**
- * Get the complete color palette for current conditions
+ * Get the complete color palette for current time
  * @param {string} timePeriod
- * @param {string} season
  * @param {number} transitionFactor - 0-1 for time transitions
  * @param {string} nextTimePeriod - Next time period for transitions
  * @returns {Object} Color palette
  */
 export function getColorPalette(
   timePeriod,
-  season,
   transitionFactor = 1,
   nextTimePeriod = null,
 ) {
@@ -226,6 +147,7 @@ export function getColorPalette(
   if (nextTimePeriod && transitionFactor < 1) {
     const nextPalette = TIME_PALETTES[nextTimePeriod];
     palette = {
+      ...palette,
       gradient: palette.gradient.map((c, i) =>
         interpolateColor(
           c,
@@ -253,31 +175,12 @@ export function getColorPalette(
     };
   }
 
-  // Apply season modifiers (hue/saturation/lightness shifts)
-  palette = {
-    ...palette,
-    gradient: palette.gradient.map((c) => applySeasonModifier(c, season)),
-    bg: applySeasonModifier(palette.bg, season),
-    cardBg: applySeasonModifier(palette.cardBg, season),
-  };
-
-  // Blend season tints into gradient for more visible seasonal effect
-  const seasonTints = SEASON_TINTS[season];
-  if (seasonTints) {
-    const tintStrength = 0.25;
-    palette.gradient = palette.gradient.map((c, i) => {
-      const tintColor = seasonTints[i % seasonTints.length];
-      return blendColors(c, tintColor, tintStrength);
-    });
-    palette.cardBg = blendColors(
-      palette.cardBg,
-      seasonTints[0],
-      tintStrength * 0.5,
-    );
-  }
-
   // Add shadows based on time
   palette.shadows = CONFIG.SHADOWS[timePeriod] || CONFIG.SHADOWS.NOON;
+
+  // Ensure celestial and gradientAngle are included
+  palette.celestial = TIME_PALETTES[timePeriod].celestial;
+  palette.gradientAngle = TIME_PALETTES[timePeriod].gradientAngle;
 
   return palette;
 }

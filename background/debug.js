@@ -5,7 +5,7 @@
  * DELETE THIS FILE when done testing.
  */
 
-import { setDebugConditions, TIME_PERIOD, SEASON } from "./index.js";
+import { setDebugConditions, TIME_PERIOD } from "./index.js";
 
 const PANEL_STYLES = `
   position: fixed;
@@ -97,11 +97,9 @@ class DebugPanel {
   constructor() {
     this.currentState = {
       timePeriod: null,
-      season: null,
     };
     this.isAutoMode = true;
     this.panel = null;
-    this.buttons = {};
   }
 
   init() {
@@ -133,16 +131,6 @@ class DebugPanel {
         </div>
       </div>
 
-      <div style="${SECTION_STYLES}">
-        <span style="${LABEL_STYLES}">Season</span>
-        <div style="${BUTTON_GROUP_STYLES}" data-group="season">
-          <button data-season="SPRING" style="${BUTTON_STYLES}">Spring</button>
-          <button data-season="SUMMER" style="${BUTTON_STYLES}">Summer</button>
-          <button data-season="AUTUMN" style="${BUTTON_STYLES}">Autumn</button>
-          <button data-season="WINTER" style="${BUTTON_STYLES}">Winter</button>
-        </div>
-      </div>
-
       <div style="font-size: 10px; color: #666; margin-bottom: 0.5rem;" id="debug-status">
         Mode: Auto
       </div>
@@ -161,15 +149,6 @@ class DebugPanel {
       btn.addEventListener("click", () => {
         this.currentState.timePeriod = TIME_PERIOD[btn.dataset.time];
         this.updateActiveStates("time", btn);
-        this.applyDebugState();
-      });
-    });
-
-    // Season buttons
-    this.panel.querySelectorAll("[data-season]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        this.currentState.season = SEASON[btn.dataset.season];
-        this.updateActiveStates("season", btn);
         this.applyDebugState();
       });
     });
@@ -205,11 +184,9 @@ class DebugPanel {
     this.isAutoMode = false;
     this.updateStatus();
 
-    // Only pass values that have been selected
     const options = {};
     if (this.currentState.timePeriod)
       options.timePeriod = this.currentState.timePeriod;
-    if (this.currentState.season) options.season = this.currentState.season;
 
     setDebugConditions(options);
   }
@@ -220,11 +197,7 @@ class DebugPanel {
       statusEl.textContent = "Mode: Auto";
       statusEl.style.color = "#666";
     } else {
-      const parts = [];
-      if (this.currentState.timePeriod)
-        parts.push(this.currentState.timePeriod);
-      if (this.currentState.season) parts.push(this.currentState.season);
-      statusEl.textContent = `Debug: ${parts.join(" / ")}`;
+      statusEl.textContent = `Debug: ${this.currentState.timePeriod || "Auto"}`;
       statusEl.style.color = "#7cb3ff";
     }
   }
@@ -232,7 +205,6 @@ class DebugPanel {
   reset() {
     this.currentState = {
       timePeriod: null,
-      season: null,
     };
     this.isAutoMode = true;
 

@@ -44,20 +44,4 @@ export const CONFIG = {
       dark: "rgba(10, 20, 40, 0.6)",
     },
   },
-
-  // Floating particle configuration (distributed across 3 depth layers)
-  PARTICLES: {
-    count: 50,
-    color: "rgba(120, 140, 180, 0.5)",
-    speed: 0.12,
-    size: { min: 8, max: 20 },
-  },
-
-  // Season-specific accent particle colors
-  SEASON_ACCENTS: {
-    SPRING: "rgba(255, 182, 193, 0.6)",
-    SUMMER: "rgba(255, 220, 120, 0.5)",
-    AUTUMN: "rgba(255, 140, 80, 0.55)",
-    WINTER: "rgba(200, 220, 255, 0.5)",
-  },
 };

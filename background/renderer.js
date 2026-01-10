@@ -145,11 +145,11 @@ export class BackgroundRenderer {
   /**
    * Update particle system with new conditions
    */
-  updateConditions(timePeriod, season, palette) {
+  updateConditions(timePeriod, palette) {
     this.currentPalette = palette;
 
     if (this.particleSystem) {
-      this.particleSystem.init(timePeriod, season);
+      this.particleSystem.init(timePeriod);
     }
   }
 
@@ -169,6 +169,9 @@ export class BackgroundRenderer {
 
     // Draw background gradient
     this.drawBackground();
+
+    // Draw celestial body (sun/moon)
+    this.drawCelestial();
 
     // Draw abstract shapes
     this.drawShapes(deltaTime);
@@ -191,27 +194,122 @@ export class BackgroundRenderer {
   }
 
   /**
-   * Draw the background gradient
+   * Draw the background gradient with time-appropriate angle
    */
   drawBackground() {
     if (!this.currentPalette) return;
 
-    const { gradient } = this.currentPalette;
+    const { gradient, gradientAngle = 180 } = this.currentPalette;
+    const w = window.innerWidth;
+    const h = window.innerHeight;
 
-    // Create a smooth multi-stop gradient
-    const bgGradient = this.ctx.createLinearGradient(
-      0,
-      0,
-      window.innerWidth * 0.5,
-      window.innerHeight,
-    );
+    // Calculate gradient start and end points based on angle
+    const angleRad = (gradientAngle * Math.PI) / 180;
+    const cos = Math.cos(angleRad);
+    const sin = Math.sin(angleRad);
+
+    // Gradient line through center of canvas
+    const cx = w / 2;
+    const cy = h / 2;
+    const length = Math.sqrt(w * w + h * h) / 2;
+
+    const x0 = cx - cos * length;
+    const y0 = cy - sin * length;
+    const x1 = cx + cos * length;
+    const y1 = cy + sin * length;
+
+    const bgGradient = this.ctx.createLinearGradient(x0, y0, x1, y1);
 
     gradient.forEach((color, index) => {
       bgGradient.addColorStop(index / (gradient.length - 1), color);
     });
 
     this.ctx.fillStyle = bgGradient;
-    this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+    this.ctx.fillRect(0, 0, w, h);
+  }
+
+  /**
+   * Draw ambient light effect - light rays coming from off-screen
+   * Creates the feeling of sunlight or moonlight illuminating the scene
+   */
+  drawCelestial() {
+    if (!this.currentPalette || !this.currentPalette.celestial) return;
+
+    const { celestial } = this.currentPalette;
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+
+    // Light source is OFF-SCREEN, we only see the light rays entering
+    // Position is where the light originates (can be outside canvas)
+    const sourceX = w * celestial.x;
+    const sourceY = h * celestial.y;
+
+    // Extend the source further off-screen for more natural light rays
+    const offsetX = (celestial.x - 0.5) * w * 0.5;
+    const offsetY = (celestial.y - 0.5) * h * 0.5;
+    const lightX = sourceX + offsetX;
+    const lightY = sourceY + offsetY;
+
+    // Calculate how far the light reaches into the scene
+    const reach = Math.max(w, h) * 1.2;
+
+    // Primary light ray - large, soft ambient light
+    const ambientLight = this.ctx.createRadialGradient(
+      lightX,
+      lightY,
+      0,
+      lightX,
+      lightY,
+      reach,
+    );
+
+    const isMoon = celestial.type === "moon";
+    const intensity = isMoon ? 0.6 : 1.0;
+
+    ambientLight.addColorStop(
+      0,
+      celestial.glowColor.replace(/[\d.]+\)$/, `${0.25 * intensity})`),
+    );
+    ambientLight.addColorStop(
+      0.2,
+      celestial.glowColor.replace(/[\d.]+\)$/, `${0.12 * intensity})`),
+    );
+    ambientLight.addColorStop(
+      0.5,
+      celestial.glowColor.replace(/[\d.]+\)$/, `${0.05 * intensity})`),
+    );
+    ambientLight.addColorStop(1, "transparent");
+
+    this.ctx.fillStyle = ambientLight;
+    this.ctx.fillRect(0, 0, w, h);
+
+    // Secondary warm/cool accent near the light source edge
+    const accentReach = reach * 0.6;
+    const accentLight = this.ctx.createRadialGradient(
+      lightX,
+      lightY,
+      0,
+      lightX,
+      lightY,
+      accentReach,
+    );
+
+    accentLight.addColorStop(
+      0,
+      celestial.color.replace(/[\d.]+\)$/, `${0.15 * intensity})`),
+    );
+    accentLight.addColorStop(
+      0.3,
+      celestial.color.replace(/[\d.]+\)$/, `${0.06 * intensity})`),
+    );
+    accentLight.addColorStop(
+      0.6,
+      celestial.color.replace(/[\d.]+\)$/, `${0.02 * intensity})`),
+    );
+    accentLight.addColorStop(1, "transparent");
+
+    this.ctx.fillStyle = accentLight;
+    this.ctx.fillRect(0, 0, w, h);
   }
 
   /**

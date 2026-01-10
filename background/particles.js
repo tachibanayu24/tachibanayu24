@@ -5,9 +5,7 @@
  * Designed for a modern, artistic atmosphere rather than distinct particles.
  */
 
-import { CONFIG } from "./config.js";
 import { TIME_PERIOD } from "./time.js";
-import { SEASON } from "./season.js";
 
 /**
  * Depth layer configuration for parallax
@@ -45,11 +43,10 @@ const DEPTH_LAYERS = {
  * Large, diffuse, and very subtle
  */
 class LightOrb {
-  constructor(canvas, config, depthLayer, timePeriod) {
+  constructor(canvas, config, depthLayer) {
     this.canvas = canvas;
     this.config = config;
     this.depthLayer = depthLayer;
-    this.timePeriod = timePeriod;
     this.reset(true);
   }
 
@@ -160,15 +157,13 @@ export class ParticleSystem {
       front: [],
     };
     this.timePeriod = TIME_PERIOD.NOON;
-    this.season = SEASON.SUMMER;
   }
 
   /**
    * Initialize ambient light orbs
    */
-  init(timePeriod, season) {
+  init(timePeriod) {
     this.timePeriod = timePeriod;
-    this.season = season;
 
     // Clear existing
     this.layers = {
@@ -199,34 +194,7 @@ export class ParticleSystem {
 
       for (let i = 0; i < count; i++) {
         this.layers[layerName].push(
-          new LightOrb(this.canvas, baseConfig, layerConfig, timePeriod),
-        );
-      }
-    }
-
-    // Add season-specific accent orbs
-    const seasonAccent = CONFIG.SEASON_ACCENTS[season];
-    if (seasonAccent) {
-      const accentConfig = {
-        ...baseConfig,
-        color: seasonAccent,
-        size: { min: 70, max: 160 },
-        baseOpacity: 0.12,
-      };
-
-      // Add accent orbs to middle and front layers
-      const accentCount = 6;
-      const accentLayers = ["middle", "front"];
-
-      for (let i = 0; i < accentCount; i++) {
-        const layerName = accentLayers[i % accentLayers.length];
-        this.layers[layerName].push(
-          new LightOrb(
-            this.canvas,
-            accentConfig,
-            DEPTH_LAYERS[layerName],
-            timePeriod,
-          ),
+          new LightOrb(this.canvas, baseConfig, layerConfig),
         );
       }
     }
@@ -260,6 +228,6 @@ export class ParticleSystem {
    * Handle canvas resize
    */
   resize() {
-    this.init(this.timePeriod, this.season);
+    this.init(this.timePeriod);
   }
 }
