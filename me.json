@@ -101,8 +101,8 @@
         "ja": "経歴"
       },
       "content": {
-        "en": "Yuto Tachibana began his career in 2018 at NTT COMWARE, where he was engaged in new businesses with cutting-edge technologies for government agencies. Then he joined several startups as an engineering manager or the head of development, where he had led 0-to-1 product creation, organizational building, and growth initiatives. In 2022, he became the tech lead and contributed to business development at a newly established joint venture of DeNA. In 2025, Yuto joined Delight Ventures. Now he serves as a temporary CTO for portfolio companies, providing all kinds of support to drive value creation.",
-        "ja": "2018年にNTTコムウェアへ新卒入社し、先端技術を応用した官公庁向け新規事業を推進。その後、複数スタートアップでエンジニアリングマネージャー／開発責任者として、0→1開発・組織づくり・グロースをリード。2022年にDeNAの新設ジョイントベンチャーでテックリードや事業開発を担い、2025年よりデライト・ベンチャーズに参画。投資先の一時的なCTOとしてバリューアップのためのあらゆる支援に取り組んでいる。"
+        "en": "Yuto Tachibana began his career in 2018 at NTT COMWARE, where he was engaged in new businesses with cutting-edge technologies for government agencies. Then he joined several startups as an engineering manager or the head of development, where he had led 0-to-1 product creation, organizational building, and growth initiatives. In 2022, he became the tech lead and contributed to business development at a newly established joint venture of DeNA. In 2025, Yuto joined Delight Ventures. Now he serves as a temporary CTO for portfolio companies, providing support for value creation and implementing AI solutions for fund management.",
+        "ja": "2018年にNTTコムウェアへ新卒入社し、先端技術を応用した官公庁向け新規事業を推進。その後、複数スタートアップでエンジニアリングマネージャー／開発責任者として、0→1開発・組織づくり・グロースをリード。2022年にDeNAの新設ジョイントベンチャーでテックリードや事業開発を担い、2025年よりデライト・ベンチャーズに参画。投資先の一時的なCTOとしてバリューアップのための支援やファンド管理へのAI実装などに取り組んでいる。"
       }
     },
     "favorites": {
@@ -119,7 +119,9 @@
           "Rabbits",
           "Shogi",
           "Real Estate",
-          "Stock Market"
+          "Stock Market",
+          "Comedy",
+          "AI in Large Industries"
         ],
         "ja": [
           "スタートアップ",
@@ -129,7 +131,9 @@
           "うさぎ",
           "将棋",
           "不動産（マンション）",
-          "株式市場"
+          "株式市場",
+          "お笑い",
+          "巨大産業へのAI実装"
         ]
       }
     }
