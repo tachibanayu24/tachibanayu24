@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://tachibanayu24.com/me.schema.json",
+  "title": "Personal Profile",
+  "description": "Schema for personal profile data with multilingual support",
+  "type": "object",
+  "required": ["name", "title", "location", "company", "bio", "links"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "name": {
+      "type": "string",
+      "description": "Full name (used across all languages)"
+    },
+    "title": {
+      "$ref": "#/$defs/localizedString",
+      "description": "Job title"
+    },
+    "location": {
+      "$ref": "#/$defs/localizedString",
+      "description": "Location/City"
+    },
+    "company": {
+      "type": "object",
+      "required": ["name", "url", "label"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Company name"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Company URL or team page"
+        },
+        "label": {
+          "$ref": "#/$defs/localizedString",
+          "description": "Label text before company name (e.g., 'Working at')"
+        }
+      },
+      "additionalProperties": false
+    },
+    "bio": {
+      "$ref": "#/$defs/localizedString",
+      "description": "Bio text (supports \\n for line breaks)"
+    },
+    "links": {
+      "type": "array",
+      "description": "Social media and other links",
+      "items": {
+        "$ref": "#/$defs/link"
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "localizedString": {
+      "type": "object",
+      "required": ["en", "ja"],
+      "properties": {
+        "en": {
+          "type": "string",
+          "description": "English text"
+        },
+        "ja": {
+          "type": "string",
+          "description": "Japanese text"
+        }
+      },
+      "additionalProperties": false
+    },
+    "link": {
+      "type": "object",
+      "required": ["name", "url", "icon"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Display name of the link"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL of the link"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Icon identifier (maps to Simple Icons slug or fallback)",
+          "enum": [
+            "facebook",
+            "linkedin",
+            "github",
+            "x",
+            "note",
+            "blog",
+            "wantedly",
+            "qiita",
+            "zenn",
+            "resume"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

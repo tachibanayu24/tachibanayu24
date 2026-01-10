@@ -44,6 +44,47 @@ body {
     12px 12px 24px var(--shadow-dark),
     -12px -12px 24px var(--shadow-light);
   animation: fadeIn 0.5s ease-out;
+  position: relative;
+}
+
+/* Language Toggle */
+.lang-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.25rem;
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 0.25rem;
+  box-shadow:
+    inset 2px 2px 4px var(--shadow-dark),
+    inset -2px -2px 4px var(--shadow-light);
+}
+
+.lang-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.lang-btn:hover {
+  color: var(--text);
+}
+
+.lang-btn.active {
+  background: var(--bg);
+  color: var(--accent);
+  box-shadow:
+    2px 2px 4px var(--shadow-dark),
+    -2px -2px 4px var(--shadow-light);
 }
 
 /* Profile Section */

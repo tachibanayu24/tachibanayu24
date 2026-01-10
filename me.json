@@ -1,0 +1,76 @@
+{
+  "$schema": "./me.schema.json",
+  "name": "Yuto Tachibana",
+  "title": {
+    "en": "Web Developer",
+    "ja": "Webデベロッパー"
+  },
+  "location": {
+    "en": "Tokyo",
+    "ja": "東京"
+  },
+  "company": {
+    "name": "Delight Ventures, Inc.",
+    "url": "https://www.delight-ventures.com/en/team/yuto-tachibana",
+    "label": {
+      "en": "Working at",
+      "ja": "勤務先:"
+    }
+  },
+  "bio": {
+    "en": "Hey! I'm a Web Developer based in Tokyo 🇯🇵\nPassionate about building great products and delightful experiences ✨\nAlways curious, always learning 🚀",
+    "ja": "東京を拠点に活動するWebデベロッパーです 🇯🇵\n良いプロダクトと心地よい体験を作ることに情熱を注いでいます ✨\n常に好奇心を持ち、学び続けています 🚀"
+  },
+  "links": [
+    {
+      "name": "Facebook",
+      "url": "https://www.facebook.com/tachibanayu24",
+      "icon": "facebook"
+    },
+    {
+      "name": "LinkedIn",
+      "url": "https://www.linkedin.com/in/yuto-tachibana",
+      "icon": "linkedin"
+    },
+    {
+      "name": "GitHub",
+      "url": "https://github.com/tachibanayu24",
+      "icon": "github"
+    },
+    {
+      "name": "X",
+      "url": "https://x.com/tachibanayu24",
+      "icon": "x"
+    },
+    {
+      "name": "Note",
+      "url": "https://note.com/tachibanayu24",
+      "icon": "note"
+    },
+    {
+      "name": "Blog",
+      "url": "https://blog.tachibanayu24.com",
+      "icon": "blog"
+    },
+    {
+      "name": "Wantedly",
+      "url": "https://www.wantedly.com/id/tachibanayu24",
+      "icon": "wantedly"
+    },
+    {
+      "name": "Qiita",
+      "url": "https://qiita.com/tachibanayu24",
+      "icon": "qiita"
+    },
+    {
+      "name": "Zenn",
+      "url": "https://zenn.dev/tachibanayu24",
+      "icon": "zenn"
+    },
+    {
+      "name": "Resume",
+      "url": "https://resume.tachibanayu24.workers.dev/",
+      "icon": "resume"
+    }
+  ]
+}

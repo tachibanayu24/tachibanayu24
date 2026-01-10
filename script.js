@@ -1,10 +1,10 @@
-const README_URL = "./README.md";
+const ME_JSON_URL = "./me.json";
 const SIMPLE_ICONS_CDN = "https://cdn.jsdelivr.net/npm/simple-icons@v16/icons";
 
-// Map link names to Simple Icons slugs
+// Map icon identifiers to Simple Icons slugs
 const iconSlugs = {
   facebook: "facebook",
-  linkedin: null, // Not available in Simple Icons (removed due to brand guidelines)
+  linkedin: null, // Not available in Simple Icons
   github: "github",
   x: "x",
   note: "note",
@@ -23,9 +23,14 @@ const fallbackIcons = {
 // Cache for fetched SVG icons
 const iconCache = {};
 
+// Current language state
+let currentLang = localStorage.getItem("lang") || "en";
+
+// Profile data
+let profileData = null;
+
 // Fetch SVG icon from Simple Icons CDN or use fallback
 async function fetchIcon(slug, key) {
-  // Use fallback if slug is null or icon exists in fallbackIcons
   if (!slug && fallbackIcons[key]) {
     return fallbackIcons[key];
   }
@@ -38,13 +43,11 @@ async function fetchIcon(slug, key) {
     const response = await fetch(`${SIMPLE_ICONS_CDN}/${slug}.svg`);
     if (!response.ok) throw new Error("Icon not found");
     let svg = await response.text();
-    // Add fill="currentColor" for CSS color control
     svg = svg.replace("<svg", '<svg fill="currentColor"');
     iconCache[slug] = svg;
     return svg;
   } catch (error) {
     console.warn(`Failed to fetch icon: ${slug}`, error);
-    // Return fallback or simple circle icon
     return (
       fallbackIcons[key] ||
       `<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>`
@@ -52,62 +55,55 @@ async function fetchIcon(slug, key) {
   }
 }
 
+// Load profile data from me.json
 async function loadContent() {
   try {
-    const response = await fetch(README_URL);
+    const response = await fetch(ME_JSON_URL);
     if (!response.ok) throw new Error("Failed to fetch");
-    const markdown = await response.text();
-    await parseAndRender(markdown);
+    profileData = await response.json();
+    await render();
+    setupLanguageToggle();
   } catch (error) {
     document.getElementById("bio").innerHTML =
       '<span class="error">Failed to load content</span>';
     document.getElementById("links").innerHTML = "";
-    console.error("Error loading README:", error);
+    console.error("Error loading me.json:", error);
   }
 }
 
-async function parseAndRender(markdown) {
-  const lines = markdown.split("\n");
-  const bioLines = [];
-  const links = [];
+// Render profile with current language
+async function render() {
+  if (!profileData) return;
 
-  for (const line of lines) {
-    if (line.startsWith("# ")) continue;
-
-    const linkMatch = line.match(/^- \[(.+?)\]\((.+?)\)/);
-    if (linkMatch) {
-      links.push({ name: linkMatch[1], url: linkMatch[2] });
-      continue;
-    }
-
-    if (line.toLowerCase().includes("find me on")) continue;
-
-    if (links.length === 0 && line.trim()) {
-      bioLines.push(line.trim());
-    }
-  }
+  const lang = currentLang;
 
   // Render bio
+  const bioLines = profileData.bio[lang].split("\n");
+  const companyLink = `<a href="${profileData.company.url}" target="_blank" rel="noopener">${profileData.company.name}</a>`;
+
   const bioHtml = bioLines
-    .map((line) => {
-      return line.replace(
-        /\[(.+?)\]\((.+?)\)/g,
-        '<a href="$2" target="_blank" rel="noopener">$1</a>',
-      );
+    .map((line, index) => {
+      if (index === bioLines.length - 1) {
+        return `${line} ${companyLink}`;
+      }
+      return line;
     })
     .join("<br>");
+
   document.getElementById("bio").innerHTML = bioHtml;
 
   // Fetch all icons in parallel
-  const iconPromises = links.map((link) => {
-    const key = link.name.toLowerCase();
-    const slug = iconSlugs[key] !== undefined ? iconSlugs[key] : iconSlugs.blog;
-    return fetchIcon(slug, key);
+  const iconPromises = profileData.links.map((link) => {
+    const slug =
+      iconSlugs[link.icon] !== undefined
+        ? iconSlugs[link.icon]
+        : iconSlugs.blog;
+    return fetchIcon(slug, link.icon);
   });
   const icons = await Promise.all(iconPromises);
 
   // Render links with icons
-  const linksHtml = links
+  const linksHtml = profileData.links
     .map((link, index) => {
       return `<a href="${link.url}" class="link" target="_blank" rel="noopener">
         <span class="link-icon">${icons[index]}</span>
@@ -115,7 +111,39 @@ async function parseAndRender(markdown) {
       </a>`;
     })
     .join("");
+
   document.getElementById("links").innerHTML = linksHtml;
+
+  // Update language toggle active state
+  updateLanguageToggleState();
+}
+
+// Setup language toggle buttons
+function setupLanguageToggle() {
+  const toggleContainer = document.getElementById("lang-toggle");
+  if (!toggleContainer) return;
+
+  toggleContainer.addEventListener("click", (e) => {
+    const button = e.target.closest("[data-lang]");
+    if (!button) return;
+
+    const newLang = button.dataset.lang;
+    if (newLang === currentLang) return;
+
+    currentLang = newLang;
+    localStorage.setItem("lang", currentLang);
+    render();
+  });
+
+  updateLanguageToggleState();
+}
+
+// Update active state of language toggle buttons
+function updateLanguageToggleState() {
+  const buttons = document.querySelectorAll("[data-lang]");
+  buttons.forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.lang === currentLang);
+  });
 }
 
 // Initialize

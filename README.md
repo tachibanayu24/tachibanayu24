@@ -1,9 +1,9 @@
 # Yuto Tachibana
 
-I'm Yuto Tachibana
-a Web Developer 🤟  
-from Tokyo 🇯🇵  
-working at [Delight Ventures, Inc.](https://www.delight-ventures.com/en/team/yuto-tachibana) 😉
+I'm Yuto Tachibana  
+a Web Developer  
+from Tokyo  
+working at [Delight Ventures, Inc.](https://www.delight-ventures.com/en/team/yuto-tachibana)
 
 You can find me on <img width="20" src="https://raw.githubusercontent.com/tachibanayu24/tachibanayu24/main/images/wave.gif" />
 
