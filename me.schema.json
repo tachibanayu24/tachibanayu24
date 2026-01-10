@@ -4,7 +4,7 @@
   "title": "Personal Profile",
   "description": "Schema for personal profile data with multilingual support",
   "type": "object",
-  "required": ["name", "companies", "bio", "links"],
+  "required": ["name", "companies", "bio", "links", "backside"],
   "properties": {
     "$schema": {
       "type": "string",
@@ -16,32 +16,67 @@
     },
     "companies": {
       "type": "object",
-      "required": ["label", "list"],
+      "required": ["fulltime", "contract"],
       "properties": {
-        "label": {
-          "$ref": "#/$defs/localizedString",
-          "description": "Label text before company names (e.g., 'Working at')"
+        "fulltime": {
+          "$ref": "#/$defs/companyGroup",
+          "description": "Full-time employment"
         },
-        "list": {
-          "type": "array",
-          "description": "List of companies",
-          "items": {
-            "type": "object",
-            "required": ["name", "url"],
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "Company name"
-              },
-              "url": {
-                "type": "string",
-                "format": "uri",
-                "description": "Company URL or team page"
-              }
+        "contract": {
+          "$ref": "#/$defs/companyGroup",
+          "description": "Contract / Advisor positions"
+        }
+      },
+      "additionalProperties": false
+    },
+    "backside": {
+      "type": "object",
+      "description": "Content for the back side of the card",
+      "required": ["about", "favorites"],
+      "properties": {
+        "about": {
+          "type": "object",
+          "description": "Career/background description",
+          "required": ["label", "content"],
+          "properties": {
+            "label": {
+              "$ref": "#/$defs/localizedString",
+              "description": "Section label"
             },
-            "additionalProperties": false
+            "content": {
+              "$ref": "#/$defs/localizedString",
+              "description": "About text content"
+            }
           },
-          "minItems": 1
+          "additionalProperties": false
+        },
+        "favorites": {
+          "type": "object",
+          "description": "List of favorite things",
+          "required": ["label", "list"],
+          "properties": {
+            "label": {
+              "$ref": "#/$defs/localizedString",
+              "description": "Section label"
+            },
+            "list": {
+              "type": "object",
+              "description": "List of favorite items per language",
+              "required": ["en", "ja"],
+              "properties": {
+                "en": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "ja": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false
@@ -72,6 +107,38 @@
         "ja": {
           "type": "string",
           "description": "Japanese text"
+        }
+      },
+      "additionalProperties": false
+    },
+    "company": {
+      "type": "object",
+      "required": ["name", "url"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Company name"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Company URL or team page"
+        }
+      },
+      "additionalProperties": false
+    },
+    "companyGroup": {
+      "type": "object",
+      "required": ["label", "list"],
+      "properties": {
+        "label": {
+          "$ref": "#/$defs/localizedString",
+          "description": "Label text (e.g., 'Full-time at')"
+        },
+        "list": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/company" },
+          "minItems": 1
         }
       },
       "additionalProperties": false

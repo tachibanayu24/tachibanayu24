@@ -14,11 +14,6 @@ export const CONFIG = {
     NIGHT: { start: 20, end: 5 },
   },
 
-  // Time transition settings
-  TIME_TRANSITION: {
-    WINDOW: 0.5, // 30 minutes transition window
-  },
-
   // Light orb (bokeh) settings for particle system
   LIGHT_ORBS: {
     COUNT: 22,

@@ -4,56 +4,43 @@
     "en": "Yuto Tachibana",
     "ja": "立花 優斗"
   },
-  "backside": {
-    "whatIDo": {
-      "en": "I specialize in full-stack development for startups, from 0→1 product building to scaling. Comfortable with both frontend and backend.",
-      "ja": "スタートアップの0→1開発からグロースまで、フルスタックで対応できます。フロントエンド・バックエンド両方得意です。"
-    },
-    "techStack": ["TypeScript", "React", "Node.js", "Go", "AWS", "GCP"],
-    "aboutMe": {
-      "en": [
-        "Living with a rabbit named Mochi",
-        "Gym 5x/week, Sauna 3x/week",
-        "Currently into sous vide cooking"
-      ],
-      "ja": [
-        "うさぎ（もち）と暮らしてます",
-        "週5ジム、週3サウナ",
-        "低温調理にハマり中"
-      ]
-    },
-    "cta": {
-      "label": { "en": "Let's chat over coffee!", "ja": "お話しませんか？" },
-      "url": "mailto:me@tachibanayu24.com"
-    }
+  "bio": {
+    "en": "Feel free to connect with me on social media!\nFor meetings, please reach out via Messenger or X DM.",
+    "ja": "Social mediaから気軽に繋がってください！\nご面談はMessengerかXのDMよりご相談ください。"
   },
   "companies": {
-    "label": {
-      "en": "Working at",
-      "ja": "現在参画中の企業"
+    "fulltime": {
+      "label": {
+        "en": "Full-time at",
+        "ja": "フルタイム"
+      },
+      "list": [
+        {
+          "name": "Delight Ventures, Inc.",
+          "url": "https://www.delight-ventures.com/en/team/yuto-tachibana"
+        }
+      ]
     },
-    "list": [
-      {
-        "name": "Delight Ventures, Inc.",
-        "url": "https://www.delight-ventures.com/en/team/yuto-tachibana"
+    "contract": {
+      "label": {
+        "en": "Contract / Advisor",
+        "ja": "パートタイム / アドバイザー"
       },
-      {
-        "name": "Algomatic Co., Ltd.",
-        "url": "https://algomatic.jp/company"
-      },
-      {
-        "name": "Workside, Inc.",
-        "url": "https://onn-hr.com/aboutus"
-      },
-      {
-        "name": "Kazetuchi Inc.",
-        "url": "https://kztc.jp/"
-      }
-    ]
-  },
-  "bio": {
-    "en": "I'm a software engineer based in Tokyo.\nI love startups, fitness, sauna, cooking, and rabbits. Feel free to connect with me on social media below!",
-    "ja": "東京でソフトウェアエンジニアをしています。\nスタートアップ・フィットネス・サウナ・料理・うさぎが好きです。以下のSocial mediaから気軽に繋がってください！"
+      "list": [
+        {
+          "name": "Algomatic Co., Ltd.",
+          "url": "https://algomatic.jp/company"
+        },
+        {
+          "name": "Workside, Inc.",
+          "url": "https://onn-hr.com/aboutus"
+        },
+        {
+          "name": "Kazetuchi Inc.",
+          "url": "https://kztc.jp/"
+        }
+      ]
+    }
   },
   "links": [
     {
@@ -106,5 +93,45 @@
       "url": "https://resume.tachibanayu24.workers.dev/",
       "icon": "resume"
     }
-  ]
+  ],
+  "backside": {
+    "about": {
+      "label": {
+        "en": "About",
+        "ja": "経歴"
+      },
+      "content": {
+        "en": "Yuto Tachibana began his career in 2018 at NTT COMWARE, where he was engaged in new businesses with cutting-edge technologies for government agencies. Then he joined several startups as an engineering manager or the head of development, where he had led 0-to-1 product creation, organizational building, and growth initiatives. In 2022, he became the tech lead and contributed to business development at a newly established joint venture of DeNA. In 2025, Yuto joined Delight Ventures. Now he serves as a temporary CTO for portfolio companies, providing all kinds of support to drive value creation.",
+        "ja": "2018年にNTTコムウェアへ新卒入社し、先端技術を応用した官公庁向け新規事業を推進。その後、複数スタートアップでエンジニアリングマネージャー／開発責任者として、0→1開発・組織づくり・グロースをリード。2022年にDeNAの新設ジョイントベンチャーでテックリードや事業開発を担い、2025年よりデライト・ベンチャーズに参画。投資先の一時的なCTOとしてバリューアップのためのあらゆる支援に取り組んでいる。"
+      }
+    },
+    "favorites": {
+      "label": {
+        "en": "Things I Love",
+        "ja": "好きなもの"
+      },
+      "list": {
+        "en": [
+          "Startups",
+          "Fitness",
+          "Sauna",
+          "Cooking",
+          "Rabbits",
+          "Shogi",
+          "Real Estate",
+          "Stock Market"
+        ],
+        "ja": [
+          "スタートアップ",
+          "フィットネス",
+          "サウナ",
+          "料理",
+          "うさぎ",
+          "将棋",
+          "不動産（マンション）",
+          "株式市場"
+        ]
+      }
+    }
+  }
 }

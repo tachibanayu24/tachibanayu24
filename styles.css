@@ -148,13 +148,13 @@ body {
   transition: color var(--transition-duration) ease;
 }
 
-.tech-stack {
+.favorites-list {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
 
-.tech-tag {
+.favorite-tag {
   background: var(--card-bg-glass);
   color: var(--text);
   font-size: 0.75rem;
@@ -168,65 +168,6 @@ body {
     background var(--transition-duration) ease,
     color var(--transition-duration) ease,
     box-shadow var(--transition-duration) ease;
-}
-
-.about-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.about-list li {
-  color: var(--text);
-  font-size: 0.85rem;
-  line-height: 1.8;
-  padding-left: 1.25rem;
-  position: relative;
-  transition: color var(--transition-duration) ease;
-}
-
-.about-list li::before {
-  content: "•";
-  position: absolute;
-  left: 0;
-  color: var(--accent);
-}
-
-.cta-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  width: 100%;
-  margin-top: 1rem;
-  padding: 1rem;
-  background: var(--accent);
-  color: white;
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-decoration: none;
-  border-radius: 14px;
-  box-shadow:
-    4px 4px 8px var(--shadow-dark),
-    -4px -4px 8px var(--shadow-light);
-  transition:
-    all 0.2s ease,
-    background var(--transition-duration) ease,
-    box-shadow var(--transition-duration) ease;
-}
-
-.cta-button:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    6px 6px 12px var(--shadow-dark),
-    -6px -6px 12px var(--shadow-light);
-}
-
-.cta-button:active {
-  transform: translateY(0);
-  box-shadow:
-    2px 2px 4px var(--shadow-dark),
-    -2px -2px 4px var(--shadow-light);
 }
 
 /* Profile Section */
@@ -351,8 +292,9 @@ body {
   border-radius: 14px;
   text-decoration: none;
   color: var(--text);
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
   box-shadow:
     4px 4px 8px var(--shadow-dark),
     -4px -4px 8px var(--shadow-light);
@@ -431,26 +373,13 @@ body {
     font-size: 0.75rem;
   }
 
-  .flip-toggle {
-    right: 3rem;
-  }
-
   .back-section-content {
     font-size: 0.8rem;
   }
 
-  .tech-tag {
+  .favorite-tag {
     font-size: 0.7rem;
     padding: 0.3rem 0.6rem;
-  }
-
-  .about-list li {
-    font-size: 0.8rem;
-  }
-
-  .cta-button {
-    font-size: 0.85rem;
-    padding: 0.875rem;
   }
 }
 

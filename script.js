@@ -185,15 +185,25 @@ async function render() {
   const bioHtml = profileData.bio[lang].split("\n").join("<br>");
   document.getElementById("bio").innerHTML = bioHtml;
 
-  // Render companies
-  const companyLabel = profileData.companies.label[lang];
-  const companyLinks = profileData.companies.list
+  // Render companies (fulltime and contract)
+  const { fulltime, contract } = profileData.companies;
+
+  const fulltimeLabel = fulltime.label[lang];
+  const fulltimeLinks = fulltime.list
     .map(
       (c) => `<a href="${c.url}" target="_blank" rel="noopener">${c.name}</a>`,
     )
     .join(" / ");
+
+  const contractLabel = contract.label[lang];
+  const contractLinks = contract.list
+    .map(
+      (c) => `<a href="${c.url}" target="_blank" rel="noopener">${c.name}</a>`,
+    )
+    .join(" / ");
+
   document.getElementById("company").innerHTML =
-    `${companyLabel}<br>${companyLinks}`;
+    `${fulltimeLabel}<br>${fulltimeLinks}<br><br>${contractLabel}<br>${contractLinks}`;
 
   // Fetch all icons in parallel
   const iconPromises = profileData.links.map((link) => {
@@ -233,34 +243,26 @@ function renderBackside(lang) {
 
   const { backside } = profileData;
 
-  // What I Do
-  const whatIDoEl = document.getElementById("what-i-do");
-  if (whatIDoEl) {
-    whatIDoEl.textContent = backside.whatIDo[lang];
+  // About
+  const aboutLabelEl = document.getElementById("about-label");
+  const aboutContentEl = document.getElementById("about-content");
+  if (aboutLabelEl && backside.about) {
+    aboutLabelEl.textContent = backside.about.label[lang];
+  }
+  if (aboutContentEl && backside.about) {
+    aboutContentEl.textContent = backside.about.content[lang];
   }
 
-  // Tech Stack
-  const techStackEl = document.getElementById("tech-stack");
-  if (techStackEl) {
-    techStackEl.innerHTML = backside.techStack
-      .map((tech) => `<span class="tech-tag">${tech}</span>`)
+  // Favorites
+  const favoritesLabelEl = document.getElementById("favorites-label");
+  const favoritesListEl = document.getElementById("favorites-list");
+  if (favoritesLabelEl && backside.favorites) {
+    favoritesLabelEl.textContent = backside.favorites.label[lang];
+  }
+  if (favoritesListEl && backside.favorites) {
+    favoritesListEl.innerHTML = backside.favorites.list[lang]
+      .map((item) => `<span class="favorite-tag">${item}</span>`)
       .join("");
-  }
-
-  // About Me
-  const aboutMeEl = document.getElementById("about-me");
-  if (aboutMeEl) {
-    aboutMeEl.innerHTML = backside.aboutMe[lang]
-      .map((item) => `<li>${item}</li>`)
-      .join("");
-  }
-
-  // CTA Button
-  const ctaButton = document.getElementById("cta-button");
-  const ctaLabel = document.getElementById("cta-label");
-  if (ctaButton && ctaLabel) {
-    ctaButton.href = backside.cta.url;
-    ctaLabel.textContent = backside.cta.label[lang];
   }
 }
 
