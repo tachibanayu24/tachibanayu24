@@ -27,7 +27,6 @@ export class EveningClouds extends BaseEffect {
     super(TIME_PERIOD.EVENING);
     /** @type {EveningRay[]} */
     this.rays = [];
-    this.init();
   }
 
   init() {

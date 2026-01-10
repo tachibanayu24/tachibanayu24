@@ -35,7 +35,6 @@ export class MorningMist extends BaseEffect {
     super(TIME_PERIOD.MORNING);
     /** @type {Wisp[]} */
     this.wisps = [];
-    this.init();
   }
 
   init() {

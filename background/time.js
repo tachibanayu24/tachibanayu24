@@ -61,7 +61,7 @@ export function getTimeTransition() {
   const currentTime = hour + minutes / 60;
   const { TIME_PERIODS } = CONFIG;
 
-  const transitionWindow = 0.5; // 30 minutes transition window
+  const { WINDOW: transitionWindow } = CONFIG.TIME_TRANSITION;
 
   // Check if we're near a transition point
   const transitions = [

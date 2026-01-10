@@ -37,7 +37,7 @@ const SIMPLE_ICONS_CDN = "https://cdn.jsdelivr.net/npm/simple-icons@v16/icons";
  */
 const iconSlugs = {
   facebook: "facebook",
-  linkedin: null, // Not available in Simple Icons
+  linkedin: null, // Uses custom fallback SVG for design consistency
   github: "github",
   x: "x",
   note: "note",
@@ -141,10 +141,15 @@ async function loadContent() {
     await render();
     setupLanguageToggle();
   } catch (error) {
-    document.getElementById("bio").innerHTML =
-      '<span class="error">Failed to load content</span>';
-    document.getElementById("links").innerHTML = "";
-    console.error("Error loading me.json:", error);
+    const bioEl = document.getElementById("bio");
+    const linksEl = document.getElementById("links");
+    if (bioEl) {
+      bioEl.innerHTML = '<span class="error">Failed to load content</span>';
+    }
+    if (linksEl) {
+      linksEl.innerHTML = "";
+    }
+    console.error("[Script] Error loading me.json:", error);
   }
 }
 

@@ -30,6 +30,10 @@ export function createCanvas(id, zIndex) {
   `;
 
   const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    console.error(`[Canvas] Failed to get 2D context for canvas: ${id}`);
+    throw new Error(`Canvas 2D context not available for: ${id}`);
+  }
   return { canvas, ctx };
 }
 

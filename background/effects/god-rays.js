@@ -31,7 +31,6 @@ export class GodRays extends BaseEffect {
     super(TIME_PERIOD.NOON);
     /** @type {Ray[]} */
     this.rays = [];
-    this.init();
   }
 
   init() {

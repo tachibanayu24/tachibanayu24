@@ -126,11 +126,18 @@ const TIME_PALETTES = {
 
 /**
  * Parse hex color to RGB
- * @param {string} hex - Hex color string
+ * @param {string} hex - Hex color string (e.g., '#FF0000')
  * @returns {RGB} RGB color object
  */
 function hexToRgb(hex) {
+  if (typeof hex !== "string") {
+    console.warn("[Colors] hexToRgb received non-string value:", hex);
+    return { r: 0, g: 0, b: 0 };
+  }
   const result = HEX_COLOR_REGEX.exec(hex);
+  if (!result) {
+    console.warn(`[Colors] Invalid hex color format: "${hex}"`);
+  }
   return result
     ? {
         r: parseInt(result[1], 16),
@@ -178,23 +185,23 @@ function interpolateColor(color1, color2, factor) {
 }
 
 /**
- * Get the complete color palette for current time
- * @param {string} timePeriod
- * @param {number} transitionFactor - 0-1 for time transitions
- * @param {string} nextTimePeriod - Next time period for transitions
- * @returns {Object} Color palette
+ * Get the complete color palette for current time with optional transition blending
+ * @param {string} timePeriod - Target time period
+ * @param {number} transitionFactor - Transition progress (0 = previousTimePeriod, 1 = timePeriod)
+ * @param {string} previousTimePeriod - Source time period for transitions
+ * @returns {ColorPalette} Blended color palette
  */
 export function getColorPalette(
   timePeriod,
   transitionFactor = 1,
-  nextTimePeriod = null,
+  previousTimePeriod = null,
 ) {
   let palette = { ...TIME_PALETTES[timePeriod] };
 
   // Apply time transition if needed
-  // transitionFactor: 0 = fully 'from', 1 = fully 'to'
-  if (nextTimePeriod && transitionFactor > 0 && transitionFactor < 1) {
-    const fromPalette = TIME_PALETTES[nextTimePeriod];
+  // transitionFactor: 0 = fully 'previous', 1 = fully 'current'
+  if (previousTimePeriod && transitionFactor > 0 && transitionFactor < 1) {
+    const fromPalette = TIME_PALETTES[previousTimePeriod];
     palette = {
       ...palette,
       gradient: palette.gradient.map((c, i) =>
@@ -235,7 +242,10 @@ export function getColorPalette(
 }
 
 /**
- * Convert hex color to rgba with opacity
+ * Convert hex color to rgba with specified opacity
+ * @param {string} hex - Hex color string (e.g., '#FF0000')
+ * @param {number} opacity - Opacity value (0-1)
+ * @returns {string} RGBA color string (e.g., 'rgba(255, 0, 0, 0.5)')
  */
 function hexToRgba(hex, opacity) {
   const rgb = hexToRgb(hex);
