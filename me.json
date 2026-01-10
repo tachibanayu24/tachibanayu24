@@ -1,6 +1,9 @@
 {
   "$schema": "./me.schema.json",
-  "name": "Yuto Tachibana",
+  "name": {
+    "en": "Yuto Tachibana",
+    "ja": "立花 優斗"
+  },
   "companies": {
     "label": {
       "en": "Working at",

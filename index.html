@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Yuto Tachibana - Web Developer from Tokyo</title>
+    <title>Yuto Tachibana (立花 優斗) - Software Engineer from Tokyo</title>
     <meta
       name="description"
-      content="Yuto Tachibana is a Web Developer from Tokyo, Japan. Connect with me on social media, read my blog, and explore my work."
+      content="Yuto Tachibana (立花 優斗) is a Software Engineer based in Tokyo, Japan. Connect with me on social media, read my blog, and explore my work."
     />
-    <meta name="author" content="Yuto Tachibana" />
+    <meta name="author" content="Yuto Tachibana, 立花 優斗" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://tachibanayu24.com/" />
 
@@ -17,14 +17,15 @@
     <meta property="og:url" content="https://tachibanayu24.com/" />
     <meta
       property="og:title"
-      content="Yuto Tachibana - Web Developer from Tokyo"
+      content="Yuto Tachibana (立花 優斗) - Software Engineer from Tokyo"
     />
     <meta
       property="og:description"
-      content="Yuto Tachibana is a Web Developer from Tokyo, Japan. Connect with me on social media, read my blog, and explore my work."
+      content="Yuto Tachibana (立花 優斗) is a Software Engineer based in Tokyo, Japan. Connect with me on social media, read my blog, and explore my work."
     />
     <meta property="og:image" content="https://github.com/tachibanayu24.png" />
     <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ja_JP" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary" />
@@ -32,11 +33,11 @@
     <meta name="twitter:creator" content="@tachibanayu24" />
     <meta
       name="twitter:title"
-      content="Yuto Tachibana - Web Developer from Tokyo"
+      content="Yuto Tachibana (立花 優斗) - Software Engineer from Tokyo"
     />
     <meta
       name="twitter:description"
-      content="Yuto Tachibana is a Web Developer from Tokyo, Japan. Connect with me on social media, read my blog, and explore my work."
+      content="Yuto Tachibana (立花 優斗) is a Software Engineer based in Tokyo, Japan. Connect with me on social media, read my blog, and explore my work."
     />
     <meta name="twitter:image" content="https://github.com/tachibanayu24.png" />
 
@@ -46,13 +47,32 @@
         "@context": "https://schema.org",
         "@type": "Person",
         "name": "Yuto Tachibana",
+        "alternateName": ["立花 優斗", "立花優斗", "tachibanayu24"],
         "url": "https://tachibanayu24.com",
         "image": "https://github.com/tachibanayu24.png",
-        "jobTitle": "Web Developer",
-        "worksFor": {
-          "@type": "Organization",
-          "name": "Delight Ventures, Inc."
-        },
+        "jobTitle": "Software Engineer",
+        "worksFor": [
+          {
+            "@type": "Organization",
+            "name": "Delight Ventures, Inc.",
+            "url": "https://www.delight-ventures.com/"
+          },
+          {
+            "@type": "Organization",
+            "name": "Algomatic Co., Ltd.",
+            "url": "https://algomatic.jp/"
+          },
+          {
+            "@type": "Organization",
+            "name": "Workside, Inc.",
+            "url": "https://onn-hr.com/"
+          },
+          {
+            "@type": "Organization",
+            "name": "Kazetuchi Inc.",
+            "url": "https://kztc.jp/"
+          }
+        ],
         "sameAs": [
           "https://github.com/tachibanayu24",
           "https://x.com/tachibanayu24",
@@ -78,16 +98,22 @@
   <body>
     <div class="container">
       <div class="card">
-        <button class="lang-toggle" id="lang-toggle">EN</button>
+        <button
+          class="lang-toggle"
+          id="lang-toggle"
+          aria-label="Switch language"
+        >
+          EN
+        </button>
         <div class="profile">
           <div class="avatar-wrapper">
             <img
               src="https://github.com/tachibanayu24.png"
-              alt="Yuto Tachibana"
+              alt="Yuto Tachibana (立花 優斗)"
               class="avatar"
             />
           </div>
-          <h1 class="name">Yuto Tachibana</h1>
+          <h1 class="name" id="name">Yuto Tachibana</h1>
           <div class="bio" id="bio">
             <span class="loading">Loading...</span>
           </div>

@@ -77,6 +77,9 @@ async function render() {
 
   const lang = currentLang;
 
+  // Update HTML lang attribute for SEO and accessibility
+  document.documentElement.lang = lang;
+
   // Render bio
   const bioHtml = profileData.bio[lang].split("\n").join("<br>");
   document.getElementById("bio").innerHTML = bioHtml;
@@ -125,18 +128,21 @@ function setupLanguageToggle() {
   toggleBtn.addEventListener("click", () => {
     currentLang = currentLang === "en" ? "ja" : "en";
     localStorage.setItem("lang", currentLang);
-    updateLanguageToggleState();
     render();
   });
 
   updateLanguageToggleState();
 }
 
-// Update language toggle button text
+// Update language toggle button text and aria-label
 function updateLanguageToggleState() {
   const toggleBtn = document.getElementById("lang-toggle");
   if (toggleBtn) {
     toggleBtn.textContent = currentLang.toUpperCase();
+    toggleBtn.setAttribute(
+      "aria-label",
+      currentLang === "en" ? "言語を切り替え" : "Switch language",
+    );
   }
 }
 
