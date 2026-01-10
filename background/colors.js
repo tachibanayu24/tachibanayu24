@@ -8,6 +8,9 @@
 import { TIME_PERIOD } from "./time.js";
 import { CONFIG } from "./config.js";
 
+// Pre-compiled regex for hex color parsing
+const HEX_COLOR_REGEX = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
+
 /**
  * Color palettes for each time period
  */
@@ -90,7 +93,7 @@ const TIME_PALETTES = {
  * Parse hex color to RGB
  */
 function hexToRgb(hex) {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  const result = HEX_COLOR_REGEX.exec(hex);
   return result
     ? {
         r: parseInt(result[1], 16),

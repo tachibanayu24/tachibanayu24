@@ -18,7 +18,6 @@ const OPACITY_REGEX = /[\d.]+\)$/;
 const DEPTH_LAYERS = {
   // Far background - very large, very subtle
   far: {
-    depth: 0,
     sizeMultiplier: 0.6,
     speedMultiplier: 0.2,
     opacityMultiplier: 0.5,
@@ -26,7 +25,6 @@ const DEPTH_LAYERS = {
   },
   // Middle layer
   middle: {
-    depth: 1,
     sizeMultiplier: 1.0,
     speedMultiplier: 0.5,
     opacityMultiplier: 0.7,
@@ -34,7 +32,6 @@ const DEPTH_LAYERS = {
   },
   // Front/close - largest, most visible
   front: {
-    depth: 2,
     sizeMultiplier: 1.4,
     speedMultiplier: 0.8,
     opacityMultiplier: 1.0,
@@ -47,8 +44,7 @@ const DEPTH_LAYERS = {
  * Large, diffuse, and very subtle
  */
 class LightOrb {
-  constructor(canvas, config, depthLayer) {
-    this.canvas = canvas;
+  constructor(config, depthLayer) {
     this.config = config;
     this.depthLayer = depthLayer;
     this.reset(true);
@@ -62,11 +58,11 @@ class LightOrb {
     const baseSize = min + Math.random() * (max - min);
     this.size = baseSize * layer.sizeMultiplier;
 
-    // Position - spread across canvas with some margin
-    this.x = Math.random() * this.canvas.width;
-    this.y = initial
-      ? Math.random() * this.canvas.height
-      : this.canvas.height + this.size * 0.5;
+    // Position - spread across viewport
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    this.x = Math.random() * w;
+    this.y = initial ? Math.random() * h : h + this.size * 0.5;
 
     // Very slow, organic movement
     this.phase = Math.random() * Math.PI * 2;
@@ -153,8 +149,7 @@ class LightOrb {
  * Ambient Light System with Parallax Depth
  */
 export class ParticleSystem {
-  constructor(canvas) {
-    this.canvas = canvas;
+  constructor() {
     this.layers = {
       far: [],
       middle: [],
@@ -197,9 +192,7 @@ export class ParticleSystem {
       const count = Math.floor(totalCount * layerConfig.count);
 
       for (let i = 0; i < count; i++) {
-        this.layers[layerName].push(
-          new LightOrb(this.canvas, baseConfig, layerConfig),
-        );
+        this.layers[layerName].push(new LightOrb(baseConfig, layerConfig));
       }
     }
   }

@@ -23,8 +23,25 @@ const fallbackIcons = {
 // Cache for fetched SVG icons
 const iconCache = {};
 
+// Safe localStorage access (may throw in private browsing)
+function getStoredLang() {
+  try {
+    return localStorage.getItem("lang");
+  } catch {
+    return null;
+  }
+}
+
+function setStoredLang(lang) {
+  try {
+    localStorage.setItem("lang", lang);
+  } catch {
+    // Ignore storage errors in private browsing
+  }
+}
+
 // Current language state
-let currentLang = localStorage.getItem("lang") || "en";
+let currentLang = getStoredLang() || "en";
 
 // Profile data
 let profileData = null;
@@ -133,7 +150,7 @@ function setupLanguageToggle() {
 
   toggleBtn.addEventListener("click", () => {
     currentLang = currentLang === "en" ? "ja" : "en";
-    localStorage.setItem("lang", currentLang);
+    setStoredLang(currentLang);
     render();
   });
 

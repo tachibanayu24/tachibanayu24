@@ -23,8 +23,7 @@ const MIST_CREAM = "245, 255, 210";
  * Creates an ethereal, peaceful morning atmosphere
  */
 export class MorningMist {
-  constructor(canvas) {
-    this.canvas = canvas;
+  constructor() {
     this.time = 0;
     this.isActive = false;
     this.wisps = [];
@@ -141,8 +140,7 @@ export class MorningMist {
  * God Rays - Light beams streaming from above
  */
 export class GodRays {
-  constructor(canvas) {
-    this.canvas = canvas;
+  constructor() {
     this.time = 0;
     this.isActive = false;
     this.rays = [];
@@ -363,8 +361,7 @@ class LightStreak {
 }
 
 export class DustParticles {
-  constructor(canvas) {
-    this.canvas = canvas;
+  constructor() {
     this.streaks = [];
     this.isActive = false;
   }
@@ -419,8 +416,7 @@ export class DustParticles {
  * Creates a warm, golden hour atmosphere
  */
 export class EveningClouds {
-  constructor(canvas) {
-    this.canvas = canvas;
+  constructor() {
     this.time = 0;
     this.isActive = false;
     this.rays = [];
@@ -631,8 +627,7 @@ class Firefly {
  * Only active during NIGHT
  */
 export class FireflySystem {
-  constructor(canvas) {
-    this.canvas = canvas;
+  constructor() {
     this.fireflies = [];
     this.isActive = false;
     this.count = 12;

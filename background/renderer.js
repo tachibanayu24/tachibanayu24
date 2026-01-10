@@ -14,6 +14,9 @@ import {
   FireflySystem,
 } from "./effects.js";
 
+// Pre-compiled regex for opacity replacement
+const OPACITY_REGEX = /[\d.]+\)$/;
+
 /**
  * Background Renderer
  * Manages the canvas and animation loop
@@ -49,6 +52,9 @@ export class BackgroundRenderer {
 
     // Gradient breathing effect
     this.gradientTime = 0;
+
+    // Cache for parsed gradient colors (RGB values)
+    this.gradientColorsCache = null;
 
     // Bind methods
     this.animate = this.animate.bind(this);
@@ -117,15 +123,15 @@ export class BackgroundRenderer {
     // Set size
     this.resize();
 
-    // Initialize particle system (on background canvas)
-    this.particleSystem = new ParticleSystem(this.canvas);
+    // Initialize particle system
+    this.particleSystem = new ParticleSystem();
 
-    // Initialize time-specific effects (on overlay canvas)
-    this.morningMist = new MorningMist(this.overlayCanvas);
-    this.godRays = new GodRays(this.overlayCanvas);
-    this.dustParticles = new DustParticles(this.overlayCanvas);
-    this.eveningClouds = new EveningClouds(this.overlayCanvas);
-    this.fireflySystem = new FireflySystem(this.overlayCanvas);
+    // Initialize time-specific effects
+    this.morningMist = new MorningMist();
+    this.godRays = new GodRays();
+    this.dustParticles = new DustParticles();
+    this.eveningClouds = new EveningClouds();
+    this.fireflySystem = new FireflySystem();
   }
 
   /**
@@ -215,6 +221,16 @@ export class BackgroundRenderer {
     this.currentPalette = palette;
     this.currentTimePeriod = timePeriod;
 
+    // Cache parsed gradient colors for breatheColor optimization
+    this.gradientColorsCache = palette.gradient.map((hex) => {
+      const h = hex.replace("#", "");
+      return {
+        r: parseInt(h.slice(0, 2), 16),
+        g: parseInt(h.slice(2, 4), 16),
+        b: parseInt(h.slice(4, 6), 16),
+      };
+    });
+
     this.particleSystem.init(timePeriod);
 
     // Update all time-specific effects
@@ -294,7 +310,7 @@ export class BackgroundRenderer {
   drawBackground() {
     if (!this.currentPalette) return;
 
-    const { gradient, gradientAngle = 180 } = this.currentPalette;
+    const { gradientAngle = 180 } = this.currentPalette;
     const w = this.width;
     const h = this.height;
 
@@ -325,16 +341,19 @@ export class BackgroundRenderer {
 
     const bgGradient = this.ctx.createLinearGradient(x0, y0, x1, y1);
 
-    // Apply breathing to gradient colors
-    gradient.forEach((color, index) => {
-      const adjustedColor = this.breatheColor(
-        color,
-        breathCycle,
-        index,
-        breathIntensity,
-      );
-      bgGradient.addColorStop(index / (gradient.length - 1), adjustedColor);
-    });
+    // Apply breathing to gradient colors using cached RGB values
+    const colors = this.gradientColorsCache;
+    if (colors) {
+      for (let i = 0; i < colors.length; i++) {
+        const adjustedColor = this.breatheColor(
+          colors[i],
+          breathCycle,
+          i,
+          breathIntensity,
+        );
+        bgGradient.addColorStop(i / (colors.length - 1), adjustedColor);
+      }
+    }
 
     this.ctx.fillStyle = bgGradient;
     this.ctx.fillRect(0, 0, w, h);
@@ -342,22 +361,17 @@ export class BackgroundRenderer {
 
   /**
    * Subtly adjust color brightness for breathing effect
+   * @param {{ r: number, g: number, b: number }} rgb - Pre-parsed RGB values
    */
-  breatheColor(hexColor, time, index, intensity) {
-    // Parse hex to RGB
-    const hex = hexColor.replace("#", "");
-    let r = parseInt(hex.slice(0, 2), 16);
-    let g = parseInt(hex.slice(2, 4), 16);
-    let b = parseInt(hex.slice(4, 6), 16);
-
+  breatheColor(rgb, time, index, intensity) {
     // Different phase for each color stop for wave effect
     const phase = index * 0.5;
     const adjustment = 1 + Math.sin(time + phase) * intensity;
 
     // Apply adjustment
-    r = Math.min(255, Math.max(0, Math.round(r * adjustment)));
-    g = Math.min(255, Math.max(0, Math.round(g * adjustment)));
-    b = Math.min(255, Math.max(0, Math.round(b * adjustment)));
+    const r = Math.min(255, Math.max(0, Math.round(rgb.r * adjustment)));
+    const g = Math.min(255, Math.max(0, Math.round(rgb.g * adjustment)));
+    const b = Math.min(255, Math.max(0, Math.round(rgb.b * adjustment)));
 
     // Convert back to hex
     return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
@@ -401,17 +415,21 @@ export class BackgroundRenderer {
     const isMoon = celestial.type === "moon";
     const intensity = isMoon ? 0.6 : 1.0;
 
+    // Helper to replace opacity in rgba color
+    const replaceOpacity = (color, opacity) =>
+      color.replace(OPACITY_REGEX, `${opacity})`);
+
     ambientLight.addColorStop(
       0,
-      celestial.glowColor.replace(/[\d.]+\)$/, `${0.25 * intensity})`),
+      replaceOpacity(celestial.glowColor, 0.25 * intensity),
     );
     ambientLight.addColorStop(
       0.2,
-      celestial.glowColor.replace(/[\d.]+\)$/, `${0.12 * intensity})`),
+      replaceOpacity(celestial.glowColor, 0.12 * intensity),
     );
     ambientLight.addColorStop(
       0.5,
-      celestial.glowColor.replace(/[\d.]+\)$/, `${0.05 * intensity})`),
+      replaceOpacity(celestial.glowColor, 0.05 * intensity),
     );
     ambientLight.addColorStop(1, "transparent");
 
@@ -431,15 +449,15 @@ export class BackgroundRenderer {
 
     accentLight.addColorStop(
       0,
-      celestial.color.replace(/[\d.]+\)$/, `${0.15 * intensity})`),
+      replaceOpacity(celestial.color, 0.15 * intensity),
     );
     accentLight.addColorStop(
       0.3,
-      celestial.color.replace(/[\d.]+\)$/, `${0.06 * intensity})`),
+      replaceOpacity(celestial.color, 0.06 * intensity),
     );
     accentLight.addColorStop(
       0.6,
-      celestial.color.replace(/[\d.]+\)$/, `${0.02 * intensity})`),
+      replaceOpacity(celestial.color, 0.02 * intensity),
     );
     accentLight.addColorStop(1, "transparent");
 
