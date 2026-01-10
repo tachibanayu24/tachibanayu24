@@ -2,11 +2,14 @@
 
 [English](./README.md)
 
-東京でソフトウェアエンジニアをしています。  
-スタートアップ・フィットネス・サウナ・料理・うさぎが好きです。以下のSocial mediaから気軽に繋がってください！
+Social mediaから気軽に繋がってください！  
+ご面談はMessengerかXのDMよりご相談ください。
 
-現在参画中の企業
-[Delight Ventures, Inc.](https://www.delight-ventures.com/en/team/yuto-tachibana) / [Algomatic Co., Ltd.](https://algomatic.jp/company) / [Workside, Inc.](https://onn-hr.com/aboutus) / [Kazetuchi Inc.](https://kztc.jp/)
+フルタイム
+[Delight Ventures, Inc.](https://www.delight-ventures.com/en/team/yuto-tachibana)
+
+パートタイム / アドバイザー
+[Algomatic Co., Ltd.](https://algomatic.jp/company) / [Workside, Inc.](https://onn-hr.com/aboutus) / [Kazetuchi Inc.](https://kztc.jp/)
 
 SNSなどはこちら <img width="20" src="https://raw.githubusercontent.com/tachibanayu24/tachibanayu24/main/images/wave.gif" />
 

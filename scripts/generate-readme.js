@@ -25,10 +25,14 @@ function generateReadme(data, lang) {
   const bioSection = data.bio[lang].split("\n").join("  \n");
 
   // Companies section
-  const companyLinks = data.companies.list
+  const { fulltime, contract } = data.companies;
+  const fulltimeLinks = fulltime.list
     .map((c) => `[${c.name}](${c.url})`)
     .join(" / ");
-  const companySection = `${data.companies.label[lang]}\n${companyLinks}`;
+  const contractLinks = contract.list
+    .map((c) => `[${c.name}](${c.url})`)
+    .join(" / ");
+  const companySection = `${fulltime.label[lang]}\n${fulltimeLinks}\n\n${contract.label[lang]}\n${contractLinks}`;
 
   // Links section
   const linksSection = data.links
