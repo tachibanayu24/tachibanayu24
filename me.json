@@ -1,21 +1,29 @@
 {
   "$schema": "./me.schema.json",
   "name": "Yuto Tachibana",
-  "title": {
-    "en": "Web Developer",
-    "ja": "Webデベロッパー"
-  },
-  "location": {
-    "en": "Tokyo",
-    "ja": "東京"
-  },
-  "company": {
-    "name": "Delight Ventures, Inc.",
-    "url": "https://www.delight-ventures.com/en/team/yuto-tachibana",
+  "companies": {
     "label": {
       "en": "Working at",
-      "ja": "勤務先:"
-    }
+      "ja": "現在参画中の企業"
+    },
+    "list": [
+      {
+        "name": "Delight Ventures, Inc.",
+        "url": "https://www.delight-ventures.com/en/team/yuto-tachibana"
+      },
+      {
+        "name": "Algomatic Co., Ltd.",
+        "url": "https://algomatic.jp/company"
+      },
+      {
+        "name": "Workside, Inc.",
+        "url": "https://onn-hr.com/aboutus"
+      },
+      {
+        "name": "Kazetuchi Inc.",
+        "url": "https://kztc.jp/"
+      }
+    ]
   },
   "bio": {
     "en": "Hey! I'm a Web Developer based in Tokyo 🇯🇵\nPassionate about building great products and delightful experiences ✨\nAlways curious, always learning 🚀",

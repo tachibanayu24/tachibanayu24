@@ -81,11 +81,15 @@ async function render() {
   const bioHtml = profileData.bio[lang].split("\n").join("<br>");
   document.getElementById("bio").innerHTML = bioHtml;
 
-  // Render company
-  const companyLabel = profileData.company.label[lang];
-  const companyLink = `<a href="${profileData.company.url}" target="_blank" rel="noopener">${profileData.company.name}</a>`;
+  // Render companies
+  const companyLabel = profileData.companies.label[lang];
+  const companyLinks = profileData.companies.list
+    .map(
+      (c) => `<a href="${c.url}" target="_blank" rel="noopener">${c.name}</a>`,
+    )
+    .join(" / ");
   document.getElementById("company").innerHTML =
-    `${companyLabel} ${companyLink}`;
+    `${companyLabel}<br>${companyLinks}`;
 
   // Fetch all icons in parallel
   const iconPromises = profileData.links.map((link) => {

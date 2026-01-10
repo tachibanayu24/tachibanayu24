@@ -1,10 +1,13 @@
 # Yuto Tachibana
 
+[English](./README.md)
+
 東京を拠点に活動するWebデベロッパーです 🇯🇵  
 良いプロダクトと心地よい体験を作ることに情熱を注いでいます ✨  
 常に好奇心を持ち、学び続けています 🚀
 
-勤務先: [Delight Ventures, Inc.](https://www.delight-ventures.com/en/team/yuto-tachibana)
+勤務先:
+[Delight Ventures, Inc.](https://www.delight-ventures.com/en/team/yuto-tachibana) / [Algomatic Co., Ltd.](https://algomatic.jp/company) / [Workside, Inc.](https://onn-hr.com/aboutus) / [Kazetuchi Inc.](https://kztc.jp/)
 
 SNSなどはこちら <img width="20" src="https://raw.githubusercontent.com/tachibanayu24/tachibanayu24/main/images/wave.gif" />
 

@@ -4,7 +4,7 @@
   "title": "Personal Profile",
   "description": "Schema for personal profile data with multilingual support",
   "type": "object",
-  "required": ["name", "title", "location", "company", "bio", "links"],
+  "required": ["name", "companies", "bio", "links"],
   "properties": {
     "$schema": {
       "type": "string",
@@ -14,30 +14,34 @@
       "type": "string",
       "description": "Full name (used across all languages)"
     },
-    "title": {
-      "$ref": "#/$defs/localizedString",
-      "description": "Job title"
-    },
-    "location": {
-      "$ref": "#/$defs/localizedString",
-      "description": "Location/City"
-    },
-    "company": {
+    "companies": {
       "type": "object",
-      "required": ["name", "url", "label"],
+      "required": ["label", "list"],
       "properties": {
-        "name": {
-          "type": "string",
-          "description": "Company name"
-        },
-        "url": {
-          "type": "string",
-          "format": "uri",
-          "description": "Company URL or team page"
-        },
         "label": {
           "$ref": "#/$defs/localizedString",
-          "description": "Label text before company name (e.g., 'Working at')"
+          "description": "Label text before company names (e.g., 'Working at')"
+        },
+        "list": {
+          "type": "array",
+          "description": "List of companies",
+          "items": {
+            "type": "object",
+            "required": ["name", "url"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Company name"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "Company URL or team page"
+              }
+            },
+            "additionalProperties": false
+          },
+          "minItems": 1
         }
       },
       "additionalProperties": false

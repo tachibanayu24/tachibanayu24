@@ -17,11 +17,18 @@ const meJson = JSON.parse(readFileSync(join(rootDir, "me.json"), "utf-8"));
 
 // Generate README content for a specific language
 function generateReadme(data, lang) {
+  // Language switch link
+  const langSwitch =
+    lang === "ja" ? "[English](./README.md)" : "[日本語](./README.ja.md)";
+
   // Bio section
   const bioSection = data.bio[lang].split("\n").join("  \n");
 
-  // Company section
-  const companySection = `${data.company.label[lang]} [${data.company.name}](${data.company.url})`;
+  // Companies section
+  const companyLinks = data.companies.list
+    .map((c) => `[${c.name}](${c.url})`)
+    .join(" / ");
+  const companySection = `${data.companies.label[lang]}\n${companyLinks}`;
 
   // Links section
   const linksSection = data.links
@@ -33,6 +40,8 @@ function generateReadme(data, lang) {
 
   // Generate full README
   return `# ${data.name}
+
+${langSwitch}
 
 ${bioSection}
 
