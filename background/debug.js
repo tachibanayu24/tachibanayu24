@@ -5,12 +5,7 @@
  * DELETE THIS FILE when done testing.
  */
 
-import {
-  setDebugConditions,
-  TIME_PERIOD,
-  SEASON,
-  WEATHER_TYPE,
-} from "./index.js";
+import { setDebugConditions, TIME_PERIOD, SEASON } from "./index.js";
 
 const PANEL_STYLES = `
   position: fixed;
@@ -103,7 +98,6 @@ class DebugPanel {
     this.currentState = {
       timePeriod: null,
       season: null,
-      weatherType: null,
     };
     this.isAutoMode = true;
     this.panel = null;
@@ -149,16 +143,6 @@ class DebugPanel {
         </div>
       </div>
 
-      <div style="${SECTION_STYLES}">
-        <span style="${LABEL_STYLES}">Weather</span>
-        <div style="${BUTTON_GROUP_STYLES}" data-group="weather">
-          <button data-weather="CLEAR" style="${BUTTON_STYLES}">Clear</button>
-          <button data-weather="CLOUDS" style="${BUTTON_STYLES}">Clouds</button>
-          <button data-weather="RAIN" style="${BUTTON_STYLES}">Rain</button>
-          <button data-weather="SNOW" style="${BUTTON_STYLES}">Snow</button>
-        </div>
-      </div>
-
       <div style="font-size: 10px; color: #666; margin-bottom: 0.5rem;" id="debug-status">
         Mode: Auto
       </div>
@@ -186,15 +170,6 @@ class DebugPanel {
       btn.addEventListener("click", () => {
         this.currentState.season = SEASON[btn.dataset.season];
         this.updateActiveStates("season", btn);
-        this.applyDebugState();
-      });
-    });
-
-    // Weather buttons
-    this.panel.querySelectorAll("[data-weather]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        this.currentState.weatherType = WEATHER_TYPE[btn.dataset.weather];
-        this.updateActiveStates("weather", btn);
         this.applyDebugState();
       });
     });
@@ -235,8 +210,6 @@ class DebugPanel {
     if (this.currentState.timePeriod)
       options.timePeriod = this.currentState.timePeriod;
     if (this.currentState.season) options.season = this.currentState.season;
-    if (this.currentState.weatherType)
-      options.weatherType = this.currentState.weatherType;
 
     setDebugConditions(options);
   }
@@ -251,8 +224,6 @@ class DebugPanel {
       if (this.currentState.timePeriod)
         parts.push(this.currentState.timePeriod);
       if (this.currentState.season) parts.push(this.currentState.season);
-      if (this.currentState.weatherType)
-        parts.push(this.currentState.weatherType);
       statusEl.textContent = `Debug: ${parts.join(" / ")}`;
       statusEl.style.color = "#7cb3ff";
     }
@@ -262,7 +233,6 @@ class DebugPanel {
     this.currentState = {
       timePeriod: null,
       season: null,
-      weatherType: null,
     };
     this.isAutoMode = true;
 

@@ -1,8 +1,8 @@
 /**
  * Background Animation System - Season Module
  *
- * Determines the current season based on date and hemisphere.
- * Supports both Northern and Southern hemisphere calculations.
+ * Determines the current season based on date.
+ * Uses Northern Hemisphere season calculation.
  */
 
 export const SEASON = {
@@ -33,70 +33,39 @@ function getDayOfYear(date = new Date()) {
 }
 
 /**
- * Determine if user is in Southern Hemisphere based on timezone or geolocation
- * @param {number|null} latitude - Optional latitude
- * @returns {boolean}
- */
-export function isSouthernHemisphere(latitude = null) {
-  if (latitude !== null) {
-    return latitude < 0;
-  }
-  // Fallback: Use timezone offset heuristic (not always accurate)
-  // Southern hemisphere countries generally have positive timezone offsets
-  // This is a rough approximation
-  return false; // Default to Northern hemisphere
-}
-
-/**
- * Get current season based on date and hemisphere
- * @param {boolean} southern - Whether user is in Southern Hemisphere
+ * Get current season based on date
  * @returns {string} One of SEASON values
  */
-export function getSeason(southern = false) {
+export function getSeason() {
   const day = getDayOfYear();
 
-  let season;
   if (
     day >= SEASON_BOUNDARIES.SPRING_START &&
     day < SEASON_BOUNDARIES.SUMMER_START
   ) {
-    season = SEASON.SPRING;
+    return SEASON.SPRING;
   } else if (
     day >= SEASON_BOUNDARIES.SUMMER_START &&
     day < SEASON_BOUNDARIES.AUTUMN_START
   ) {
-    season = SEASON.SUMMER;
+    return SEASON.SUMMER;
   } else if (
     day >= SEASON_BOUNDARIES.AUTUMN_START &&
     day < SEASON_BOUNDARIES.WINTER_START
   ) {
-    season = SEASON.AUTUMN;
+    return SEASON.AUTUMN;
   } else {
-    season = SEASON.WINTER;
+    return SEASON.WINTER;
   }
-
-  // Flip seasons for Southern Hemisphere
-  if (southern) {
-    const flip = {
-      [SEASON.SPRING]: SEASON.AUTUMN,
-      [SEASON.SUMMER]: SEASON.WINTER,
-      [SEASON.AUTUMN]: SEASON.SPRING,
-      [SEASON.WINTER]: SEASON.SUMMER,
-    };
-    season = flip[season];
-  }
-
-  return season;
 }
 
 /**
  * Get season progress (0-1) within the current season
- * @param {boolean} southern
  * @returns {number}
  */
-export function getSeasonProgress(southern = false) {
+export function getSeasonProgress() {
   const day = getDayOfYear();
-  const season = getSeason(southern);
+  const season = getSeason();
 
   const boundaries = {
     [SEASON.SPRING]: [
@@ -137,28 +106,28 @@ export function getSeasonCharacteristics(season) {
   switch (season) {
     case SEASON.SPRING:
       return {
-        hueShift: -10, // Slightly pink/green
+        hueShift: -10,
         saturation: 1.1,
         motif: "petal",
         colorAccent: "rgba(255, 182, 193, 0.3)",
       };
     case SEASON.SUMMER:
       return {
-        hueShift: 10, // Warm/golden
+        hueShift: 10,
         saturation: 1.2,
         motif: "wave",
         colorAccent: "rgba(135, 206, 235, 0.3)",
       };
     case SEASON.AUTUMN:
       return {
-        hueShift: 25, // Orange/amber
+        hueShift: 25,
         saturation: 1.0,
         motif: "leaf",
         colorAccent: "rgba(210, 105, 30, 0.3)",
       };
     case SEASON.WINTER:
       return {
-        hueShift: -20, // Cool/blue
+        hueShift: -20,
         saturation: 0.8,
         motif: "crystal",
         colorAccent: "rgba(176, 224, 230, 0.3)",

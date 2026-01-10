@@ -6,10 +6,6 @@
  */
 
 export const CONFIG = {
-  // OpenWeatherMap API (free tier available)
-  // Get your API key at: https://openweathermap.org/api
-  WEATHER_API_KEY: "", // Leave empty to skip weather features
-
   // Time periods (24-hour format)
   TIME_PERIODS: {
     MORNING: { start: 5, end: 11 },
@@ -49,42 +45,19 @@ export const CONFIG = {
     },
   },
 
-  // Weather-specific particle configurations
-  WEATHER_PARTICLES: {
-    CLEAR: {
-      type: "float",
-      count: 60,
-      color: "rgba(255, 220, 120, 0.85)",
-      speed: 0.12,
-      size: { min: 8, max: 20 },
-    },
-    CLOUDS: {
-      type: "blob",
-      count: 15,
-      color: "rgba(180, 190, 210, 0.4)",
-      speed: 0.05,
-      size: { min: 150, max: 350 },
-    },
-    RAIN: {
-      type: "fall",
-      count: 150,
-      color: "rgba(100, 140, 200, 0.6)",
-      speed: 4,
-      size: { min: 2, max: 4 },
-    },
-    SNOW: {
-      type: "fall",
-      count: 80,
-      color: "rgba(255, 255, 255, 0.9)",
-      speed: 0.6,
-      size: { min: 3, max: 8 },
-    },
-    DEFAULT: {
-      type: "float",
-      count: 35,
-      color: "rgba(120, 140, 180, 0.5)",
-      speed: 0.2,
-      size: { min: 4, max: 10 },
-    },
+  // Floating particle configuration (distributed across 3 depth layers)
+  PARTICLES: {
+    count: 50,
+    color: "rgba(120, 140, 180, 0.5)",
+    speed: 0.12,
+    size: { min: 8, max: 20 },
+  },
+
+  // Season-specific accent particle colors
+  SEASON_ACCENTS: {
+    SPRING: "rgba(255, 182, 193, 0.6)",
+    SUMMER: "rgba(255, 220, 120, 0.5)",
+    AUTUMN: "rgba(255, 140, 80, 0.55)",
+    WINTER: "rgba(200, 220, 255, 0.5)",
   },
 };

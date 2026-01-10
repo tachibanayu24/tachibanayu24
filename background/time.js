@@ -115,11 +115,26 @@ export function getTimeTransition() {
   ];
 
   for (const { boundary, from, to } of transitions) {
-    const distance = currentTime - boundary;
+    let distance = currentTime - boundary;
+
+    // Handle midnight crossing for NIGHT -> MORNING transition
+    // If we're in early morning hours (0-5) and checking MORNING boundary (5),
+    // the calculation works normally.
+    // If we're late at night (23.5+) and boundary is early morning,
+    // we need to adjust for the day wrap.
+    if (boundary < 6 && currentTime > 20) {
+      // Late night, approaching next day's morning
+      distance = currentTime - (boundary + 24);
+    }
+
     if (Math.abs(distance) <= transitionWindow) {
       // Smooth easing function
       const factor = (distance + transitionWindow) / (transitionWindow * 2);
-      return { from, to, factor: easeInOutCubic(factor) };
+      return {
+        from,
+        to,
+        factor: easeInOutCubic(Math.max(0, Math.min(1, factor))),
+      };
     }
   }
 

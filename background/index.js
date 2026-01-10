@@ -2,7 +2,7 @@
  * Background Animation System - Main Entry Point
  *
  * Orchestrates all modules to create a dynamic, context-aware background.
- * Responds to time of day, season, and weather conditions.
+ * Responds to time of day and season.
  *
  * Usage:
  *   import { initBackground } from './background/index.js';
@@ -10,16 +10,9 @@
  */
 
 import { getTimePeriod, getTimeTransition } from "./time.js";
-import { getSeason, isSouthernHemisphere } from "./season.js";
-import {
-  getWeather,
-  getCachedWeatherType,
-  getCachedLatitude,
-  WEATHER_TYPE,
-} from "./weather.js";
+import { getSeason } from "./season.js";
 import { getColorPalette, applyPaletteToCss } from "./colors.js";
 import { BackgroundRenderer } from "./renderer.js";
-import { CONFIG } from "./config.js";
 
 // Global state
 let renderer = null;
@@ -27,16 +20,14 @@ let updateInterval = null;
 let currentState = {
   timePeriod: null,
   season: null,
-  weatherType: WEATHER_TYPE.DEFAULT,
   palette: null,
 };
 
 /**
  * Initialize the background animation system
- * @param {Object} options - Configuration options
  * @returns {Object} API for controlling the background
  */
-export async function initBackground(options = {}) {
+export async function initBackground() {
   console.log("[Background] Initializing dynamic background system...");
 
   // Create and initialize renderer
@@ -44,7 +35,7 @@ export async function initBackground(options = {}) {
   renderer.init();
 
   // Get initial conditions
-  await updateConditions();
+  updateConditions();
 
   // Start animation
   renderer.start();
@@ -55,7 +46,6 @@ export async function initBackground(options = {}) {
   console.log("[Background] Background system initialized", {
     timePeriod: currentState.timePeriod,
     season: currentState.season,
-    weatherType: currentState.weatherType,
   });
 
   // Return public API
@@ -75,48 +65,30 @@ export async function initBackground(options = {}) {
 /**
  * Update all environmental conditions and apply changes
  */
-async function updateConditions() {
+function updateConditions() {
   // Get time-based info
   const timePeriod = getTimePeriod();
   const timeTransition = getTimeTransition();
 
-  // Get location-based info (may need async weather fetch)
-  let latitude = getCachedLatitude();
-  let weatherType = getCachedWeatherType();
+  // Get season
+  const season = getSeason();
 
-  // Fetch weather if not cached
-  if (!latitude || weatherType === WEATHER_TYPE.DEFAULT) {
-    const weather = await getWeather();
-    if (weather) {
-      weatherType = weather.type;
-      latitude = getCachedLatitude();
-    }
-  }
-
-  // Determine hemisphere and season
-  const isSouthern = isSouthernHemisphere(latitude);
-  const season = getSeason(isSouthern);
-
-  // Get color palette based on all conditions
+  // Get color palette based on conditions
   const palette = getColorPalette(
     timeTransition.to,
     season,
-    weatherType,
     timeTransition.factor,
     timeTransition.from !== timeTransition.to ? timeTransition.from : null,
   );
 
   // Check if anything changed
   const changed =
-    currentState.timePeriod !== timePeriod ||
-    currentState.season !== season ||
-    currentState.weatherType !== weatherType;
+    currentState.timePeriod !== timePeriod || currentState.season !== season;
 
   // Update state
   currentState = {
     timePeriod,
     season,
-    weatherType,
     palette,
   };
 
@@ -125,14 +97,13 @@ async function updateConditions() {
 
   // Update renderer
   if (renderer) {
-    renderer.updateConditions(weatherType, timePeriod, season, palette);
+    renderer.updateConditions(timePeriod, season, palette);
   }
 
   if (changed) {
     console.log("[Background] Conditions updated", {
       timePeriod,
       season,
-      weatherType,
     });
   }
 }
@@ -145,14 +116,6 @@ function startPeriodicUpdates() {
   updateInterval = setInterval(() => {
     updateConditions();
   }, 60000);
-
-  // Also update weather every 30 minutes
-  setInterval(async () => {
-    const weather = await getWeather();
-    if (weather && weather.type !== currentState.weatherType) {
-      await updateConditions();
-    }
-  }, 30 * 60000);
 }
 
 /**
@@ -174,23 +137,19 @@ export function setDebugConditions(options = {}) {
     return;
   }
 
-  const {
-    timePeriod = currentState.timePeriod,
-    season = currentState.season,
-    weatherType = currentState.weatherType,
-  } = options;
+  const { timePeriod = currentState.timePeriod, season = currentState.season } =
+    options;
 
-  const palette = getColorPalette(timePeriod, season, weatherType);
+  const palette = getColorPalette(timePeriod, season);
 
   currentState = {
     timePeriod,
     season,
-    weatherType,
     palette,
   };
 
   applyPaletteToCss(palette);
-  renderer.updateConditions(weatherType, timePeriod, season, palette);
+  renderer.updateConditions(timePeriod, season, palette);
 
   console.log("[Background] Debug conditions set", options);
 }
@@ -198,7 +157,6 @@ export function setDebugConditions(options = {}) {
 // Export constants for external use
 export { TIME_PERIOD } from "./time.js";
 export { SEASON } from "./season.js";
-export { WEATHER_TYPE } from "./weather.js";
 
 // Auto-initialize when script loads (can be disabled by setting window.BACKGROUND_MANUAL_INIT)
 if (typeof window !== "undefined" && !window.BACKGROUND_MANUAL_INIT) {

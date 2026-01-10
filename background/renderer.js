@@ -6,8 +6,6 @@
  */
 
 import { ParticleSystem } from "./particles.js";
-import { createGradientString } from "./colors.js";
-import { CONFIG } from "./config.js";
 
 /**
  * Background Renderer
@@ -30,6 +28,7 @@ export class BackgroundRenderer {
     // Bind methods
     this.animate = this.animate.bind(this);
     this.handleResize = this.handleResize.bind(this);
+    this.handleVisibility = this.handleVisibility.bind(this);
   }
 
   /**
@@ -83,15 +82,18 @@ export class BackgroundRenderer {
    */
   setupEventListeners() {
     window.addEventListener("resize", this.handleResize);
+    document.addEventListener("visibilitychange", this.handleVisibility);
+  }
 
-    // Visibility change - pause when hidden
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) {
-        this.pause();
-      } else {
-        this.resume();
-      }
-    });
+  /**
+   * Handle visibility change - pause when hidden
+   */
+  handleVisibility() {
+    if (document.hidden) {
+      this.pause();
+    } else {
+      this.resume();
+    }
   }
 
   /**
@@ -112,6 +114,8 @@ export class BackgroundRenderer {
     const dpr = window.devicePixelRatio || 1;
     this.canvas.width = window.innerWidth * dpr;
     this.canvas.height = window.innerHeight * dpr;
+    // Reset transform before scaling to prevent accumulation
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.scale(dpr, dpr);
   }
 
@@ -141,11 +145,11 @@ export class BackgroundRenderer {
   /**
    * Update particle system with new conditions
    */
-  updateConditions(weatherType, timePeriod, season, palette) {
+  updateConditions(timePeriod, season, palette) {
     this.currentPalette = palette;
 
     if (this.particleSystem) {
-      this.particleSystem.init(weatherType, timePeriod, season);
+      this.particleSystem.init(timePeriod, season);
     }
   }
 
@@ -155,7 +159,9 @@ export class BackgroundRenderer {
   animate(currentTime) {
     if (!this.isRunning) return;
 
-    const deltaTime = currentTime - this.lastTime;
+    // Prevent huge deltaTime on first frame or after pause
+    const rawDelta = currentTime - this.lastTime;
+    const deltaTime = this.lastTime === 0 || rawDelta > 100 ? 16 : rawDelta;
     this.lastTime = currentTime;
 
     // Clear canvas
@@ -166,9 +172,6 @@ export class BackgroundRenderer {
 
     // Draw abstract shapes
     this.drawShapes(deltaTime);
-
-    // Draw weather overlay
-    this.drawWeatherOverlay();
 
     // Update and draw particles
     if (this.particleSystem) {
@@ -292,21 +295,6 @@ export class BackgroundRenderer {
   }
 
   /**
-   * Draw weather overlay effect
-   */
-  drawWeatherOverlay() {
-    if (!this.currentPalette?.weatherOverlay) return;
-
-    const { opacity, color } = this.currentPalette.weatherOverlay;
-    if (opacity > 0) {
-      this.ctx.fillStyle = color;
-      this.ctx.globalAlpha = opacity;
-      this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-      this.ctx.globalAlpha = 1;
-    }
-  }
-
-  /**
    * Start the animation
    */
   start() {
@@ -343,6 +331,7 @@ export class BackgroundRenderer {
   destroy() {
     this.pause();
     window.removeEventListener("resize", this.handleResize);
+    document.removeEventListener("visibilitychange", this.handleVisibility);
 
     if (this.canvas && this.canvas.parentNode) {
       this.canvas.parentNode.removeChild(this.canvas);

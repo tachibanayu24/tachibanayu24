@@ -1,13 +1,12 @@
 /**
  * Background Animation System - Colors Module
  *
- * Defines color palettes for different times, seasons, and weather conditions.
+ * Defines color palettes for different times and seasons.
  * Provides smooth color interpolation and CSS variable updates.
  */
 
 import { TIME_PERIOD } from "./time.js";
 import { SEASON } from "./season.js";
-import { WEATHER_TYPE } from "./weather.js";
 import { CONFIG } from "./config.js";
 
 /**
@@ -54,31 +53,20 @@ const TIME_PALETTES = {
  * More dramatic shifts to make seasons visually distinct
  */
 const SEASON_MODIFIERS = {
-  [SEASON.SPRING]: { hue: -15, saturation: 1.25, lightness: 1.05 }, // Pink/green tones, more vibrant
-  [SEASON.SUMMER]: { hue: 10, saturation: 1.35, lightness: 1.02 }, // Warm, vivid colors
-  [SEASON.AUTUMN]: { hue: 30, saturation: 1.1, lightness: 0.95 }, // Orange/red warm tones
-  [SEASON.WINTER]: { hue: -20, saturation: 0.7, lightness: 1.1 }, // Cool, desaturated, bright
+  [SEASON.SPRING]: { hue: -15, saturation: 1.25, lightness: 1.05 },
+  [SEASON.SUMMER]: { hue: 10, saturation: 1.35, lightness: 1.02 },
+  [SEASON.AUTUMN]: { hue: 30, saturation: 1.1, lightness: 0.95 },
+  [SEASON.WINTER]: { hue: -20, saturation: 0.7, lightness: 1.1 },
 };
 
 /**
  * Season-specific gradient tints (blended with base gradients)
  */
 const SEASON_TINTS = {
-  [SEASON.SPRING]: ["#FFE4EC", "#E8F5E9"], // Sakura pink, fresh green
-  [SEASON.SUMMER]: ["#E3F2FD", "#FFF8E1"], // Sky blue, sunny yellow
-  [SEASON.AUTUMN]: ["#FBE9E7", "#FFF3E0"], // Warm orange, maple red
-  [SEASON.WINTER]: ["#E8EAF6", "#ECEFF1"], // Cool blue-gray, frost
-};
-
-/**
- * Weather-based color overlays
- */
-const WEATHER_OVERLAYS = {
-  [WEATHER_TYPE.CLEAR]: { opacity: 0, color: "transparent" },
-  [WEATHER_TYPE.CLOUDS]: { opacity: 0.05, color: "rgba(180, 180, 190, 0.5)" },
-  [WEATHER_TYPE.RAIN]: { opacity: 0.08, color: "rgba(100, 120, 150, 0.5)" },
-  [WEATHER_TYPE.SNOW]: { opacity: 0.1, color: "rgba(230, 240, 255, 0.5)" },
-  [WEATHER_TYPE.DEFAULT]: { opacity: 0, color: "transparent" },
+  [SEASON.SPRING]: ["#FFE4EC", "#E8F5E9"],
+  [SEASON.SUMMER]: ["#E3F2FD", "#FFF8E1"],
+  [SEASON.AUTUMN]: ["#FBE9E7", "#FFF3E0"],
+  [SEASON.WINTER]: ["#E8EAF6", "#ECEFF1"],
 };
 
 /**
@@ -136,7 +124,7 @@ function rgbToHsl(r, g, b) {
       case g:
         h = ((b - r) / d + 2) / 6;
         break;
-      case b:
+      default:
         h = ((r - g) / d + 4) / 6;
         break;
     }
@@ -183,12 +171,8 @@ function hslToRgb(h, s, l) {
 
 /**
  * Interpolate between two colors
- * @param {string} color1 - Hex color
- * @param {string} color2 - Hex color
- * @param {number} factor - 0-1 interpolation factor
- * @returns {string} Hex color
  */
-export function interpolateColor(color1, color2, factor) {
+function interpolateColor(color1, color2, factor) {
   const c1 = hexToRgb(color1);
   const c2 = hexToRgb(color2);
 
@@ -201,11 +185,8 @@ export function interpolateColor(color1, color2, factor) {
 
 /**
  * Apply season modifier to a color
- * @param {string} hex - Hex color
- * @param {string} season - SEASON value
- * @returns {string} Modified hex color
  */
-export function applySeasonModifier(hex, season) {
+function applySeasonModifier(hex, season) {
   const modifier = SEASON_MODIFIERS[season] || SEASON_MODIFIERS[SEASON.SUMMER];
   const rgb = hexToRgb(hex);
   const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
@@ -220,10 +201,6 @@ export function applySeasonModifier(hex, season) {
 
 /**
  * Blend two colors with a given ratio
- * @param {string} color1 - Hex color
- * @param {string} color2 - Hex color
- * @param {number} ratio - 0-1 blend ratio (0 = color1, 1 = color2)
- * @returns {string} Hex color
  */
 function blendColors(color1, color2, ratio) {
   return interpolateColor(color1, color2, ratio);
@@ -233,7 +210,6 @@ function blendColors(color1, color2, ratio) {
  * Get the complete color palette for current conditions
  * @param {string} timePeriod
  * @param {string} season
- * @param {string} weatherType
  * @param {number} transitionFactor - 0-1 for time transitions
  * @param {string} nextTimePeriod - Next time period for transitions
  * @returns {Object} Color palette
@@ -241,7 +217,6 @@ function blendColors(color1, color2, ratio) {
 export function getColorPalette(
   timePeriod,
   season,
-  weatherType = WEATHER_TYPE.DEFAULT,
   transitionFactor = 1,
   nextTimePeriod = null,
 ) {
@@ -289,12 +264,11 @@ export function getColorPalette(
   // Blend season tints into gradient for more visible seasonal effect
   const seasonTints = SEASON_TINTS[season];
   if (seasonTints) {
-    const tintStrength = 0.25; // 25% tint blend
+    const tintStrength = 0.25;
     palette.gradient = palette.gradient.map((c, i) => {
       const tintColor = seasonTints[i % seasonTints.length];
       return blendColors(c, tintColor, tintStrength);
     });
-    // Also tint the card background slightly
     palette.cardBg = blendColors(
       palette.cardBg,
       seasonTints[0],
@@ -302,11 +276,7 @@ export function getColorPalette(
     );
   }
 
-  // Add weather overlay info
-  palette.weatherOverlay =
-    WEATHER_OVERLAYS[weatherType] || WEATHER_OVERLAYS[WEATHER_TYPE.DEFAULT];
-
-  // Add neumorphism shadows based on time
+  // Add shadows based on time
   palette.shadows = CONFIG.SHADOWS[timePeriod] || CONFIG.SHADOWS.NOON;
 
   return palette;
@@ -314,7 +284,6 @@ export function getColorPalette(
 
 /**
  * Apply color palette to CSS variables
- * @param {Object} palette
  */
 export function applyPaletteToCss(palette) {
   const root = document.documentElement;
@@ -326,14 +295,4 @@ export function applyPaletteToCss(palette) {
   root.style.setProperty("--accent", palette.accent);
   root.style.setProperty("--shadow-light", palette.shadows.light);
   root.style.setProperty("--shadow-dark", palette.shadows.dark);
-}
-
-/**
- * Create CSS gradient string from palette
- * @param {Object} palette
- * @param {string} direction - CSS gradient direction
- * @returns {string}
- */
-export function createGradientString(palette, direction = "135deg") {
-  return `linear-gradient(${direction}, ${palette.gradient.join(", ")})`;
 }
