@@ -117,32 +117,27 @@ async function render() {
   updateLanguageToggleState();
 }
 
-// Setup language toggle buttons
+// Setup language toggle button
 function setupLanguageToggle() {
-  const toggleContainer = document.getElementById("lang-toggle");
-  if (!toggleContainer) return;
+  const toggleBtn = document.getElementById("lang-toggle");
+  if (!toggleBtn) return;
 
-  toggleContainer.addEventListener("click", (e) => {
-    const button = e.target.closest("[data-lang]");
-    if (!button) return;
-
-    const newLang = button.dataset.lang;
-    if (newLang === currentLang) return;
-
-    currentLang = newLang;
+  toggleBtn.addEventListener("click", () => {
+    currentLang = currentLang === "en" ? "ja" : "en";
     localStorage.setItem("lang", currentLang);
+    updateLanguageToggleState();
     render();
   });
 
   updateLanguageToggleState();
 }
 
-// Update active state of language toggle buttons
+// Update language toggle button text
 function updateLanguageToggleState() {
-  const buttons = document.querySelectorAll("[data-lang]");
-  buttons.forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.lang === currentLang);
-  });
+  const toggleBtn = document.getElementById("lang-toggle");
+  if (toggleBtn) {
+    toggleBtn.textContent = currentLang.toUpperCase();
+  }
 }
 
 // Initialize

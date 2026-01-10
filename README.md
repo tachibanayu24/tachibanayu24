@@ -2,9 +2,8 @@
 
 [日本語](./README.ja.md)
 
-Hey! I'm a Web Developer based in Tokyo 🇯🇵  
-Passionate about building great products and delightful experiences ✨  
-Always curious, always learning 🚀
+I'm a software engineer based in Tokyo.  
+I love startups, fitness, sauna, cooking, and rabbits. Feel free to connect with me on social media below!
 
 Working at
 [Delight Ventures, Inc.](https://www.delight-ventures.com/en/team/yuto-tachibana) / [Algomatic Co., Ltd.](https://algomatic.jp/company) / [Workside, Inc.](https://onn-hr.com/aboutus) / [Kazetuchi Inc.](https://kztc.jp/)
