@@ -32,6 +32,10 @@ export class BackgroundRenderer {
     this.currentPalette = null;
     this.currentTimePeriod = null;
 
+    // Cached window dimensions (updated on resize)
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+
     // Time-specific effects (rendered on overlay canvas)
     this.morningMist = null;
     this.godRays = null;
@@ -148,15 +152,13 @@ export class BackgroundRenderer {
    */
   handleResize() {
     this.resize();
-    if (this.particleSystem) {
-      this.particleSystem.resize();
-    }
+    this.particleSystem.resize();
     // Resize all time-specific effects
-    if (this.morningMist) this.morningMist.resize();
-    if (this.godRays) this.godRays.resize();
-    if (this.dustParticles) this.dustParticles.resize();
-    if (this.eveningClouds) this.eveningClouds.resize();
-    if (this.fireflySystem) this.fireflySystem.resize();
+    this.morningMist.resize();
+    this.godRays.resize();
+    this.dustParticles.resize();
+    this.eveningClouds.resize();
+    this.fireflySystem.resize();
     this.initShapes();
   }
 
@@ -164,21 +166,23 @@ export class BackgroundRenderer {
    * Resize canvases to window size
    */
   resize() {
+    // Update cached dimensions
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+
     const dpr = window.devicePixelRatio || 1;
 
     // Resize background canvas
-    this.canvas.width = window.innerWidth * dpr;
-    this.canvas.height = window.innerHeight * dpr;
+    this.canvas.width = this.width * dpr;
+    this.canvas.height = this.height * dpr;
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.scale(dpr, dpr);
 
     // Resize overlay canvas
-    if (this.overlayCanvas && this.overlayCtx) {
-      this.overlayCanvas.width = window.innerWidth * dpr;
-      this.overlayCanvas.height = window.innerHeight * dpr;
-      this.overlayCtx.setTransform(1, 0, 0, 1, 0, 0);
-      this.overlayCtx.scale(dpr, dpr);
-    }
+    this.overlayCanvas.width = this.width * dpr;
+    this.overlayCanvas.height = this.height * dpr;
+    this.overlayCtx.setTransform(1, 0, 0, 1, 0, 0);
+    this.overlayCtx.scale(dpr, dpr);
   }
 
   /**
@@ -190,8 +194,8 @@ export class BackgroundRenderer {
 
     for (let i = 0; i < count; i++) {
       this.shapes.push({
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
+        x: Math.random() * this.width,
+        y: Math.random() * this.height,
         size: 100 + Math.random() * 200,
         rotation: Math.random() * Math.PI * 2,
         rotationSpeed: (Math.random() - 0.5) * 0.0002,
@@ -211,16 +215,14 @@ export class BackgroundRenderer {
     this.currentPalette = palette;
     this.currentTimePeriod = timePeriod;
 
-    if (this.particleSystem) {
-      this.particleSystem.init(timePeriod);
-    }
+    this.particleSystem.init(timePeriod);
 
     // Update all time-specific effects
-    if (this.morningMist) this.morningMist.setTimePeriod(timePeriod);
-    if (this.godRays) this.godRays.setTimePeriod(timePeriod);
-    if (this.dustParticles) this.dustParticles.setTimePeriod(timePeriod);
-    if (this.eveningClouds) this.eveningClouds.setTimePeriod(timePeriod);
-    if (this.fireflySystem) this.fireflySystem.setTimePeriod(timePeriod);
+    this.morningMist.setTimePeriod(timePeriod);
+    this.godRays.setTimePeriod(timePeriod);
+    this.dustParticles.setTimePeriod(timePeriod);
+    this.eveningClouds.setTimePeriod(timePeriod);
+    this.fireflySystem.setTimePeriod(timePeriod);
   }
 
   /**
@@ -250,41 +252,29 @@ export class BackgroundRenderer {
     this.drawShapes(deltaTime);
 
     // Update and draw particles (on background canvas)
-    if (this.particleSystem) {
-      this.particleSystem.update(deltaTime);
-      this.particleSystem.draw(this.ctx);
-    }
+    this.particleSystem.update(deltaTime);
+    this.particleSystem.draw(this.ctx);
 
     // ===== OVERLAY CANVAS: Time-specific effects (visible above card) =====
     // MORNING: Rising mist
-    if (this.morningMist) {
-      this.morningMist.update(deltaTime);
-      this.morningMist.draw(this.overlayCtx, this.currentPalette);
-    }
+    this.morningMist.update(deltaTime);
+    this.morningMist.draw(this.overlayCtx, this.currentPalette);
 
     // NOON: God rays
-    if (this.godRays) {
-      this.godRays.update(deltaTime);
-      this.godRays.draw(this.overlayCtx, this.currentPalette);
-    }
+    this.godRays.update(deltaTime);
+    this.godRays.draw(this.overlayCtx, this.currentPalette);
 
     // NOON: Dust particles / Light streaks
-    if (this.dustParticles) {
-      this.dustParticles.update(deltaTime);
-      this.dustParticles.draw(this.overlayCtx);
-    }
+    this.dustParticles.update(deltaTime);
+    this.dustParticles.draw(this.overlayCtx);
 
     // EVENING: Drifting clouds/haze
-    if (this.eveningClouds) {
-      this.eveningClouds.update(deltaTime);
-      this.eveningClouds.draw(this.overlayCtx, this.currentPalette);
-    }
+    this.eveningClouds.update(deltaTime);
+    this.eveningClouds.draw(this.overlayCtx, this.currentPalette);
 
     // NIGHT: Fireflies
-    if (this.fireflySystem) {
-      this.fireflySystem.update(deltaTime);
-      this.fireflySystem.draw(this.overlayCtx);
-    }
+    this.fireflySystem.update(deltaTime);
+    this.fireflySystem.draw(this.overlayCtx);
 
     // Continue animation
     this.animationId = requestAnimationFrame(this.animate);
@@ -294,10 +284,8 @@ export class BackgroundRenderer {
    * Clear both canvases
    */
   clear() {
-    this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    if (this.overlayCtx) {
-      this.overlayCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    }
+    this.ctx.clearRect(0, 0, this.width, this.height);
+    this.overlayCtx.clearRect(0, 0, this.width, this.height);
   }
 
   /**
@@ -307,8 +295,8 @@ export class BackgroundRenderer {
     if (!this.currentPalette) return;
 
     const { gradient, gradientAngle = 180 } = this.currentPalette;
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+    const w = this.width;
+    const h = this.height;
 
     // Subtle breathing effect - very slow oscillation
     const breathCycle = this.gradientTime * 0.00008;
@@ -383,8 +371,8 @@ export class BackgroundRenderer {
     if (!this.currentPalette || !this.currentPalette.celestial) return;
 
     const { celestial } = this.currentPalette;
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+    const w = this.width;
+    const h = this.height;
 
     // Light source is OFF-SCREEN, we only see the light rays entering
     // Position is where the light originates (can be outside canvas)
@@ -474,10 +462,10 @@ export class BackgroundRenderer {
       shape.rotation += shape.rotationSpeed * deltaTime;
 
       // Wrap around edges
-      if (shape.x < -shape.size) shape.x = window.innerWidth + shape.size;
-      if (shape.x > window.innerWidth + shape.size) shape.x = -shape.size;
-      if (shape.y < -shape.size) shape.y = window.innerHeight + shape.size;
-      if (shape.y > window.innerHeight + shape.size) shape.y = -shape.size;
+      if (shape.x < -shape.size) shape.x = this.width + shape.size;
+      if (shape.x > this.width + shape.size) shape.x = -shape.size;
+      if (shape.y < -shape.size) shape.y = this.height + shape.size;
+      if (shape.y > this.height + shape.size) shape.y = -shape.size;
 
       // Draw shape
       this.ctx.save();

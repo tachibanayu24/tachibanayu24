@@ -14,15 +14,13 @@ export const CONFIG = {
     NIGHT: { start: 20, end: 5 },
   },
 
-  // Animation settings
-  ANIMATION: {
-    PARTICLE_COUNT: 50,
-    PARTICLE_SIZE: { min: 2, max: 8 },
-    PARTICLE_SPEED: { min: 0.2, max: 1.0 },
-    BLOB_COUNT: 5,
-    BLOB_SIZE: { min: 100, max: 300 },
-    TRANSITION_DURATION: 2000, // ms for color transitions
-    FPS: 60,
+  // Light orb (bokeh) settings for particle system
+  LIGHT_ORBS: {
+    COUNT: 22,
+    SIZE: { min: 60, max: 140 },
+    SPEED: 0.08,
+    BASE_OPACITY: 0.15,
+    NIGHT_OPACITY: 0.1,
   },
 
   // Neumorphism shadow adjustments per time period

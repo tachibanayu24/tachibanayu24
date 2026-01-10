@@ -10,78 +10,13 @@
 
 import { TIME_PERIOD } from "./time.js";
 
-/**
- * Simple Perlin-like noise for smooth organic movement
- */
-class SimplexNoise {
-  constructor() {
-    this.perm = [];
-    for (let i = 0; i < 512; i++) {
-      this.perm[i] = Math.floor(Math.random() * 256);
-    }
-  }
-
-  noise2D(x, y) {
-    const xi = Math.floor(x) & 255;
-    const yi = Math.floor(y) & 255;
-    const xf = x - Math.floor(x);
-    const yf = y - Math.floor(y);
-
-    const u = this.fade(xf);
-    const v = this.fade(yf);
-
-    const aa = this.perm[this.perm[xi] + yi];
-    const ab = this.perm[this.perm[xi] + yi + 1];
-    const ba = this.perm[this.perm[xi + 1] + yi];
-    const bb = this.perm[this.perm[xi + 1] + yi + 1];
-
-    const x1 = this.lerp(this.grad(aa, xf, yf), this.grad(ba, xf - 1, yf), u);
-    const x2 = this.lerp(
-      this.grad(ab, xf, yf - 1),
-      this.grad(bb, xf - 1, yf - 1),
-      u,
-    );
-
-    return this.lerp(x1, x2, v);
-  }
-
-  fade(t) {
-    return t * t * t * (t * (t * 6 - 15) + 10);
-  }
-
-  lerp(a, b, t) {
-    return a + t * (b - a);
-  }
-
-  grad(hash, x, y) {
-    const h = hash & 3;
-    const u = h < 2 ? x : y;
-    const v = h < 2 ? y : x;
-    return (h & 1 ? -u : u) + (h & 2 ? -v : v);
-  }
-}
-
-/**
- * Parse color string to RGB values
- */
-function parseColor(color) {
-  if (color.startsWith("rgba")) {
-    const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-    if (match) return `${match[1]}, ${match[2]}, ${match[3]}`;
-  }
-  if (color.startsWith("#")) {
-    const hex = color.slice(1);
-    const r = parseInt(hex.slice(0, 2), 16);
-    const g = parseInt(hex.slice(2, 4), 16);
-    const b = parseInt(hex.slice(4, 6), 16);
-    return `${r}, ${g}, ${b}`;
-  }
-  return "200, 200, 200";
-}
-
 // ============================================
 // MORNING: Rising Mist Effect
 // ============================================
+
+// Mist color constants
+const MIST_WHITE = "250, 255, 220";
+const MIST_CREAM = "245, 255, 210";
 
 /**
  * Morning Mist - Soft fog rising from the bottom
@@ -90,7 +25,6 @@ function parseColor(color) {
 export class MorningMist {
   constructor(canvas) {
     this.canvas = canvas;
-    this.noise = new SimplexNoise();
     this.time = 0;
     this.isActive = false;
     this.wisps = [];
@@ -145,11 +79,6 @@ export class MorningMist {
     const w = window.innerWidth;
     const h = window.innerHeight;
 
-    // Clean white mist - like fresh bed sheets on a Sunday morning
-    // Pure yellow morning light, no red tones
-    const mistWhite = "250, 255, 220";
-    const mistCream = "245, 255, 210";
-
     for (const wisp of this.wisps) {
       // Organic horizontal drift
       const drift = Math.sin(this.time * wisp.speed + wisp.driftPhase) * 30;
@@ -169,9 +98,9 @@ export class MorningMist {
         wisp.width * 0.8,
       );
 
-      gradient.addColorStop(0, `rgba(${mistWhite}, ${wisp.opacity})`);
-      gradient.addColorStop(0.3, `rgba(${mistCream}, ${wisp.opacity * 0.6})`);
-      gradient.addColorStop(0.6, `rgba(${mistWhite}, ${wisp.opacity * 0.3})`);
+      gradient.addColorStop(0, `rgba(${MIST_WHITE}, ${wisp.opacity})`);
+      gradient.addColorStop(0.3, `rgba(${MIST_CREAM}, ${wisp.opacity * 0.6})`);
+      gradient.addColorStop(0.6, `rgba(${MIST_WHITE}, ${wisp.opacity * 0.3})`);
       gradient.addColorStop(1, "transparent");
 
       ctx.save();
@@ -189,10 +118,10 @@ export class MorningMist {
     // Base fog layer - clean, soft white blanket
     const baseGradient = ctx.createLinearGradient(0, h * 0.3, 0, h);
     baseGradient.addColorStop(0, "transparent");
-    baseGradient.addColorStop(0.2, `rgba(${mistWhite}, 0.1)`);
-    baseGradient.addColorStop(0.45, `rgba(${mistCream}, 0.2)`);
-    baseGradient.addColorStop(0.7, `rgba(${mistWhite}, 0.25)`);
-    baseGradient.addColorStop(1, `rgba(${mistCream}, 0.3)`);
+    baseGradient.addColorStop(0.2, `rgba(${MIST_WHITE}, 0.1)`);
+    baseGradient.addColorStop(0.45, `rgba(${MIST_CREAM}, 0.2)`);
+    baseGradient.addColorStop(0.7, `rgba(${MIST_WHITE}, 0.25)`);
+    baseGradient.addColorStop(1, `rgba(${MIST_CREAM}, 0.3)`);
     ctx.fillStyle = baseGradient;
     ctx.fillRect(0, h * 0.3, w, h * 0.7);
   }
@@ -573,34 +502,17 @@ export class EveningClouds {
   }
 }
 
-// ============================================
-// Backward compatibility: FogLayer alias
-// ============================================
-
-/**
- * FogLayer - Kept for backward compatibility
- * Now just wraps MorningMist
- */
-export class FogLayer extends MorningMist {
-  setTimePeriod(timePeriod) {
-    // FogLayer was active for both MORNING and EVENING
-    // Now only MORNING uses it (EVENING uses EveningClouds)
-    this.isActive = timePeriod === TIME_PERIOD.MORNING;
-  }
-}
-
 /**
  * Firefly - Single firefly with organic movement and glow
  */
 class Firefly {
-  constructor(canvas) {
-    this.canvas = canvas;
+  constructor() {
     this.reset();
   }
 
   reset() {
-    this.x = Math.random() * this.canvas.width;
-    this.y = Math.random() * this.canvas.height;
+    this.x = Math.random() * window.innerWidth;
+    this.y = Math.random() * window.innerHeight;
 
     // Very small size
     this.size = 2 + Math.random() * 3;
@@ -729,7 +641,7 @@ export class FireflySystem {
   init() {
     this.fireflies = [];
     for (let i = 0; i < this.count; i++) {
-      this.fireflies.push(new Firefly(this.canvas));
+      this.fireflies.push(new Firefly());
     }
   }
 

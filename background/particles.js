@@ -6,6 +6,10 @@
  */
 
 import { TIME_PERIOD } from "./time.js";
+import { CONFIG } from "./config.js";
+
+// Pre-compiled regex for opacity adjustment
+const OPACITY_REGEX = /[\d.]+\)$/;
 
 /**
  * Depth layer configuration for parallax
@@ -141,7 +145,7 @@ class LightOrb {
    * Adjust opacity of rgba color string
    */
   adjustOpacity(color, newOpacity) {
-    return color.replace(/[\d.]+\)$/, `${Math.max(0, newOpacity)})`);
+    return color.replace(OPACITY_REGEX, `${Math.max(0, newOpacity)})`);
   }
 }
 
@@ -172,21 +176,21 @@ export class ParticleSystem {
       front: [],
     };
 
+    const { LIGHT_ORBS } = CONFIG;
+
     // Base configuration for soft light orbs
     const baseConfig = {
-      size: { min: 60, max: 140 },
-      speed: 0.08,
+      size: LIGHT_ORBS.SIZE,
+      speed: LIGHT_ORBS.SPEED,
       color: "rgba(120, 140, 180, 1)",
-      baseOpacity: 0.15,
+      baseOpacity:
+        timePeriod === TIME_PERIOD.NIGHT
+          ? LIGHT_ORBS.NIGHT_OPACITY
+          : LIGHT_ORBS.BASE_OPACITY,
     };
 
-    // Adjust for night
-    if (timePeriod === TIME_PERIOD.NIGHT) {
-      baseConfig.baseOpacity = 0.1;
-    }
-
     // Total orb count
-    const totalCount = 22;
+    const totalCount = LIGHT_ORBS.COUNT;
 
     // Create orbs for each depth layer
     for (const [layerName, layerConfig] of Object.entries(DEPTH_LAYERS)) {

@@ -144,32 +144,33 @@ export function getColorPalette(
   let palette = { ...TIME_PALETTES[timePeriod] };
 
   // Apply time transition if needed
-  if (nextTimePeriod && transitionFactor < 1) {
-    const nextPalette = TIME_PALETTES[nextTimePeriod];
+  // transitionFactor: 0 = fully 'from', 1 = fully 'to'
+  if (nextTimePeriod && transitionFactor > 0 && transitionFactor < 1) {
+    const fromPalette = TIME_PALETTES[nextTimePeriod];
     palette = {
       ...palette,
       gradient: palette.gradient.map((c, i) =>
         interpolateColor(
+          fromPalette.gradient[i % fromPalette.gradient.length],
           c,
-          nextPalette.gradient[i % nextPalette.gradient.length],
           transitionFactor,
         ),
       ),
-      bg: interpolateColor(palette.bg, nextPalette.bg, transitionFactor),
+      bg: interpolateColor(fromPalette.bg, palette.bg, transitionFactor),
       cardBg: interpolateColor(
+        fromPalette.cardBg,
         palette.cardBg,
-        nextPalette.cardBg,
         transitionFactor,
       ),
-      text: interpolateColor(palette.text, nextPalette.text, transitionFactor),
+      text: interpolateColor(fromPalette.text, palette.text, transitionFactor),
       textMuted: interpolateColor(
+        fromPalette.textMuted,
         palette.textMuted,
-        nextPalette.textMuted,
         transitionFactor,
       ),
       accent: interpolateColor(
+        fromPalette.accent,
         palette.accent,
-        nextPalette.accent,
         transitionFactor,
       ),
     };

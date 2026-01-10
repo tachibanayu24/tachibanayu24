@@ -35,48 +35,6 @@ export function getTimePeriod() {
 }
 
 /**
- * Get a normalized progress value within the current time period (0-1)
- * Useful for smooth gradient transitions within a period
- * @returns {number} Value between 0 and 1
- */
-export function getTimePeriodProgress() {
-  const now = new Date();
-  const hour = now.getHours();
-  const minutes = now.getMinutes();
-  const currentTime = hour + minutes / 60;
-  const { TIME_PERIODS } = CONFIG;
-
-  const period = getTimePeriod();
-  let start, end;
-
-  switch (period) {
-    case TIME_PERIOD.MORNING:
-      start = TIME_PERIODS.MORNING.start;
-      end = TIME_PERIODS.MORNING.end;
-      break;
-    case TIME_PERIOD.NOON:
-      start = TIME_PERIODS.NOON.start;
-      end = TIME_PERIODS.NOON.end;
-      break;
-    case TIME_PERIOD.EVENING:
-      start = TIME_PERIODS.EVENING.start;
-      end = TIME_PERIODS.EVENING.end;
-      break;
-    case TIME_PERIOD.NIGHT:
-      // Night spans midnight, needs special handling
-      start = TIME_PERIODS.NIGHT.start;
-      end = TIME_PERIODS.NIGHT.end + 24;
-      const adjustedTime =
-        currentTime < TIME_PERIODS.NIGHT.end ? currentTime + 24 : currentTime;
-      return (adjustedTime - start) / (end - start);
-    default:
-      return 0.5;
-  }
-
-  return (currentTime - start) / (end - start);
-}
-
-/**
  * Get transition factor between time periods (0-1)
  * Returns higher values near period boundaries for smooth transitions
  * @returns {{ from: string, to: string, factor: number }}
@@ -148,27 +106,4 @@ export function getTimeTransition() {
  */
 function easeInOutCubic(t) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-}
-
-/**
- * Get ambient light intensity (0-1) based on time
- * Useful for adjusting overall brightness
- * @returns {number}
- */
-export function getAmbientLight() {
-  const period = getTimePeriod();
-  const progress = getTimePeriodProgress();
-
-  switch (period) {
-    case TIME_PERIOD.MORNING:
-      return 0.5 + progress * 0.4; // 0.5 -> 0.9
-    case TIME_PERIOD.NOON:
-      return 0.9 + Math.sin(progress * Math.PI) * 0.1; // peaks at 1.0 midday
-    case TIME_PERIOD.EVENING:
-      return 0.9 - progress * 0.5; // 0.9 -> 0.4
-    case TIME_PERIOD.NIGHT:
-      return 0.3 + Math.sin(progress * Math.PI) * 0.1; // subtle variation
-    default:
-      return 0.7;
-  }
 }
