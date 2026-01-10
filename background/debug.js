@@ -227,13 +227,15 @@ class DebugPanel {
   }
 }
 
-// Initialize debug panel
+// Initialize debug panel only when #debug is in URL
 const debugPanel = new DebugPanel();
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", () => debugPanel.init());
-} else {
-  debugPanel.init();
+if (window.location.hash === "#debug") {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => debugPanel.init());
+  } else {
+    debugPanel.init();
+  }
 }
 
 export { debugPanel };

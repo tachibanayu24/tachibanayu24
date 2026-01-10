@@ -13,26 +13,26 @@ import { CONFIG } from "./config.js";
  */
 const TIME_PALETTES = {
   [TIME_PERIOD.MORNING]: {
-    // Sunrise: soft pink/peach horizon fading to light blue sky
-    gradient: ["#FFE5D4", "#FFDCC8", "#FFD4B8", "#E8F0F8"],
-    bg: "#F5EDE4",
-    cardBg: "#F5EDE4",
-    text: "#4A4035",
-    textMuted: "#7D7165",
-    accent: "#C4956A",
-    // Sunrise light from lower left (off-screen)
+    // Morning: clean white and soft yellow, like Sunday morning bed sheets
+    gradient: ["#FFFEF5", "#FFFDE8", "#FFFBD5", "#F0F4FF"],
+    bg: "#E8E6D6",
+    cardBg: "#E8E6D6",
+    text: "#3A3A35",
+    textMuted: "#6E6E65",
+    accent: "#B8AD45",
+    // Morning sunlight from lower left (off-screen)
     celestial: {
       type: "sun",
       x: -0.1,
       y: 0.9,
-      color: "rgba(255, 200, 130, 0.5)",
-      glowColor: "rgba(255, 180, 120, 0.2)",
+      color: "rgba(255, 255, 180, 0.5)",
+      glowColor: "rgba(255, 255, 150, 0.2)",
     },
     gradientAngle: 135,
   },
   [TIME_PERIOD.NOON]: {
-    // Midday: clear blue sky with subtle cloud wisps
-    gradient: ["#87CEEB", "#A8D8F0", "#C5E5F5", "#E8F4FC", "#F5FAFF"],
+    // Midday: clear blue sky - more blue coverage
+    gradient: ["#6BC4E8", "#87CEEB", "#A8D8F0", "#B8E0F5", "#D0ECFA"],
     bg: "#E8EEF3",
     cardBg: "#E8EEF3",
     text: "#2D3748",
@@ -201,7 +201,7 @@ export function applyPaletteToCss(palette) {
 
   root.style.setProperty("--bg", palette.bg);
   root.style.setProperty("--card-bg", palette.cardBg);
-  root.style.setProperty("--card-bg-glass", hexToRgba(palette.cardBg, 0.4));
+  root.style.setProperty("--card-bg-glass", hexToRgba(palette.cardBg, 0.65));
   root.style.setProperty("--text", palette.text);
   root.style.setProperty("--text-muted", palette.textMuted);
   root.style.setProperty("--accent", palette.accent);

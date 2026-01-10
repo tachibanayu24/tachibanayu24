@@ -28,8 +28,8 @@ export const CONFIG = {
   // Neumorphism shadow adjustments per time period
   SHADOWS: {
     MORNING: {
-      light: "rgba(255, 255, 255, 0.9)",
-      dark: "rgba(200, 180, 160, 0.4)",
+      light: "#FFFFF8",
+      dark: "#C5C2A8",
     },
     NOON: {
       light: "rgba(255, 255, 255, 0.95)",

@@ -6,7 +6,13 @@
  */
 
 import { ParticleSystem } from "./particles.js";
-import { FogLayer, FireflySystem } from "./effects.js";
+import {
+  MorningMist,
+  GodRays,
+  DustParticles,
+  EveningClouds,
+  FireflySystem,
+} from "./effects.js";
 
 /**
  * Background Renderer
@@ -16,14 +22,22 @@ export class BackgroundRenderer {
   constructor() {
     this.canvas = null;
     this.ctx = null;
+    // Overlay canvas for effects that should appear above the card
+    this.overlayCanvas = null;
+    this.overlayCtx = null;
     this.particleSystem = null;
-    this.fogLayer = null;
-    this.fireflySystem = null;
     this.animationId = null;
     this.lastTime = 0;
     this.isRunning = false;
     this.currentPalette = null;
     this.currentTimePeriod = null;
+
+    // Time-specific effects (rendered on overlay canvas)
+    this.morningMist = null;
+    this.godRays = null;
+    this.dustParticles = null;
+    this.eveningClouds = null;
+    this.fireflySystem = null;
 
     // Geometric shapes for abstract art effect
     this.shapes = [];
@@ -49,16 +63,20 @@ export class BackgroundRenderer {
   }
 
   /**
-   * Create and insert canvas element
+   * Create and insert canvas elements
    */
   createCanvas() {
-    // Remove existing canvas if any
+    // Remove existing canvases if any
     const existing = document.getElementById("bg-canvas");
     if (existing) {
       existing.remove();
     }
+    const existingOverlay = document.getElementById("overlay-canvas");
+    if (existingOverlay) {
+      existingOverlay.remove();
+    }
 
-    // Create new canvas
+    // Create background canvas (behind content)
     this.canvas = document.createElement("canvas");
     this.canvas.id = "bg-canvas";
     this.canvas.style.cssText = `
@@ -71,21 +89,39 @@ export class BackgroundRenderer {
       pointer-events: none;
     `;
 
-    // Insert as first child of body
-    document.body.insertBefore(this.canvas, document.body.firstChild);
+    // Create overlay canvas (in front of content, for time-specific effects)
+    this.overlayCanvas = document.createElement("canvas");
+    this.overlayCanvas.id = "overlay-canvas";
+    this.overlayCanvas.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      pointer-events: none;
+    `;
 
-    // Get context
+    // Insert canvases
+    document.body.insertBefore(this.canvas, document.body.firstChild);
+    document.body.appendChild(this.overlayCanvas);
+
+    // Get contexts
     this.ctx = this.canvas.getContext("2d");
+    this.overlayCtx = this.overlayCanvas.getContext("2d");
 
     // Set size
     this.resize();
 
-    // Initialize particle system
+    // Initialize particle system (on background canvas)
     this.particleSystem = new ParticleSystem(this.canvas);
 
-    // Initialize special effects
-    this.fogLayer = new FogLayer(this.canvas);
-    this.fireflySystem = new FireflySystem(this.canvas);
+    // Initialize time-specific effects (on overlay canvas)
+    this.morningMist = new MorningMist(this.overlayCanvas);
+    this.godRays = new GodRays(this.overlayCanvas);
+    this.dustParticles = new DustParticles(this.overlayCanvas);
+    this.eveningClouds = new EveningClouds(this.overlayCanvas);
+    this.fireflySystem = new FireflySystem(this.overlayCanvas);
   }
 
   /**
@@ -115,22 +151,34 @@ export class BackgroundRenderer {
     if (this.particleSystem) {
       this.particleSystem.resize();
     }
-    if (this.fireflySystem) {
-      this.fireflySystem.resize();
-    }
+    // Resize all time-specific effects
+    if (this.morningMist) this.morningMist.resize();
+    if (this.godRays) this.godRays.resize();
+    if (this.dustParticles) this.dustParticles.resize();
+    if (this.eveningClouds) this.eveningClouds.resize();
+    if (this.fireflySystem) this.fireflySystem.resize();
     this.initShapes();
   }
 
   /**
-   * Resize canvas to window size
+   * Resize canvases to window size
    */
   resize() {
     const dpr = window.devicePixelRatio || 1;
+
+    // Resize background canvas
     this.canvas.width = window.innerWidth * dpr;
     this.canvas.height = window.innerHeight * dpr;
-    // Reset transform before scaling to prevent accumulation
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.scale(dpr, dpr);
+
+    // Resize overlay canvas
+    if (this.overlayCanvas && this.overlayCtx) {
+      this.overlayCanvas.width = window.innerWidth * dpr;
+      this.overlayCanvas.height = window.innerHeight * dpr;
+      this.overlayCtx.setTransform(1, 0, 0, 1, 0, 0);
+      this.overlayCtx.scale(dpr, dpr);
+    }
   }
 
   /**
@@ -167,13 +215,12 @@ export class BackgroundRenderer {
       this.particleSystem.init(timePeriod);
     }
 
-    // Update special effects based on time period
-    if (this.fogLayer) {
-      this.fogLayer.setTimePeriod(timePeriod);
-    }
-    if (this.fireflySystem) {
-      this.fireflySystem.setTimePeriod(timePeriod);
-    }
+    // Update all time-specific effects
+    if (this.morningMist) this.morningMist.setTimePeriod(timePeriod);
+    if (this.godRays) this.godRays.setTimePeriod(timePeriod);
+    if (this.dustParticles) this.dustParticles.setTimePeriod(timePeriod);
+    if (this.eveningClouds) this.eveningClouds.setTimePeriod(timePeriod);
+    if (this.fireflySystem) this.fireflySystem.setTimePeriod(timePeriod);
   }
 
   /**
@@ -199,25 +246,44 @@ export class BackgroundRenderer {
     // Draw celestial body (sun/moon)
     this.drawCelestial();
 
-    // Draw fog layer (MORNING/EVENING only)
-    if (this.fogLayer) {
-      this.fogLayer.update(deltaTime);
-      this.fogLayer.draw(this.ctx, this.currentPalette);
-    }
-
-    // Draw abstract shapes
+    // Draw abstract shapes (on background canvas)
     this.drawShapes(deltaTime);
 
-    // Update and draw particles
+    // Update and draw particles (on background canvas)
     if (this.particleSystem) {
       this.particleSystem.update(deltaTime);
       this.particleSystem.draw(this.ctx);
     }
 
-    // Draw fireflies (NIGHT only)
+    // ===== OVERLAY CANVAS: Time-specific effects (visible above card) =====
+    // MORNING: Rising mist
+    if (this.morningMist) {
+      this.morningMist.update(deltaTime);
+      this.morningMist.draw(this.overlayCtx, this.currentPalette);
+    }
+
+    // NOON: God rays
+    if (this.godRays) {
+      this.godRays.update(deltaTime);
+      this.godRays.draw(this.overlayCtx, this.currentPalette);
+    }
+
+    // NOON: Dust particles / Light streaks
+    if (this.dustParticles) {
+      this.dustParticles.update(deltaTime);
+      this.dustParticles.draw(this.overlayCtx);
+    }
+
+    // EVENING: Drifting clouds/haze
+    if (this.eveningClouds) {
+      this.eveningClouds.update(deltaTime);
+      this.eveningClouds.draw(this.overlayCtx, this.currentPalette);
+    }
+
+    // NIGHT: Fireflies
     if (this.fireflySystem) {
       this.fireflySystem.update(deltaTime);
-      this.fireflySystem.draw(this.ctx);
+      this.fireflySystem.draw(this.overlayCtx);
     }
 
     // Continue animation
@@ -225,10 +291,13 @@ export class BackgroundRenderer {
   }
 
   /**
-   * Clear the canvas
+   * Clear both canvases
    */
   clear() {
     this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    if (this.overlayCtx) {
+      this.overlayCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    }
   }
 
   /**
@@ -513,10 +582,19 @@ export class BackgroundRenderer {
       this.canvas.parentNode.removeChild(this.canvas);
     }
 
+    if (this.overlayCanvas && this.overlayCanvas.parentNode) {
+      this.overlayCanvas.parentNode.removeChild(this.overlayCanvas);
+    }
+
     this.canvas = null;
     this.ctx = null;
+    this.overlayCanvas = null;
+    this.overlayCtx = null;
     this.particleSystem = null;
-    this.fogLayer = null;
+    this.morningMist = null;
+    this.godRays = null;
+    this.dustParticles = null;
+    this.eveningClouds = null;
     this.fireflySystem = null;
   }
 }

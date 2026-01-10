@@ -1,7 +1,11 @@
 /**
  * Background Animation System - Special Effects Module
  *
- * Contains fog/mist layers and firefly effects.
+ * Time-specific visual effects:
+ * - MORNING: Rising mist from bottom
+ * - NOON: God rays + floating dust particles
+ * - EVENING: Drifting sunset clouds
+ * - NIGHT: Fireflies
  */
 
 import { TIME_PERIOD } from "./time.js";
@@ -58,34 +62,189 @@ class SimplexNoise {
 }
 
 /**
- * Fog/Mist Layer - Creates ethereal, flowing mist
- * Active during MORNING and EVENING
+ * Parse color string to RGB values
  */
-export class FogLayer {
+function parseColor(color) {
+  if (color.startsWith("rgba")) {
+    const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) return `${match[1]}, ${match[2]}, ${match[3]}`;
+  }
+  if (color.startsWith("#")) {
+    const hex = color.slice(1);
+    const r = parseInt(hex.slice(0, 2), 16);
+    const g = parseInt(hex.slice(2, 4), 16);
+    const b = parseInt(hex.slice(4, 6), 16);
+    return `${r}, ${g}, ${b}`;
+  }
+  return "200, 200, 200";
+}
+
+// ============================================
+// MORNING: Rising Mist Effect
+// ============================================
+
+/**
+ * Morning Mist - Soft fog rising from the bottom
+ * Creates an ethereal, peaceful morning atmosphere
+ */
+export class MorningMist {
   constructor(canvas) {
     this.canvas = canvas;
     this.noise = new SimplexNoise();
     this.time = 0;
-    this.layers = [];
     this.isActive = false;
+    this.wisps = [];
     this.init();
   }
 
   init() {
-    // Create multiple fog layers for depth
-    this.layers = [
-      { scale: 0.002, speed: 0.00003, opacity: 0.08, yOffset: 0.6 },
-      { scale: 0.003, speed: 0.00005, opacity: 0.05, yOffset: 0.4 },
-      { scale: 0.001, speed: 0.00002, opacity: 0.06, yOffset: 0.8 },
-    ];
+    this.wisps = [];
+    const count = 10;
+    for (let i = 0; i < count; i++) {
+      this.wisps.push({
+        x: Math.random() * window.innerWidth,
+        baseY: window.innerHeight * (0.5 + Math.random() * 0.5),
+        width: 300 + Math.random() * 400,
+        height: 150 + Math.random() * 200,
+        speed: 0.0004 + Math.random() * 0.0003,
+        riseSpeed: 0.06 + Math.random() * 0.04,
+        opacity: 0.3 + Math.random() * 0.15,
+        phase: Math.random() * Math.PI * 2,
+        driftPhase: Math.random() * Math.PI * 2,
+      });
+    }
   }
 
-  /**
-   * Update active state based on time period
-   */
   setTimePeriod(timePeriod) {
-    this.isActive =
-      timePeriod === TIME_PERIOD.MORNING || timePeriod === TIME_PERIOD.EVENING;
+    const wasActive = this.isActive;
+    this.isActive = timePeriod === TIME_PERIOD.MORNING;
+    if (this.isActive && !wasActive) {
+      this.init();
+    }
+  }
+
+  update(deltaTime) {
+    if (!this.isActive) return;
+    this.time += deltaTime;
+
+    for (const wisp of this.wisps) {
+      // Slow upward drift
+      wisp.baseY -= wisp.riseSpeed * deltaTime * 0.1;
+
+      // Reset when too high
+      if (wisp.baseY < -wisp.height) {
+        wisp.baseY = window.innerHeight + wisp.height * 0.5;
+        wisp.x = Math.random() * window.innerWidth;
+      }
+    }
+  }
+
+  draw(ctx, palette) {
+    if (!this.isActive || !palette) return;
+
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+
+    // Clean white mist - like fresh bed sheets on a Sunday morning
+    // Pure yellow morning light, no red tones
+    const mistWhite = "250, 255, 220";
+    const mistCream = "245, 255, 210";
+
+    for (const wisp of this.wisps) {
+      // Organic horizontal drift
+      const drift = Math.sin(this.time * wisp.speed + wisp.driftPhase) * 30;
+      const verticalWobble =
+        Math.sin(this.time * wisp.speed * 0.7 + wisp.phase) * 15;
+
+      const x = wisp.x + drift;
+      const y = wisp.baseY + verticalWobble;
+
+      // Main wisp gradient - soft white
+      const gradient = ctx.createRadialGradient(
+        x,
+        y,
+        0,
+        x,
+        y,
+        wisp.width * 0.8,
+      );
+
+      gradient.addColorStop(0, `rgba(${mistWhite}, ${wisp.opacity})`);
+      gradient.addColorStop(0.3, `rgba(${mistCream}, ${wisp.opacity * 0.6})`);
+      gradient.addColorStop(0.6, `rgba(${mistWhite}, ${wisp.opacity * 0.3})`);
+      gradient.addColorStop(1, "transparent");
+
+      ctx.save();
+
+      // Stretch horizontally for wispy look
+      ctx.scale(1.5, 0.6);
+      ctx.beginPath();
+      ctx.arc(x / 1.5, y / 0.6, wisp.width * 0.5, 0, Math.PI * 2);
+      ctx.fillStyle = gradient;
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    // Base fog layer - clean, soft white blanket
+    const baseGradient = ctx.createLinearGradient(0, h * 0.3, 0, h);
+    baseGradient.addColorStop(0, "transparent");
+    baseGradient.addColorStop(0.2, `rgba(${mistWhite}, 0.1)`);
+    baseGradient.addColorStop(0.45, `rgba(${mistCream}, 0.2)`);
+    baseGradient.addColorStop(0.7, `rgba(${mistWhite}, 0.25)`);
+    baseGradient.addColorStop(1, `rgba(${mistCream}, 0.3)`);
+    ctx.fillStyle = baseGradient;
+    ctx.fillRect(0, h * 0.3, w, h * 0.7);
+  }
+
+  resize() {
+    if (this.isActive) {
+      this.init();
+    }
+  }
+}
+
+// ============================================
+// NOON: God Rays + Dust Particles
+// ============================================
+
+/**
+ * God Rays - Light beams streaming from above
+ */
+export class GodRays {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.time = 0;
+    this.isActive = false;
+    this.rays = [];
+    this.init();
+  }
+
+  init() {
+    this.rays = [];
+    // Reduce count on narrow screens
+    const baseCount = 7;
+    const screenFactor = Math.min(1, window.innerWidth / 800);
+    const count = Math.max(2, Math.floor(baseCount * screenFactor));
+
+    for (let i = 0; i < count; i++) {
+      this.rays.push({
+        x: window.innerWidth * (0.1 + (i / count) * 0.8),
+        width: 150 + Math.random() * 250,
+        angle: -20 + Math.random() * 40, // degrees from vertical
+        opacity: 0.1 + Math.random() * 0.08,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.0003 + Math.random() * 0.0002,
+      });
+    }
+  }
+
+  setTimePeriod(timePeriod) {
+    const wasActive = this.isActive;
+    this.isActive = timePeriod === TIME_PERIOD.NOON;
+    if (this.isActive && !wasActive) {
+      this.init();
+    }
   }
 
   update(deltaTime) {
@@ -99,85 +258,334 @@ export class FogLayer {
     const w = window.innerWidth;
     const h = window.innerHeight;
 
-    // Use accent color for fog tint
-    const fogColor = palette.textMuted || "rgba(150, 150, 150, 1)";
+    // Reduce opacity on narrow screens (mobile)
+    const screenFactor = Math.min(1, w / 800);
 
-    for (const layer of this.layers) {
-      this.drawFogLayer(ctx, w, h, layer, fogColor);
+    // Warm sunlight color - soft pale yellow
+    const lightColor = "255, 248, 200";
+
+    for (const ray of this.rays) {
+      // Subtle opacity breathing
+      const breathe = 0.7 + Math.sin(this.time * ray.speed + ray.phase) * 0.3;
+      const currentOpacity = ray.opacity * breathe * screenFactor;
+
+      // Subtle position drift
+      const drift = Math.sin(this.time * ray.speed * 0.5 + ray.phase) * 20;
+
+      ctx.save();
+
+      // Position at top of screen
+      ctx.translate(ray.x + drift, -50);
+      ctx.rotate((ray.angle * Math.PI) / 180);
+
+      // Create ray gradient (fades from top to bottom)
+      const rayGradient = ctx.createLinearGradient(0, 0, 0, h * 1.2);
+      rayGradient.addColorStop(0, `rgba(${lightColor}, ${currentOpacity})`);
+      rayGradient.addColorStop(
+        0.3,
+        `rgba(${lightColor}, ${currentOpacity * 0.7})`,
+      );
+      rayGradient.addColorStop(
+        0.6,
+        `rgba(${lightColor}, ${currentOpacity * 0.3})`,
+      );
+      rayGradient.addColorStop(1, "transparent");
+
+      // Draw tapered ray shape
+      ctx.beginPath();
+      ctx.moveTo(-ray.width * 0.3, 0);
+      ctx.lineTo(ray.width * 0.3, 0);
+      ctx.lineTo(ray.width * 0.8, h * 1.2);
+      ctx.lineTo(-ray.width * 0.8, h * 1.2);
+      ctx.closePath();
+
+      ctx.fillStyle = rayGradient;
+      ctx.fill();
+
+      ctx.restore();
     }
   }
 
-  drawFogLayer(ctx, w, h, layer, baseColor) {
-    const { scale, speed, opacity, yOffset } = layer;
+  resize() {
+    if (this.isActive) {
+      this.init();
+    }
+  }
+}
 
-    // Create horizontal fog bands
-    const bandHeight = h * 0.4;
-    const bandY = h * yOffset - bandHeight / 2;
+/**
+ * Light Streak - A single ray of light falling from above
+ * Like sunlight streaming through trees or windows
+ */
+class LightStreak {
+  constructor() {
+    this.reset(true);
+  }
 
-    // Animate offset with noise
-    const noiseOffset = this.noise.noise2D(this.time * speed, 0) * 50;
+  reset(initial = false) {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
 
-    // Create gradient for fog band
-    const gradient = ctx.createLinearGradient(0, bandY, 0, bandY + bandHeight);
+    this.x = Math.random() * w;
+    this.y = initial ? Math.random() * h : -50;
 
-    // Parse base color to extract RGB
-    const rgb = this.parseColor(baseColor);
+    // Vertical streak dimensions
+    this.length = 60 + Math.random() * 120;
+    this.width = 1 + Math.random() * 2;
 
-    gradient.addColorStop(0, "transparent");
-    gradient.addColorStop(0.3, `rgba(${rgb}, ${opacity * 0.5})`);
-    gradient.addColorStop(0.5, `rgba(${rgb}, ${opacity})`);
-    gradient.addColorStop(0.7, `rgba(${rgb}, ${opacity * 0.5})`);
-    gradient.addColorStop(1, "transparent");
+    // Falling speed
+    this.speed = 0.08 + Math.random() * 0.06;
+
+    // Slight angle (mostly vertical)
+    this.angle = (Math.random() - 0.5) * 0.15;
+
+    // Opacity and fade
+    this.opacity = 0.12 + Math.random() * 0.1;
+    this.fadePhase = Math.random() * Math.PI * 2;
+    this.fadeSpeed = 0.001 + Math.random() * 0.001;
+
+    this.time = 0;
+  }
+
+  update(deltaTime) {
+    this.time += deltaTime;
+    this.y += this.speed * deltaTime;
+    this.x += this.angle * this.speed * deltaTime;
+
+    // Reset when below screen
+    if (this.y > window.innerHeight + this.length) {
+      this.reset();
+    }
+  }
+
+  draw(ctx) {
+    // Reduce opacity on narrow screens (mobile)
+    const screenFactor = Math.min(1, window.innerWidth / 800);
+
+    // Gentle fade in/out
+    const fade =
+      0.6 + Math.sin(this.time * this.fadeSpeed + this.fadePhase) * 0.4;
+    const currentOpacity = this.opacity * fade * screenFactor;
 
     ctx.save();
-    ctx.translate(noiseOffset, 0);
-    ctx.fillStyle = gradient;
-    ctx.fillRect(-100, bandY, w + 200, bandHeight);
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.angle);
 
-    // Add subtle noise texture
-    this.drawNoiseTexture(ctx, w, h, bandY, bandHeight, opacity * 0.3, rgb);
+    // Draw the light streak as a soft gradient line - soft pale yellow
+    const gradient = ctx.createLinearGradient(
+      0,
+      -this.length / 2,
+      0,
+      this.length / 2,
+    );
+    gradient.addColorStop(0, `rgba(255, 252, 220, 0)`);
+    gradient.addColorStop(0.2, `rgba(255, 250, 200, ${currentOpacity * 0.5})`);
+    gradient.addColorStop(0.5, `rgba(255, 250, 200, ${currentOpacity})`);
+    gradient.addColorStop(0.8, `rgba(255, 250, 200, ${currentOpacity * 0.5})`);
+    gradient.addColorStop(1, `rgba(255, 252, 220, 0)`);
+
+    // Draw soft glow around streak
+    ctx.beginPath();
+    ctx.roundRect(
+      -this.width * 3,
+      -this.length / 2,
+      this.width * 6,
+      this.length,
+      this.width * 2,
+    );
+    ctx.fillStyle = gradient;
+    ctx.fill();
+
+    // Draw brighter center - soft pale core
+    const centerGradient = ctx.createLinearGradient(
+      0,
+      -this.length / 2,
+      0,
+      this.length / 2,
+    );
+    centerGradient.addColorStop(0, `rgba(255, 255, 240, 0)`);
+    centerGradient.addColorStop(
+      0.3,
+      `rgba(255, 253, 230, ${currentOpacity * 0.6})`,
+    );
+    centerGradient.addColorStop(
+      0.5,
+      `rgba(255, 253, 230, ${currentOpacity * 0.8})`,
+    );
+    centerGradient.addColorStop(
+      0.7,
+      `rgba(255, 253, 230, ${currentOpacity * 0.6})`,
+    );
+    centerGradient.addColorStop(1, `rgba(255, 255, 240, 0)`);
+
+    ctx.beginPath();
+    ctx.roundRect(
+      -this.width,
+      -this.length / 2,
+      this.width * 2,
+      this.length,
+      this.width,
+    );
+    ctx.fillStyle = centerGradient;
+    ctx.fill();
 
     ctx.restore();
   }
+}
 
-  drawNoiseTexture(ctx, w, h, bandY, bandHeight, opacity, rgb) {
-    // Draw subtle noise patches for organic feel
-    const patches = 8;
-    for (let i = 0; i < patches; i++) {
-      const px =
-        (this.noise.noise2D(i * 0.5, this.time * 0.00002) + 1) * 0.5 * w;
-      const py =
-        bandY +
-        (this.noise.noise2D(i * 0.7 + 100, this.time * 0.00003) + 1) *
-          0.5 *
-          bandHeight;
-      const size =
-        100 + this.noise.noise2D(i * 0.3, this.time * 0.00001) * 50 + 50;
+export class DustParticles {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.streaks = [];
+    this.isActive = false;
+  }
 
-      const patchGradient = ctx.createRadialGradient(px, py, 0, px, py, size);
-      patchGradient.addColorStop(0, `rgba(${rgb}, ${opacity})`);
-      patchGradient.addColorStop(0.5, `rgba(${rgb}, ${opacity * 0.3})`);
-      patchGradient.addColorStop(1, "transparent");
+  init() {
+    this.streaks = [];
+    // Reduce count on narrow screens
+    const baseCount = 25;
+    const screenFactor = Math.min(1, window.innerWidth / 800);
+    const count = Math.max(5, Math.floor(baseCount * screenFactor));
 
-      ctx.fillStyle = patchGradient;
-      ctx.fillRect(px - size, py - size, size * 2, size * 2);
+    for (let i = 0; i < count; i++) {
+      this.streaks.push(new LightStreak());
     }
   }
 
-  parseColor(color) {
-    // Extract RGB from various color formats
-    if (color.startsWith("rgba")) {
-      const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-      if (match) return `${match[1]}, ${match[2]}, ${match[3]}`;
+  setTimePeriod(timePeriod) {
+    const wasActive = this.isActive;
+    this.isActive = timePeriod === TIME_PERIOD.NOON;
+    if (this.isActive && !wasActive) {
+      this.init();
     }
-    if (color.startsWith("#")) {
-      const hex = color.slice(1);
-      const r = parseInt(hex.slice(0, 2), 16);
-      const g = parseInt(hex.slice(2, 4), 16);
-      const b = parseInt(hex.slice(4, 6), 16);
-      return `${r}, ${g}, ${b}`;
+  }
+
+  update(deltaTime) {
+    if (!this.isActive) return;
+    for (const streak of this.streaks) {
+      streak.update(deltaTime);
     }
-    return "200, 200, 200";
+  }
+
+  draw(ctx) {
+    if (!this.isActive) return;
+    for (const streak of this.streaks) {
+      streak.draw(ctx);
+    }
+  }
+
+  resize() {
+    if (this.isActive) {
+      this.init();
+    }
+  }
+}
+
+// ============================================
+// EVENING: Horizontal Light Rays (Sunset Glow)
+// ============================================
+
+/**
+ * Evening Light Rays - Horizontal light beams from setting sun
+ * Creates a warm, golden hour atmosphere
+ */
+export class EveningClouds {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.time = 0;
+    this.isActive = false;
+    this.rays = [];
+    this.init();
+  }
+
+  init() {
+    this.rays = [];
+    const h = window.innerHeight;
+
+    // Create horizontal rays at different heights
+    const count = 5;
+    for (let i = 0; i < count; i++) {
+      this.rays.push({
+        y: h * (0.1 + (i / count) * 0.6), // Spread across upper portion
+        height: 40 + Math.random() * 80,
+        opacity: 0.2 + Math.random() * 0.15,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.001 + Math.random() * 0.0008,
+      });
+    }
+  }
+
+  setTimePeriod(timePeriod) {
+    const wasActive = this.isActive;
+    this.isActive = timePeriod === TIME_PERIOD.EVENING;
+    if (this.isActive && !wasActive) {
+      this.init();
+    }
+  }
+
+  update(deltaTime) {
+    if (!this.isActive) return;
+    this.time += deltaTime;
+  }
+
+  draw(ctx, palette) {
+    if (!this.isActive || !palette) return;
+
+    const w = window.innerWidth;
+
+    // Reduce opacity on narrow screens
+    const screenFactor = Math.min(1, w / 800);
+
+    for (const ray of this.rays) {
+      // Gentle breathing effect
+      const breathe = 0.7 + Math.sin(this.time * ray.speed + ray.phase) * 0.3;
+      const currentOpacity = ray.opacity * breathe * screenFactor;
+
+      // Slight vertical drift
+      const drift = Math.sin(this.time * ray.speed * 0.5 + ray.phase) * 10;
+      const y = ray.y + drift;
+
+      // Create horizontal gradient - light from right (sunset direction)
+      const gradient = ctx.createLinearGradient(w, y, 0, y);
+
+      // Warm sunset colors - orange/pink
+      gradient.addColorStop(0, `rgba(255, 180, 120, ${currentOpacity})`);
+      gradient.addColorStop(
+        0.3,
+        `rgba(255, 160, 130, ${currentOpacity * 0.7})`,
+      );
+      gradient.addColorStop(
+        0.6,
+        `rgba(240, 140, 130, ${currentOpacity * 0.4})`,
+      );
+      gradient.addColorStop(1, "transparent");
+
+      // Draw the ray as a soft horizontal band
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, y - ray.height / 2, w, ray.height);
+    }
+  }
+
+  resize() {
+    if (this.isActive) {
+      this.init();
+    }
+  }
+}
+
+// ============================================
+// Backward compatibility: FogLayer alias
+// ============================================
+
+/**
+ * FogLayer - Kept for backward compatibility
+ * Now just wraps MorningMist
+ */
+export class FogLayer extends MorningMist {
+  setTimePeriod(timePeriod) {
+    // FogLayer was active for both MORNING and EVENING
+    // Now only MORNING uses it (EVENING uses EveningClouds)
+    this.isActive = timePeriod === TIME_PERIOD.MORNING;
   }
 }
 
