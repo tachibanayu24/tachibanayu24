@@ -80,6 +80,12 @@ async function render() {
   // Update HTML lang attribute for SEO and accessibility
   document.documentElement.lang = lang;
 
+  // Render name
+  const nameEl = document.getElementById("name");
+  if (nameEl) {
+    nameEl.textContent = profileData.name[lang];
+  }
+
   // Render bio
   const bioHtml = profileData.bio[lang].split("\n").join("<br>");
   document.getElementById("bio").innerHTML = bioHtml;

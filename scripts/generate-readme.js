@@ -39,7 +39,7 @@ function generateReadme(data, lang) {
   const findMeText = lang === "ja" ? "SNSなどはこちら" : "You can find me on";
 
   // Generate full README
-  return `# ${data.name}
+  return `# ${data.name[lang]}
 
 ${langSwitch}
 

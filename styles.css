@@ -6,6 +6,7 @@
   --accent: #4a6fa5;
   --shadow-light: #ffffff;
   --shadow-dark: #c5ccd6;
+  --transition-duration: 0.3s;
 }
 
 * {
@@ -21,13 +22,14 @@ body {
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-  background: var(--bg);
+  background: transparent;
   color: var(--text);
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 2rem 1rem;
+  transition: color var(--transition-duration) ease;
 }
 
 .container {
@@ -45,6 +47,9 @@ body {
     -12px -12px 24px var(--shadow-light);
   animation: fadeIn 0.5s ease-out;
   position: relative;
+  transition:
+    background var(--transition-duration) ease,
+    box-shadow var(--transition-duration) ease;
 }
 
 /* Language Toggle */
@@ -53,14 +58,17 @@ body {
   top: 1rem;
   right: 1rem;
   border: none;
-  background: var(--bg);
+  background: var(--card-bg);
   color: var(--text-muted);
   font-size: 0.65rem;
   font-weight: 600;
   padding: 0.4rem 0.6rem;
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition:
+    all 0.2s ease,
+    background var(--transition-duration) ease,
+    box-shadow var(--transition-duration) ease;
   font-family: inherit;
   box-shadow:
     2px 2px 4px var(--shadow-dark),
@@ -87,11 +95,14 @@ body {
   display: inline-block;
   padding: 6px;
   border-radius: 50%;
-  background: var(--bg);
+  background: var(--card-bg);
   box-shadow:
     6px 6px 12px var(--shadow-dark),
     -6px -6px 12px var(--shadow-light);
   margin-bottom: 1.5rem;
+  transition:
+    background var(--transition-duration) ease,
+    box-shadow var(--transition-duration) ease;
 }
 
 .avatar {
@@ -108,12 +119,14 @@ body {
   letter-spacing: -0.02em;
   margin-bottom: 0.75rem;
   color: var(--text);
+  transition: color var(--transition-duration) ease;
 }
 
 .bio {
   color: var(--text-muted);
   font-size: 0.9rem;
   line-height: 1.8;
+  transition: color var(--transition-duration) ease;
 }
 
 .bio a {
@@ -121,7 +134,9 @@ body {
   text-decoration: underline;
   text-underline-offset: 2px;
   font-weight: 500;
-  transition: opacity 0.2s;
+  transition:
+    opacity 0.2s,
+    color var(--transition-duration) ease;
 }
 
 .bio a:hover {
@@ -133,6 +148,7 @@ body {
   margin-top: 1rem;
   font-size: 0.8rem;
   color: var(--text-muted);
+  transition: color var(--transition-duration) ease;
 }
 
 .company a {
@@ -140,7 +156,9 @@ body {
   text-decoration: underline;
   text-underline-offset: 2px;
   font-weight: 500;
-  transition: opacity 0.2s;
+  transition:
+    opacity 0.2s,
+    color var(--transition-duration) ease;
 }
 
 .company a:hover {
@@ -169,6 +187,7 @@ body {
   margin-bottom: 1.25rem;
   text-align: center;
   font-weight: 600;
+  transition: color var(--transition-duration) ease;
 }
 
 .links-grid {
@@ -184,7 +203,7 @@ body {
   justify-content: center;
   gap: 0.5rem;
   padding: 0.875rem 0.75rem;
-  background: var(--bg);
+  background: var(--card-bg);
   border-radius: 14px;
   text-decoration: none;
   color: var(--text);
@@ -193,7 +212,10 @@ body {
   box-shadow:
     4px 4px 8px var(--shadow-dark),
     -4px -4px 8px var(--shadow-light);
-  transition: all 0.2s ease;
+  transition:
+    all 0.2s ease,
+    background var(--transition-duration) ease,
+    box-shadow var(--transition-duration) ease;
 }
 
 .link:hover {
