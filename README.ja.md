@@ -1,6 +1,6 @@
 # 立花 優斗
 
-[English](./README.md)
+[English](./README.md) | [Website](https://tachibanayu24.com/)
 
 Social mediaから気軽に繋がってください！  
 ご面談はMessengerかXのDMよりご相談ください。
