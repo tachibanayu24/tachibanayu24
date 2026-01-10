@@ -346,6 +346,12 @@ export function applyPaletteToCss(palette) {
   const root = document.documentElement;
 
   root.style.setProperty("--bg", palette.bg);
+
+  // Update theme-color meta tag for Android system UI
+  const themeColorMeta = document.getElementById("theme-color");
+  if (themeColorMeta) {
+    themeColorMeta.setAttribute("content", palette.bg);
+  }
   root.style.setProperty("--card-bg", palette.cardBg);
   // Slightly visible card background (very transparent)
   root.style.setProperty("--card-bg-glass", hexToRgba(palette.cardBg, 0.075));
@@ -366,9 +372,9 @@ export function applyPaletteToCss(palette) {
   // Card edge colors for plastic thickness effect
   // More transparent than before, but less than card body (7.5%)
   const cardBgRgb = hexToRgb(palette.cardBg);
-  const edgeLight = `rgba(${Math.min(255, cardBgRgb.r + 30)}, ${Math.min(255, cardBgRgb.g + 30)}, ${Math.min(255, cardBgRgb.b + 30)}, 0.25)`;
-  const edgeDark = `rgba(${Math.max(0, cardBgRgb.r - 30)}, ${Math.max(0, cardBgRgb.g - 30)}, ${Math.max(0, cardBgRgb.b - 30)}, 0.3)`;
-  const edgeDarker = `rgba(${Math.max(0, cardBgRgb.r - 50)}, ${Math.max(0, cardBgRgb.g - 50)}, ${Math.max(0, cardBgRgb.b - 50)}, 0.35)`;
+  const edgeLight = `rgba(${Math.min(255, cardBgRgb.r + 30)}, ${Math.min(255, cardBgRgb.g + 30)}, ${Math.min(255, cardBgRgb.b + 30)}, 0.15)`;
+  const edgeDark = `rgba(${Math.max(0, cardBgRgb.r - 30)}, ${Math.max(0, cardBgRgb.g - 30)}, ${Math.max(0, cardBgRgb.b - 30)}, 0.2)`;
+  const edgeDarker = `rgba(${Math.max(0, cardBgRgb.r - 50)}, ${Math.max(0, cardBgRgb.g - 50)}, ${Math.max(0, cardBgRgb.b - 50)}, 0.25)`;
   root.style.setProperty("--card-edge-light", edgeLight);
   root.style.setProperty("--card-edge-dark", edgeDark);
   root.style.setProperty("--card-edge-darker", edgeDarker);

@@ -5,15 +5,20 @@
   --button-bg: rgba(232, 238, 243, 0.45);
   --glass-border: rgba(232, 238, 243, 0.3);
   --glass-shadow: rgba(0, 0, 0, 0.1);
-  --card-edge-light: rgba(255, 255, 255, 0.5);
-  --card-edge-dark: rgba(200, 205, 215, 0.6);
-  --card-edge-darker: rgba(180, 185, 195, 0.7);
+  --card-edge-light: rgba(255, 255, 255, 0.15);
+  --card-edge-dark: rgba(200, 205, 215, 0.2);
+  --card-edge-darker: rgba(180, 185, 195, 0.25);
   --text: #2d3748;
   --text-muted: #718096;
   --accent: #4a6fa5;
   --shadow-light: #ffffff;
   --shadow-dark: #c5ccd6;
   --transition-duration: 0.3s;
+}
+
+html {
+  background: var(--bg);
+  transition: background var(--transition-duration) ease;
 }
 
 * {
@@ -32,10 +37,15 @@ body {
   background: transparent;
   color: var(--text);
   min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem 1rem;
+  /* Safe area padding for notched devices */
+  padding: calc(2rem + env(safe-area-inset-top, 0px))
+    calc(1rem + env(safe-area-inset-right, 0px))
+    calc(2rem + env(safe-area-inset-bottom, 0px))
+    calc(1rem + env(safe-area-inset-left, 0px));
   transition: color var(--transition-duration) ease;
 }
 
@@ -379,7 +389,10 @@ button {
 /* Mobile */
 @media (max-width: 480px) {
   body {
-    padding: 1.5rem 1rem;
+    padding: calc(1.5rem + env(safe-area-inset-top, 0px))
+      calc(1rem + env(safe-area-inset-right, 0px))
+      calc(1.5rem + env(safe-area-inset-bottom, 0px))
+      calc(1rem + env(safe-area-inset-left, 0px));
     align-items: flex-start;
   }
 

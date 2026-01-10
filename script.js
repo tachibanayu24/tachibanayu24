@@ -114,6 +114,12 @@ let profileData = null;
 let cardHeightFixed = false;
 
 /**
+ * Flag to track if hint animation is playing
+ * @type {boolean}
+ */
+let isHintAnimating = false;
+
+/**
  * Fetch SVG icon from Simple Icons CDN or use fallback
  * @param {string|null} slug - Simple Icons slug
  * @param {string} key - Icon key for fallback lookup
@@ -368,6 +374,8 @@ function setupFlipToggle() {
   card.addEventListener("click", (e) => {
     // Don't flip if clicking on interactive elements
     if (e.target.closest("a, button")) return;
+    // Don't flip during hint animation
+    if (isHintAnimating) return;
     card.classList.toggle("flipped");
   });
 
@@ -380,6 +388,9 @@ function setupFlipToggle() {
  * @param {HTMLElement} card - Card element
  */
 function showFlipHint(card) {
+  // Block interactions during fadeIn + hint animation
+  isHintAnimating = true;
+
   // Start hint after fadeIn animation completes (0.3s)
   setTimeout(() => {
     card.classList.add("hint");
@@ -389,6 +400,7 @@ function showFlipHint(card) {
       "animationend",
       () => {
         card.classList.remove("hint");
+        isHintAnimating = false;
       },
       { once: true },
     );
