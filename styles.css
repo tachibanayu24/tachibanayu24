@@ -138,6 +138,25 @@ body {
   opacity: 0.7;
 }
 
+/* Company */
+.company {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.company a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.company a:hover {
+  opacity: 0.7;
+}
+
 /* Divider */
 .divider {
   height: 2px;

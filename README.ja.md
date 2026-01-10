@@ -1,12 +1,12 @@
 # Yuto Tachibana
 
-Hey! I'm a Web Developer based in Tokyo 🇯🇵  
-Passionate about building great products and delightful experiences ✨  
-Always curious, always learning 🚀
+東京を拠点に活動するWebデベロッパーです 🇯🇵  
+良いプロダクトと心地よい体験を作ることに情熱を注いでいます ✨  
+常に好奇心を持ち、学び続けています 🚀
 
-Working at [Delight Ventures, Inc.](https://www.delight-ventures.com/en/team/yuto-tachibana)
+勤務先: [Delight Ventures, Inc.](https://www.delight-ventures.com/en/team/yuto-tachibana)
 
-You can find me on <img width="20" src="https://raw.githubusercontent.com/tachibanayu24/tachibanayu24/main/images/wave.gif" />
+SNSなどはこちら <img width="20" src="https://raw.githubusercontent.com/tachibanayu24/tachibanayu24/main/images/wave.gif" />
 
 - [Facebook](https://www.facebook.com/tachibanayu24)
 - [LinkedIn](https://www.linkedin.com/in/yuto-tachibana)

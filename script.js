@@ -78,19 +78,14 @@ async function render() {
   const lang = currentLang;
 
   // Render bio
-  const bioLines = profileData.bio[lang].split("\n");
-  const companyLink = `<a href="${profileData.company.url}" target="_blank" rel="noopener">${profileData.company.name}</a>`;
-
-  const bioHtml = bioLines
-    .map((line, index) => {
-      if (index === bioLines.length - 1) {
-        return `${line} ${companyLink}`;
-      }
-      return line;
-    })
-    .join("<br>");
-
+  const bioHtml = profileData.bio[lang].split("\n").join("<br>");
   document.getElementById("bio").innerHTML = bioHtml;
+
+  // Render company
+  const companyLabel = profileData.company.label[lang];
+  const companyLink = `<a href="${profileData.company.url}" target="_blank" rel="noopener">${profileData.company.name}</a>`;
+  document.getElementById("company").innerHTML =
+    `${companyLabel} ${companyLink}`;
 
   // Fetch all icons in parallel
   const iconPromises = profileData.links.map((link) => {
