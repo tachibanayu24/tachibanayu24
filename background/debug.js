@@ -131,6 +131,14 @@ class DebugPanel {
         </div>
       </div>
 
+      <div style="${SECTION_STYLES}">
+        <span style="${LABEL_STYLES}">Card Actions</span>
+        <div style="${BUTTON_GROUP_STYLES}">
+          <button id="debug-flip" style="${BUTTON_STYLES}">Flip</button>
+          <button id="debug-hint" style="${BUTTON_STYLES}">Hint Anim</button>
+        </div>
+      </div>
+
       <div style="font-size: 10px; color: #666; margin-bottom: 0.5rem;" id="debug-status">
         Mode: Auto
       </div>
@@ -161,6 +169,29 @@ class DebugPanel {
     // Close button
     this.panel.querySelector("#debug-close").addEventListener("click", () => {
       this.panel.style.display = "none";
+    });
+
+    // Flip button
+    this.panel.querySelector("#debug-flip").addEventListener("click", () => {
+      const card = document.querySelector(".card");
+      if (card) {
+        card.classList.add("flipping");
+        card.classList.toggle("flipped");
+        setTimeout(() => card.classList.remove("flipping"), 600);
+      }
+    });
+
+    // Hint animation button
+    this.panel.querySelector("#debug-hint").addEventListener("click", () => {
+      const card = document.querySelector(".card");
+      if (card && !card.classList.contains("hint")) {
+        card.classList.add("hint");
+        card.addEventListener(
+          "animationend",
+          () => card.classList.remove("hint"),
+          { once: true },
+        );
+      }
     });
 
     // Keyboard shortcut to toggle panel (Ctrl+Shift+D)

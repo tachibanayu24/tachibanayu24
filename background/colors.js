@@ -93,7 +93,7 @@ const TIME_PALETTES = {
     cardBg: "#E8E0DC",
     text: "#4A4040",
     textMuted: "#7A6B6B",
-    accent: "#B89080",
+    accent: "#8F5A4A",
     // Sunset light from lower right (off-screen)
     celestial: {
       type: "sun",
@@ -242,7 +242,7 @@ export function getColorPalette(
   transitionFactor = 1,
   previousTimePeriod = null,
 ) {
-  let palette = { ...TIME_PALETTES[timePeriod] };
+  let palette = { ...TIME_PALETTES[timePeriod], timePeriod };
 
   // Apply time transition if needed
   // transitionFactor: 0 = fully 'previous', 1 = fully 'current'
@@ -378,4 +378,82 @@ export function applyPaletteToCss(palette) {
   root.style.setProperty("--card-edge-light", edgeLight);
   root.style.setProperty("--card-edge-dark", edgeDark);
   root.style.setProperty("--card-edge-darker", edgeDarker);
+
+  // Light reflection based on celestial position (sun/moon)
+  if (palette.celestial) {
+    const { x, y, type, color } = palette.celestial;
+
+    // Convert celestial position to highlight position on card
+    // Clamp to 0-100% range for gradient positioning
+    const highlightX = Math.max(0, Math.min(100, x * 100));
+    const highlightY = Math.max(0, Math.min(100, y * 100));
+
+    // Adjust reflection intensity based on celestial type (stronger values)
+    const isMoon = type === "moon";
+    const baseOpacity = isMoon ? 0.15 : 0.25;
+
+    // Parse celestial color for highlight tint
+    const celestialRgba = parseRgbaColor(color);
+    const highlightColor = `rgba(${celestialRgba.r}, ${celestialRgba.g}, ${celestialRgba.b}, ${baseOpacity})`;
+
+    // Create radial gradient from light source position (larger and more visible)
+    const highlightGradient = `radial-gradient(
+      ellipse 150% 100% at ${highlightX}% ${highlightY}%,
+      ${highlightColor} 0%,
+      transparent 65%
+    )`;
+    root.style.setProperty("--card-highlight", highlightGradient);
+
+    // Edge highlight intensity based on light direction (stronger values)
+    // Brighter edge on the side facing the light
+    const topEdgeOpacity = y < 0.5 ? 0.5 : 0.25;
+    const leftEdgeOpacity = x < 0.5 ? 0.45 : 0.2;
+    root.style.setProperty(
+      "--edge-highlight-top",
+      `rgba(255, 255, 255, ${topEdgeOpacity})`,
+    );
+    root.style.setProperty(
+      "--edge-highlight-left",
+      `rgba(255, 255, 255, ${leftEdgeOpacity})`,
+    );
+
+    // Oil slick angle follows light direction
+    const oilslickAngle = Math.atan2(y - 0.5, x - 0.5) * (180 / Math.PI) + 90;
+    root.style.setProperty("--oilslick-angle", `${oilslickAngle}deg`);
+
+    // Shimmer intensity per time period (brighter backgrounds need stronger shimmer)
+    const shimmerIntensity = {
+      MORNING: 0.35,
+      NOON: 0.25,
+      EVENING: 0.3,
+      NIGHT: 0.15,
+    };
+    root.style.setProperty(
+      "--shimmer-intensity",
+      shimmerIntensity[palette.timePeriod] || 0.25,
+    );
+
+    // Oil slick intensity per time period (night is subtle, others are stronger)
+    const oilslickIntensity = {
+      MORNING: 0.12,
+      NOON: 0.14,
+      EVENING: 0.15,
+      NIGHT: 0.04,
+    };
+    const intensity = oilslickIntensity[palette.timePeriod] || 0.1;
+
+    const oilslickGradient = `linear-gradient(
+      ${oilslickAngle}deg,
+      transparent 0%,
+      rgba(255, 100, 100, ${intensity * 0.7}) 12%,
+      rgba(255, 200, 100, ${intensity}) 24%,
+      rgba(200, 255, 100, ${intensity}) 36%,
+      rgba(100, 255, 200, ${intensity}) 48%,
+      rgba(100, 200, 255, ${intensity}) 60%,
+      rgba(150, 100, 255, ${intensity * 0.7}) 72%,
+      rgba(255, 100, 200, ${intensity * 0.5}) 84%,
+      transparent 100%
+    )`;
+    root.style.setProperty("--oilslick-gradient", oilslickGradient);
+  }
 }
