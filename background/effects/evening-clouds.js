@@ -61,32 +61,37 @@ export class EveningClouds extends BaseEffect {
     if (!this.isActive || !palette) return;
 
     const w = window.innerWidth;
-    const { MOBILE_BREAKPOINT } = CONFIG.SCREEN;
+    const { MOBILE_BREAKPOINT, MOBILE_MIN_OPACITY_FACTOR } = CONFIG.SCREEN;
 
-    // Reduce opacity on narrow screens
-    const screenFactor = Math.min(1, w / MOBILE_BREAKPOINT);
+    // Reduce opacity on narrow screens, but keep minimum visibility
+    const rawFactor = w / MOBILE_BREAKPOINT;
+    const screenFactor = Math.max(
+      MOBILE_MIN_OPACITY_FACTOR,
+      Math.min(1, rawFactor),
+    );
 
     for (const ray of this.rays) {
-      // Gentle breathing effect
-      const breathe = 0.7 + Math.sin(this.time * ray.speed + ray.phase) * 0.3;
+      // More dynamic breathing effect
+      const breathe =
+        0.6 + Math.sin(this.time * ray.speed * 1.4 + ray.phase) * 0.4;
       const currentOpacity = ray.opacity * breathe * screenFactor;
 
-      // Slight vertical drift
-      const drift = Math.sin(this.time * ray.speed * 0.5 + ray.phase) * 10;
+      // More noticeable vertical drift
+      const drift = Math.sin(this.time * ray.speed * 0.7 + ray.phase) * 18;
       const y = ray.y + drift;
 
       // Create horizontal gradient - light from right (sunset direction)
       const gradient = ctx.createLinearGradient(w, y, 0, y);
 
-      // Warm sunset colors - orange/pink
-      gradient.addColorStop(0, `rgba(255, 180, 120, ${currentOpacity})`);
+      // Richer sunset colors - deeper orange/pink for visibility
+      gradient.addColorStop(0, `rgba(255, 170, 100, ${currentOpacity * 1.15})`);
       gradient.addColorStop(
-        0.3,
-        `rgba(255, 160, 130, ${currentOpacity * 0.7})`,
+        0.25,
+        `rgba(255, 150, 110, ${currentOpacity * 0.85})`,
       );
       gradient.addColorStop(
-        0.6,
-        `rgba(240, 140, 130, ${currentOpacity * 0.4})`,
+        0.5,
+        `rgba(245, 130, 120, ${currentOpacity * 0.55})`,
       );
       gradient.addColorStop(1, "transparent");
 

@@ -61,11 +61,15 @@ class LightStreak {
   }
 
   draw(ctx) {
-    const { MOBILE_BREAKPOINT } = CONFIG.SCREEN;
+    const { MOBILE_BREAKPOINT, MOBILE_MIN_OPACITY_FACTOR } = CONFIG.SCREEN;
     const w = window.innerWidth;
 
-    // Reduce opacity on narrow screens
-    const screenFactor = Math.min(1, w / MOBILE_BREAKPOINT);
+    // Reduce opacity on narrow screens, but keep minimum visibility
+    const rawFactor = w / MOBILE_BREAKPOINT;
+    const screenFactor = Math.max(
+      MOBILE_MIN_OPACITY_FACTOR,
+      Math.min(1, rawFactor),
+    );
 
     // Gentle fade in/out
     const fade =
@@ -76,18 +80,18 @@ class LightStreak {
     ctx.translate(this.x, this.y);
     ctx.rotate(this.angle);
 
-    // Draw the light streak as a soft gradient line
+    // Draw the light streak with golden tint for visibility
     const gradient = ctx.createLinearGradient(
       0,
       -this.length / 2,
       0,
       this.length / 2,
     );
-    gradient.addColorStop(0, `rgba(255, 252, 220, 0)`);
-    gradient.addColorStop(0.2, `rgba(255, 250, 200, ${currentOpacity * 0.5})`);
-    gradient.addColorStop(0.5, `rgba(255, 250, 200, ${currentOpacity})`);
-    gradient.addColorStop(0.8, `rgba(255, 250, 200, ${currentOpacity * 0.5})`);
-    gradient.addColorStop(1, `rgba(255, 252, 220, 0)`);
+    gradient.addColorStop(0, `rgba(255, 245, 200, 0)`);
+    gradient.addColorStop(0.2, `rgba(255, 235, 180, ${currentOpacity * 0.6})`);
+    gradient.addColorStop(0.5, `rgba(255, 230, 170, ${currentOpacity})`);
+    gradient.addColorStop(0.8, `rgba(255, 235, 180, ${currentOpacity * 0.6})`);
+    gradient.addColorStop(1, `rgba(255, 245, 200, 0)`);
 
     // Draw soft glow around streak
     ctx.beginPath();
@@ -101,27 +105,27 @@ class LightStreak {
     ctx.fillStyle = gradient;
     ctx.fill();
 
-    // Draw brighter center
+    // Draw brighter golden center
     const centerGradient = ctx.createLinearGradient(
       0,
       -this.length / 2,
       0,
       this.length / 2,
     );
-    centerGradient.addColorStop(0, `rgba(255, 255, 240, 0)`);
+    centerGradient.addColorStop(0, `rgba(255, 250, 220, 0)`);
     centerGradient.addColorStop(
       0.3,
-      `rgba(255, 253, 230, ${currentOpacity * 0.6})`,
+      `rgba(255, 240, 200, ${currentOpacity * 0.7})`,
     );
     centerGradient.addColorStop(
       0.5,
-      `rgba(255, 253, 230, ${currentOpacity * 0.8})`,
+      `rgba(255, 235, 190, ${currentOpacity * 0.9})`,
     );
     centerGradient.addColorStop(
       0.7,
-      `rgba(255, 253, 230, ${currentOpacity * 0.6})`,
+      `rgba(255, 240, 200, ${currentOpacity * 0.7})`,
     );
-    centerGradient.addColorStop(1, `rgba(255, 255, 240, 0)`);
+    centerGradient.addColorStop(1, `rgba(255, 250, 220, 0)`);
 
     ctx.beginPath();
     ctx.roundRect(

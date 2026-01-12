@@ -9,8 +9,9 @@ import { TIME_PERIOD } from "../time.js";
 import { CONFIG } from "../config.js";
 import { BaseEffect } from "./base-effect.js";
 
-// Warm sunlight color
-const LIGHT_COLOR = "255, 248, 200";
+// Warm sunlight colors - slightly more golden for visibility
+const LIGHT_COLOR = "255, 240, 180";
+const LIGHT_COLOR_WARM = "255, 220, 150";
 
 /**
  * @typedef {Object} Ray
@@ -73,18 +74,23 @@ export class GodRays extends BaseEffect {
 
     const w = window.innerWidth;
     const h = window.innerHeight;
-    const { MOBILE_BREAKPOINT } = CONFIG.SCREEN;
+    const { MOBILE_BREAKPOINT, MOBILE_MIN_OPACITY_FACTOR } = CONFIG.SCREEN;
 
-    // Reduce opacity on narrow screens
-    const screenFactor = Math.min(1, w / MOBILE_BREAKPOINT);
+    // Reduce opacity on narrow screens, but keep minimum visibility
+    const rawFactor = w / MOBILE_BREAKPOINT;
+    const screenFactor = Math.max(
+      MOBILE_MIN_OPACITY_FACTOR,
+      Math.min(1, rawFactor),
+    );
 
     for (const ray of this.rays) {
-      // Subtle opacity breathing
-      const breathe = 0.7 + Math.sin(this.time * ray.speed + ray.phase) * 0.3;
+      // More dynamic opacity breathing
+      const breathe =
+        0.6 + Math.sin(this.time * ray.speed * 1.5 + ray.phase) * 0.4;
       const currentOpacity = ray.opacity * breathe * screenFactor;
 
-      // Subtle position drift
-      const drift = Math.sin(this.time * ray.speed * 0.5 + ray.phase) * 20;
+      // More noticeable position drift
+      const drift = Math.sin(this.time * ray.speed * 0.8 + ray.phase) * 35;
 
       ctx.save();
 
@@ -92,16 +98,16 @@ export class GodRays extends BaseEffect {
       ctx.translate(ray.x + drift, -50);
       ctx.rotate((ray.angle * Math.PI) / 180);
 
-      // Create ray gradient (fades from top to bottom)
+      // Create ray gradient with warmer color at core
       const rayGradient = ctx.createLinearGradient(0, 0, 0, h * 1.2);
-      rayGradient.addColorStop(0, `rgba(${LIGHT_COLOR}, ${currentOpacity})`);
       rayGradient.addColorStop(
-        0.3,
-        `rgba(${LIGHT_COLOR}, ${currentOpacity * 0.7})`,
+        0,
+        `rgba(${LIGHT_COLOR_WARM}, ${currentOpacity * 1.2})`,
       );
+      rayGradient.addColorStop(0.2, `rgba(${LIGHT_COLOR}, ${currentOpacity})`);
       rayGradient.addColorStop(
-        0.6,
-        `rgba(${LIGHT_COLOR}, ${currentOpacity * 0.3})`,
+        0.5,
+        `rgba(${LIGHT_COLOR}, ${currentOpacity * 0.5})`,
       );
       rayGradient.addColorStop(1, "transparent");
 

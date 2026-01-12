@@ -9,9 +9,10 @@ import { TIME_PERIOD } from "../time.js";
 import { CONFIG } from "../config.js";
 import { BaseEffect } from "./base-effect.js";
 
-// Mist color constants
-const MIST_WHITE = "250, 255, 220";
-const MIST_CREAM = "245, 255, 210";
+// Mist color constants - slightly more golden for morning sun
+const MIST_WHITE = "255, 252, 220";
+const MIST_CREAM = "255, 248, 200";
+const MIST_GOLD = "255, 240, 180";
 
 /**
  * @typedef {Object} Wisp
@@ -91,15 +92,16 @@ export class MorningMist extends BaseEffect {
     const h = window.innerHeight;
 
     for (const wisp of this.wisps) {
-      // Organic horizontal drift
-      const drift = Math.sin(this.time * wisp.speed + wisp.driftPhase) * 30;
+      // More dynamic horizontal drift
+      const drift =
+        Math.sin(this.time * wisp.speed * 1.3 + wisp.driftPhase) * 45;
       const verticalWobble =
-        Math.sin(this.time * wisp.speed * 0.7 + wisp.phase) * 15;
+        Math.sin(this.time * wisp.speed * 0.9 + wisp.phase) * 20;
 
       const x = wisp.x + drift;
       const y = wisp.baseY + verticalWobble;
 
-      // Main wisp gradient
+      // Main wisp gradient with golden tint
       const gradient = ctx.createRadialGradient(
         x,
         y,
@@ -108,9 +110,9 @@ export class MorningMist extends BaseEffect {
         y,
         wisp.width * 0.8,
       );
-      gradient.addColorStop(0, `rgba(${MIST_WHITE}, ${wisp.opacity})`);
-      gradient.addColorStop(0.3, `rgba(${MIST_CREAM}, ${wisp.opacity * 0.6})`);
-      gradient.addColorStop(0.6, `rgba(${MIST_WHITE}, ${wisp.opacity * 0.3})`);
+      gradient.addColorStop(0, `rgba(${MIST_GOLD}, ${wisp.opacity * 1.1})`);
+      gradient.addColorStop(0.25, `rgba(${MIST_CREAM}, ${wisp.opacity * 0.8})`);
+      gradient.addColorStop(0.5, `rgba(${MIST_WHITE}, ${wisp.opacity * 0.4})`);
       gradient.addColorStop(1, "transparent");
 
       ctx.save();
@@ -123,13 +125,13 @@ export class MorningMist extends BaseEffect {
       ctx.restore();
     }
 
-    // Base fog layer
+    // Base fog layer with golden glow
     const baseGradient = ctx.createLinearGradient(0, h * 0.3, 0, h);
     baseGradient.addColorStop(0, "transparent");
-    baseGradient.addColorStop(0.2, `rgba(${MIST_WHITE}, 0.1)`);
-    baseGradient.addColorStop(0.45, `rgba(${MIST_CREAM}, 0.2)`);
-    baseGradient.addColorStop(0.7, `rgba(${MIST_WHITE}, 0.25)`);
-    baseGradient.addColorStop(1, `rgba(${MIST_CREAM}, 0.3)`);
+    baseGradient.addColorStop(0.15, `rgba(${MIST_GOLD}, 0.12)`);
+    baseGradient.addColorStop(0.35, `rgba(${MIST_CREAM}, 0.22)`);
+    baseGradient.addColorStop(0.6, `rgba(${MIST_WHITE}, 0.28)`);
+    baseGradient.addColorStop(1, `rgba(${MIST_CREAM}, 0.35)`);
     ctx.fillStyle = baseGradient;
     ctx.fillRect(0, h * 0.3, w, h * 0.7);
   }

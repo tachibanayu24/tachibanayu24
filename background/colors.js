@@ -455,5 +455,76 @@ export function applyPaletteToCss(palette) {
       transparent 100%
     )`;
     root.style.setProperty("--oilslick-gradient", oilslickGradient);
+
+    // Text shadow colors per time period
+    // Light modes: white highlight above, dark shadow below (emboss)
+    // Night mode: subtle glow effect with dark shadow above (inverted for light text)
+    const textShadowConfig = {
+      MORNING: {
+        highlightColor: "rgba(255, 255, 255, 0.8)",
+        shadowColor: "rgba(0, 0, 0, 0.15)",
+        highlightOffset: "0 2px 1px",
+        shadowOffset: "0 -1px 1px",
+        // Subtle for body text
+        highlightColorSubtle: "rgba(255, 255, 255, 0.35)",
+        shadowColorSubtle: "rgba(0, 0, 0, 0.06)",
+        highlightOffsetSubtle: "0 1px 0",
+        shadowOffsetSubtle: "0 -1px 0",
+      },
+      NOON: {
+        highlightColor: "rgba(255, 255, 255, 0.8)",
+        shadowColor: "rgba(0, 0, 0, 0.12)",
+        highlightOffset: "0 2px 1px",
+        shadowOffset: "0 -1px 1px",
+        highlightColorSubtle: "rgba(255, 255, 255, 0.35)",
+        shadowColorSubtle: "rgba(0, 0, 0, 0.05)",
+        highlightOffsetSubtle: "0 1px 0",
+        shadowOffsetSubtle: "0 -1px 0",
+      },
+      EVENING: {
+        highlightColor: "rgba(255, 240, 220, 0.7)",
+        shadowColor: "rgba(0, 0, 0, 0.18)",
+        highlightOffset: "0 2px 1px",
+        shadowOffset: "0 -1px 1px",
+        highlightColorSubtle: "rgba(255, 240, 220, 0.3)",
+        shadowColorSubtle: "rgba(0, 0, 0, 0.08)",
+        highlightOffsetSubtle: "0 1px 0",
+        shadowOffsetSubtle: "0 -1px 0",
+      },
+      NIGHT: {
+        highlightColor: "rgba(100, 130, 180, 0.4)",
+        shadowColor: "rgba(0, 0, 0, 0.5)",
+        highlightOffset: "0 1px 2px",
+        shadowOffset: "0 -1px 1px",
+        highlightColorSubtle: "rgba(100, 130, 180, 0.2)",
+        shadowColorSubtle: "rgba(0, 0, 0, 0.25)",
+        highlightOffsetSubtle: "0 1px 0",
+        shadowOffsetSubtle: "0 -1px 0",
+      },
+    };
+
+    const tsConfig =
+      textShadowConfig[palette.timePeriod] || textShadowConfig.NOON;
+    root.style.setProperty("--text-highlight-color", tsConfig.highlightColor);
+    root.style.setProperty("--text-shadow-color", tsConfig.shadowColor);
+    root.style.setProperty("--text-highlight-offset", tsConfig.highlightOffset);
+    root.style.setProperty("--text-shadow-offset", tsConfig.shadowOffset);
+    // Subtle variants for body text
+    root.style.setProperty(
+      "--text-highlight-color-subtle",
+      tsConfig.highlightColorSubtle,
+    );
+    root.style.setProperty(
+      "--text-shadow-color-subtle",
+      tsConfig.shadowColorSubtle,
+    );
+    root.style.setProperty(
+      "--text-highlight-offset-subtle",
+      tsConfig.highlightOffsetSubtle,
+    );
+    root.style.setProperty(
+      "--text-shadow-offset-subtle",
+      tsConfig.shadowOffsetSubtle,
+    );
   }
 }

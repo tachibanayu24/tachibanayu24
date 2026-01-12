@@ -75,40 +75,40 @@ export const CONFIG = {
   EFFECTS: {
     // Morning mist rising from bottom
     MIST: {
-      COUNT: 10,
+      COUNT: 12,
       WIDTH: { min: 300, max: 700 },
       HEIGHT: { min: 150, max: 350 },
-      SPEED: { min: 0.0004, max: 0.0007 },
-      RISE_SPEED: { min: 0.06, max: 0.1 },
-      OPACITY: { min: 0.3, max: 0.45 },
+      SPEED: { min: 0.0005, max: 0.0009 },
+      RISE_SPEED: { min: 0.08, max: 0.12 },
+      OPACITY: { min: 0.35, max: 0.55 },
     },
 
     // Noon god rays from above
     GOD_RAYS: {
-      BASE_COUNT: 7,
+      BASE_COUNT: 4,
       WIDTH: { min: 150, max: 400 },
       ANGLE: { min: -20, max: 20 },
-      OPACITY: { min: 0.1, max: 0.18 },
-      SPEED: { min: 0.0003, max: 0.0005 },
+      OPACITY: { min: 0.14, max: 0.24 },
+      SPEED: { min: 0.0004, max: 0.0007 },
     },
 
     // Noon dust/light streaks
     DUST: {
-      BASE_COUNT: 25,
-      LENGTH: { min: 60, max: 180 },
-      WIDTH: { min: 1, max: 3 },
-      SPEED: { min: 0.08, max: 0.14 },
-      OPACITY: { min: 0.12, max: 0.22 },
+      BASE_COUNT: 20,
+      LENGTH: { min: 70, max: 200 },
+      WIDTH: { min: 1.5, max: 4 },
+      SPEED: { min: 0.1, max: 0.18 },
+      OPACITY: { min: 0.16, max: 0.28 },
       ANGLE_VARIANCE: 0.15,
-      FADE_SPEED: { min: 0.001, max: 0.002 },
+      FADE_SPEED: { min: 0.0012, max: 0.0025 },
     },
 
     // Evening horizontal light rays
     EVENING_RAYS: {
-      COUNT: 5,
-      HEIGHT: { min: 40, max: 120 },
-      OPACITY: { min: 0.2, max: 0.35 },
-      SPEED: { min: 0.001, max: 0.0018 },
+      COUNT: 6,
+      HEIGHT: { min: 50, max: 140 },
+      OPACITY: { min: 0.25, max: 0.42 },
+      SPEED: { min: 0.0012, max: 0.0022 },
     },
 
     // Night fireflies
@@ -171,5 +171,7 @@ export const CONFIG = {
   // Screen adaptation
   SCREEN: {
     MOBILE_BREAKPOINT: 800,
+    // Minimum opacity factor for mobile (prevents effects from becoming too faint)
+    MOBILE_MIN_OPACITY_FACTOR: 0.75,
   },
 };
