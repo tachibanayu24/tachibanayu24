@@ -7,7 +7,7 @@
 
 import { TIME_PERIOD } from "../time.js";
 import { CONFIG } from "../config.js";
-import { BaseEffect, getScreenFactor } from "./base-effect.js";
+import { BaseEffect } from "./base-effect.js";
 
 /**
  * @typedef {Object} EveningRay
@@ -32,12 +32,12 @@ export class EveningClouds extends BaseEffect {
   init() {
     this.rays = [];
     const { EVENING_RAYS } = CONFIG.EFFECTS;
-    const h = window.innerHeight;
 
+    // Use cached dimensions from base class
     const count = EVENING_RAYS.COUNT;
     for (let i = 0; i < count; i++) {
       this.rays.push({
-        y: h * (0.1 + (i / count) * 0.6),
+        y: this.height * (0.1 + (i / count) * 0.6),
         height:
           EVENING_RAYS.HEIGHT.min +
           Math.random() * (EVENING_RAYS.HEIGHT.max - EVENING_RAYS.HEIGHT.min),
@@ -60,14 +60,14 @@ export class EveningClouds extends BaseEffect {
   draw(ctx, palette) {
     if (!this.isActive || !palette) return;
 
-    const w = window.innerWidth;
-    const screenFactor = getScreenFactor(w);
+    // Use cached dimensions from base class
+    const w = this.width;
 
     for (const ray of this.rays) {
       // More dynamic breathing effect
       const breathe =
         0.6 + Math.sin(this.time * ray.speed * 1.4 + ray.phase) * 0.4;
-      const currentOpacity = ray.opacity * breathe * screenFactor;
+      const currentOpacity = ray.opacity * breathe * this.screenFactor;
 
       // More noticeable vertical drift
       const drift = Math.sin(this.time * ray.speed * 0.7 + ray.phase) * 18;

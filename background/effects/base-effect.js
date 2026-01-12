@@ -30,6 +30,11 @@ export class BaseEffect {
     this.targetTimePeriod = targetTimePeriod;
     this.isActive = false;
     this.time = 0;
+
+    // Cached dimensions to avoid layout thrashing
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+    this.screenFactor = getScreenFactor(this.width);
   }
 
   /**
@@ -48,6 +53,11 @@ export class BaseEffect {
    * Handle window resize
    */
   resize() {
+    // Update cached dimensions
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+    this.screenFactor = getScreenFactor(this.width);
+
     if (this.isActive) {
       this.init();
     }

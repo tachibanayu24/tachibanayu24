@@ -13,14 +13,18 @@ import { BaseEffect } from "./base-effect.js";
  * Single firefly with organic movement and glow
  */
 class Firefly {
-  constructor() {
+  /**
+   * @param {FireflySystem} parent - Parent effect for dimension access
+   */
+  constructor(parent) {
+    this.parent = parent;
     this.reset();
   }
 
   reset() {
     const { FIREFLY } = CONFIG.EFFECTS;
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+    const w = this.parent.width;
+    const h = this.parent.height;
 
     this.x = Math.random() * w;
     this.y = Math.random() * h;
@@ -60,8 +64,10 @@ class Firefly {
 
   update(deltaTime) {
     this.time += deltaTime;
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+
+    // Use cached dimensions from parent
+    const w = this.parent.width;
+    const h = this.parent.height;
 
     // Organic wandering movement
     this.wanderAngle +=
@@ -160,7 +166,7 @@ export class FireflySystem extends BaseEffect {
     this.fireflies = [];
     const { FIREFLY } = CONFIG.EFFECTS;
     for (let i = 0; i < FIREFLY.COUNT; i++) {
-      this.fireflies.push(new Firefly());
+      this.fireflies.push(new Firefly(this));
     }
   }
 

@@ -42,13 +42,12 @@ export class MorningMist extends BaseEffect {
     this.wisps = [];
     const { MIST } = CONFIG.EFFECTS;
     const count = MIST.COUNT;
-    const w = window.innerWidth;
-    const h = window.innerHeight;
 
+    // Use cached dimensions from base class
     for (let i = 0; i < count; i++) {
       this.wisps.push({
-        x: Math.random() * w,
-        baseY: h * (0.5 + Math.random() * 0.5),
+        x: Math.random() * this.width,
+        baseY: this.height * (0.5 + Math.random() * 0.5),
         width:
           MIST.WIDTH.min + Math.random() * (MIST.WIDTH.max - MIST.WIDTH.min),
         height:
@@ -70,17 +69,16 @@ export class MorningMist extends BaseEffect {
   update(deltaTime) {
     if (!this.isActive) return;
     this.time += deltaTime;
-    const h = window.innerHeight;
-    const w = window.innerWidth;
 
+    // Use cached dimensions from base class
     for (const wisp of this.wisps) {
       // Slow upward drift
       wisp.baseY -= wisp.riseSpeed * deltaTime * 0.1;
 
       // Reset when too high
       if (wisp.baseY < -wisp.height) {
-        wisp.baseY = h + wisp.height * 0.5;
-        wisp.x = Math.random() * w;
+        wisp.baseY = this.height + wisp.height * 0.5;
+        wisp.x = Math.random() * this.width;
       }
     }
   }
@@ -88,8 +86,9 @@ export class MorningMist extends BaseEffect {
   draw(ctx, palette) {
     if (!this.isActive || !palette) return;
 
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+    // Use cached dimensions from base class
+    const w = this.width;
+    const h = this.height;
 
     for (const wisp of this.wisps) {
       // More dynamic horizontal drift

@@ -7,20 +7,24 @@
 
 import { TIME_PERIOD } from "../time.js";
 import { CONFIG } from "../config.js";
-import { BaseEffect, getScreenFactor } from "./base-effect.js";
+import { BaseEffect } from "./base-effect.js";
 
 /**
  * Single light streak falling from above
  */
 class LightStreak {
-  constructor() {
+  /**
+   * @param {DustParticles} parent - Parent effect for dimension access
+   */
+  constructor(parent) {
+    this.parent = parent;
     this.reset(true);
   }
 
   reset(initial = false) {
     const { DUST } = CONFIG.EFFECTS;
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+    const w = this.parent.width;
+    const h = this.parent.height;
 
     this.x = Math.random() * w;
     this.y = initial ? Math.random() * h : -50;
@@ -54,14 +58,15 @@ class LightStreak {
     this.y += this.speed * deltaTime;
     this.x += this.angle * this.speed * deltaTime;
 
-    // Reset when below screen
-    if (this.y > window.innerHeight + this.length) {
+    // Reset when below screen (use cached height from parent)
+    if (this.y > this.parent.height + this.length) {
       this.reset();
     }
   }
 
   draw(ctx) {
-    const screenFactor = getScreenFactor();
+    // Use cached screenFactor from parent
+    const screenFactor = this.parent.screenFactor;
 
     // Gentle fade in/out
     const fade =
@@ -149,14 +154,13 @@ export class DustParticles extends BaseEffect {
     this.streaks = [];
     const { DUST } = CONFIG.EFFECTS;
     const { MOBILE_BREAKPOINT } = CONFIG.SCREEN;
-    const w = window.innerWidth;
 
-    // Reduce count on narrow screens
-    const screenFactor = Math.min(1, w / MOBILE_BREAKPOINT);
+    // Use cached dimensions from base class
+    const screenFactor = Math.min(1, this.width / MOBILE_BREAKPOINT);
     const count = Math.max(5, Math.floor(DUST.BASE_COUNT * screenFactor));
 
     for (let i = 0; i < count; i++) {
-      this.streaks.push(new LightStreak());
+      this.streaks.push(new LightStreak(this));
     }
   }
 

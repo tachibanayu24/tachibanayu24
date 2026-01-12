@@ -7,7 +7,7 @@
 
 import { TIME_PERIOD } from "../time.js";
 import { CONFIG } from "../config.js";
-import { BaseEffect, getScreenFactor } from "./base-effect.js";
+import { BaseEffect } from "./base-effect.js";
 
 // Warm sunlight colors - slightly more golden for visibility
 const LIGHT_COLOR = "255, 240, 180";
@@ -38,15 +38,14 @@ export class GodRays extends BaseEffect {
     this.rays = [];
     const { GOD_RAYS } = CONFIG.EFFECTS;
     const { MOBILE_BREAKPOINT } = CONFIG.SCREEN;
-    const w = window.innerWidth;
 
-    // Reduce count on narrow screens
-    const screenFactor = Math.min(1, w / MOBILE_BREAKPOINT);
+    // Use cached dimensions from base class
+    const screenFactor = Math.min(1, this.width / MOBILE_BREAKPOINT);
     const count = Math.max(2, Math.floor(GOD_RAYS.BASE_COUNT * screenFactor));
 
     for (let i = 0; i < count; i++) {
       this.rays.push({
-        x: w * (0.1 + (i / count) * 0.8),
+        x: this.width * (0.1 + (i / count) * 0.8),
         width:
           GOD_RAYS.WIDTH.min +
           Math.random() * (GOD_RAYS.WIDTH.max - GOD_RAYS.WIDTH.min),
@@ -72,15 +71,14 @@ export class GodRays extends BaseEffect {
   draw(ctx, palette) {
     if (!this.isActive || !palette) return;
 
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    const screenFactor = getScreenFactor(w);
+    // Use cached height from base class
+    const h = this.height;
 
     for (const ray of this.rays) {
       // More dynamic opacity breathing
       const breathe =
         0.6 + Math.sin(this.time * ray.speed * 1.5 + ray.phase) * 0.4;
-      const currentOpacity = ray.opacity * breathe * screenFactor;
+      const currentOpacity = ray.opacity * breathe * this.screenFactor;
 
       // More noticeable position drift
       const drift = Math.sin(this.time * ray.speed * 0.8 + ray.phase) * 35;

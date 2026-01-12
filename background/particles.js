@@ -24,8 +24,45 @@ import { CONFIG } from "./config.js";
  * @property {number} baseOpacity - Base opacity value
  */
 
-// Pre-compiled regex for opacity adjustment
-const OPACITY_REGEX = /[\d.]+\)$/;
+// Cached offscreen canvas for gradient rendering (shared across all orbs)
+const GRADIENT_CACHE_SIZE = 128;
+let gradientCanvas = null;
+let gradientCtx = null;
+
+/**
+ * Initialize or get the shared gradient cache canvas
+ */
+function getGradientCache() {
+  if (!gradientCanvas) {
+    gradientCanvas = document.createElement("canvas");
+    gradientCanvas.width = GRADIENT_CACHE_SIZE;
+    gradientCanvas.height = GRADIENT_CACHE_SIZE;
+    gradientCtx = gradientCanvas.getContext("2d");
+
+    // Draw the gradient once - a soft radial falloff
+    const center = GRADIENT_CACHE_SIZE / 2;
+    const gradient = gradientCtx.createRadialGradient(
+      center,
+      center,
+      0,
+      center,
+      center,
+      center,
+    );
+
+    // Soft falloff pattern (will be tinted with globalAlpha)
+    gradient.addColorStop(0, "rgba(255, 255, 255, 1)");
+    gradient.addColorStop(0.15, "rgba(255, 255, 255, 0.7)");
+    gradient.addColorStop(0.35, "rgba(255, 255, 255, 0.4)");
+    gradient.addColorStop(0.55, "rgba(255, 255, 255, 0.15)");
+    gradient.addColorStop(0.75, "rgba(255, 255, 255, 0.05)");
+    gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+    gradientCtx.fillStyle = gradient;
+    gradientCtx.fillRect(0, 0, GRADIENT_CACHE_SIZE, GRADIENT_CACHE_SIZE);
+  }
+  return gradientCanvas;
+}
 
 /**
  * Depth layer configuration for parallax
@@ -60,9 +97,15 @@ const DEPTH_LAYERS = {
  * Large, diffuse, and very subtle
  */
 class LightOrb {
-  constructor(config, depthLayer) {
+  /**
+   * @param {Object} config - Orb configuration
+   * @param {Object} depthLayer - Depth layer configuration
+   * @param {ParticleSystem} parent - Parent system for dimension access
+   */
+  constructor(config, depthLayer, parent) {
     this.config = config;
     this.depthLayer = depthLayer;
+    this.parent = parent;
     this.reset(true);
   }
 
@@ -74,9 +117,9 @@ class LightOrb {
     const baseSize = min + Math.random() * (max - min);
     this.size = baseSize * layer.sizeMultiplier;
 
-    // Position - spread across viewport
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+    // Position - spread across viewport (use cached dimensions from parent)
+    const w = this.parent.width;
+    const h = this.parent.height;
     this.x = Math.random() * w;
     this.y = initial ? Math.random() * h : h + this.size * 0.5;
 
@@ -125,39 +168,23 @@ class LightOrb {
   }
 
   draw(ctx) {
-    // Create ultra-soft radial gradient (bokeh effect)
-    const gradient = ctx.createRadialGradient(
-      this.x,
-      this.y,
-      0,
-      this.x,
-      this.y,
-      this.currentSize,
+    // Use cached gradient canvas for performance
+    const cache = getGradientCache();
+    const diameter = this.currentSize * 2;
+
+    ctx.save();
+    ctx.globalAlpha = this.opacity;
+
+    // Draw the cached gradient scaled to current size
+    ctx.drawImage(
+      cache,
+      this.x - this.currentSize,
+      this.y - this.currentSize,
+      diameter,
+      diameter,
     );
 
-    // Extract base color and create gradient stops
-    const baseColor = this.config.color;
-    const opacity = this.opacity;
-
-    // Soft falloff - visible but not harsh
-    gradient.addColorStop(0, this.adjustOpacity(baseColor, opacity));
-    gradient.addColorStop(0.15, this.adjustOpacity(baseColor, opacity * 0.7));
-    gradient.addColorStop(0.35, this.adjustOpacity(baseColor, opacity * 0.4));
-    gradient.addColorStop(0.55, this.adjustOpacity(baseColor, opacity * 0.15));
-    gradient.addColorStop(0.75, this.adjustOpacity(baseColor, opacity * 0.05));
-    gradient.addColorStop(1, "transparent");
-
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.currentSize, 0, Math.PI * 2);
-    ctx.fillStyle = gradient;
-    ctx.fill();
-  }
-
-  /**
-   * Adjust opacity of rgba color string
-   */
-  adjustOpacity(color, newOpacity) {
-    return color.replace(OPACITY_REGEX, `${Math.max(0, newOpacity)})`);
+    ctx.restore();
   }
 }
 
@@ -172,6 +199,10 @@ export class ParticleSystem {
       front: [],
     };
     this.timePeriod = TIME_PERIOD.NOON;
+
+    // Cached dimensions to avoid layout thrashing
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
   }
 
   /**
@@ -208,7 +239,9 @@ export class ParticleSystem {
       const count = Math.floor(totalCount * layerConfig.count);
 
       for (let i = 0; i < count; i++) {
-        this.layers[layerName].push(new LightOrb(baseConfig, layerConfig));
+        this.layers[layerName].push(
+          new LightOrb(baseConfig, layerConfig, this),
+        );
       }
     }
   }
@@ -241,6 +274,9 @@ export class ParticleSystem {
    * Handle canvas resize
    */
   resize() {
+    // Update cached dimensions
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
     this.init(this.timePeriod);
   }
 }

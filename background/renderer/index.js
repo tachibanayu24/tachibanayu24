@@ -65,6 +65,9 @@ export class BackgroundRenderer {
     // Rabbit character (always visible)
     this.rabbitCharacter = null;
 
+    // Resize debounce timer
+    this.resizeTimer = null;
+
     // Bind methods
     this.animate = this.animate.bind(this);
     this.handleResize = this.handleResize.bind(this);
@@ -143,18 +146,25 @@ export class BackgroundRenderer {
   }
 
   /**
-   * Handle window resize
+   * Handle window resize with debounce
    */
   handleResize() {
-    this.resize();
-    this.particleSystem.resize();
-    this.morningMist.resize();
-    this.godRays.resize();
-    this.dustParticles.resize();
-    this.eveningClouds.resize();
-    this.fireflySystem.resize();
-    this.rabbitCharacter.resize();
-    initShapes(this.shapesState, this.width, this.height);
+    // Debounce resize to prevent excessive recalculations
+    if (this.resizeTimer) {
+      clearTimeout(this.resizeTimer);
+    }
+
+    this.resizeTimer = setTimeout(() => {
+      this.resize();
+      this.particleSystem.resize();
+      this.morningMist.resize();
+      this.godRays.resize();
+      this.dustParticles.resize();
+      this.eveningClouds.resize();
+      this.fireflySystem.resize();
+      this.rabbitCharacter.resize();
+      initShapes(this.shapesState, this.width, this.height);
+    }, 150);
   }
 
   /**

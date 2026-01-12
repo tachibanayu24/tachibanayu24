@@ -49,6 +49,17 @@ export function removeExistingCanvas(id) {
 }
 
 /**
+ * Get capped device pixel ratio for performance
+ * Limits DPR to 2 to prevent excessive rendering on high-DPI displays
+ * @returns {number}
+ */
+export function getDevicePixelRatio() {
+  const dpr = window.devicePixelRatio || 1;
+  // Cap at 2 for performance - 3x displays don't need full resolution for background effects
+  return Math.min(dpr, 2);
+}
+
+/**
  * Resize canvas to match window dimensions with device pixel ratio support
  * @param {HTMLCanvasElement} canvas - The canvas element
  * @param {CanvasRenderingContext2D} ctx - The 2D rendering context
@@ -56,7 +67,7 @@ export function removeExistingCanvas(id) {
  * @param {number} height - Target height
  */
 export function resizeCanvas(canvas, ctx, width, height) {
-  const dpr = window.devicePixelRatio || 1;
+  const dpr = getDevicePixelRatio();
 
   canvas.width = width * dpr;
   canvas.height = height * dpr;
