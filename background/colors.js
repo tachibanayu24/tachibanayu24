@@ -370,11 +370,10 @@ export function applyPaletteToCss(palette) {
   root.style.setProperty("--glass-shadow", "rgba(0, 0, 0, 0.1)");
 
   // Card edge colors for plastic thickness effect
-  // More transparent than before, but less than card body (7.5%)
   const cardBgRgb = hexToRgb(palette.cardBg);
-  const edgeLight = `rgba(${Math.min(255, cardBgRgb.r + 30)}, ${Math.min(255, cardBgRgb.g + 30)}, ${Math.min(255, cardBgRgb.b + 30)}, 0.15)`;
-  const edgeDark = `rgba(${Math.max(0, cardBgRgb.r - 30)}, ${Math.max(0, cardBgRgb.g - 30)}, ${Math.max(0, cardBgRgb.b - 30)}, 0.2)`;
-  const edgeDarker = `rgba(${Math.max(0, cardBgRgb.r - 50)}, ${Math.max(0, cardBgRgb.g - 50)}, ${Math.max(0, cardBgRgb.b - 50)}, 0.25)`;
+  const edgeLight = `rgba(${Math.min(255, cardBgRgb.r + 40)}, ${Math.min(255, cardBgRgb.g + 40)}, ${Math.min(255, cardBgRgb.b + 40)}, 0.25)`;
+  const edgeDark = `rgba(${Math.max(0, cardBgRgb.r - 40)}, ${Math.max(0, cardBgRgb.g - 40)}, ${Math.max(0, cardBgRgb.b - 40)}, 0.5)`;
+  const edgeDarker = `rgba(${Math.max(0, cardBgRgb.r - 60)}, ${Math.max(0, cardBgRgb.g - 60)}, ${Math.max(0, cardBgRgb.b - 60)}, 0.6)`;
   root.style.setProperty("--card-edge-light", edgeLight);
   root.style.setProperty("--card-edge-dark", edgeDark);
   root.style.setProperty("--card-edge-darker", edgeDarker);
@@ -492,14 +491,15 @@ export function applyPaletteToCss(palette) {
         shadowOffsetSubtle: "0 -1px 0",
       },
       NIGHT: {
-        highlightColor: "rgba(100, 130, 180, 0.4)",
-        shadowColor: "rgba(0, 0, 0, 0.5)",
-        highlightOffset: "0 1px 2px",
-        shadowOffset: "0 -1px 1px",
-        highlightColorSubtle: "rgba(100, 130, 180, 0.2)",
-        shadowColorSubtle: "rgba(0, 0, 0, 0.25)",
-        highlightOffsetSubtle: "0 1px 0",
-        shadowOffsetSubtle: "0 -1px 0",
+        // Night uses glow + drop shadow instead of emboss
+        highlightColor: "rgba(80, 120, 180, 0.5)",
+        shadowColor: "rgba(0, 0, 0, 0.7)",
+        highlightOffset: "0 0 8px",
+        shadowOffset: "0 2px 4px",
+        highlightColorSubtle: "rgba(80, 120, 180, 0.3)",
+        shadowColorSubtle: "rgba(0, 0, 0, 0.5)",
+        highlightOffsetSubtle: "0 0 4px",
+        shadowOffsetSubtle: "0 1px 2px",
       },
     };
 
@@ -526,5 +526,31 @@ export function applyPaletteToCss(palette) {
       "--text-shadow-offset-subtle",
       tsConfig.shadowOffsetSubtle,
     );
+
+    // Icon deboss colors per time period
+    const iconDebossConfig = {
+      MORNING: {
+        shadow: "rgba(0, 0, 0, 0.3)",
+        highlight: "rgba(255, 255, 255, 0.7)",
+      },
+      NOON: {
+        shadow: "rgba(0, 0, 0, 0.25)",
+        highlight: "rgba(255, 255, 255, 0.7)",
+      },
+      EVENING: {
+        shadow: "rgba(0, 0, 0, 0.35)",
+        highlight: "rgba(255, 240, 220, 0.65)",
+      },
+      NIGHT: {
+        // Night: swap roles - subtle glow on top, drop shadow below
+        shadow: "rgba(80, 120, 180, 0.25)",
+        highlight: "rgba(0, 0, 0, 0.6)",
+      },
+    };
+
+    const iconConfig =
+      iconDebossConfig[palette.timePeriod] || iconDebossConfig.NOON;
+    root.style.setProperty("--icon-shadow-color", iconConfig.shadow);
+    root.style.setProperty("--icon-highlight-color", iconConfig.highlight);
   }
 }

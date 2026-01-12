@@ -5,14 +5,14 @@
   --button-bg: rgba(232, 238, 243, 0.45);
   --glass-border: rgba(232, 238, 243, 0.3);
   --glass-shadow: rgba(0, 0, 0, 0.1);
-  --card-edge-light: rgba(255, 255, 255, 0.15);
-  --card-edge-dark: rgba(200, 205, 215, 0.2);
-  --card-edge-darker: rgba(180, 185, 195, 0.25);
+  --card-edge-light: rgba(255, 255, 255, 0.25);
+  --card-edge-dark: rgba(160, 165, 175, 0.5);
+  --card-edge-darker: rgba(140, 145, 155, 0.6);
   --text: #2d3748;
   --text-muted: #718096;
   --accent: #4a6fa5;
-  --shadow-light: #ffffff;
-  --shadow-dark: #c5ccd6;
+  --shadow-light: rgba(255, 255, 255, 0.75);
+  --shadow-dark: rgba(150, 165, 180, 0.45);
   --transition-duration: 0.3s;
   /* Text shadow defaults (overridden by JS per time period) */
   --text-highlight-color: rgba(255, 255, 255, 0.8);
@@ -24,6 +24,9 @@
   --text-shadow-color-subtle: rgba(0, 0, 0, 0.06);
   --text-highlight-offset-subtle: 0 1px 0;
   --text-shadow-offset-subtle: 0 -1px 0;
+  /* Icon deboss effect (inset look) */
+  --icon-shadow-color: rgba(0, 0, 0, 0.15);
+  --icon-highlight-color: rgba(255, 255, 255, 0.5);
 }
 
 html {
@@ -116,24 +119,20 @@ button {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   overflow: hidden;
-  /* Plastic card thickness effect - edges on multiple sides */
+  /* Plastic card thickness effect */
   box-shadow:
-    /* D: Inner shadow for depth - subtle recessed feel */
-    inset 0 2px 4px rgba(0, 0, 0, 0.04),
-    inset 0 -1px 2px rgba(255, 255, 255, 0.15),
-    /* Top highlight */ inset 0 1px 0 var(--card-edge-light),
-    /* F: Enhanced card thickness - more visible edges */ -3px 0 0
-      var(--card-edge-dark),
-    0 4px 0 var(--card-edge-dark),
-    -3px 4px 0 var(--card-edge-darker),
-    2px 0 0 rgba(0, 0, 0, 0.04),
-    /* C: Contact shadow */ 0 2px 4px rgba(0, 0, 0, 0.2),
-    0 4px 8px rgba(0, 0, 0, 0.15),
-    /* Drop shadow */ 0 8px 16px var(--glass-shadow),
-    0 16px 32px var(--glass-shadow),
-    /* Floating shadow */ 0 20px 40px rgba(0, 0, 0, 0.15),
-    0 40px 80px rgba(0, 0, 0, 0.1),
-    0 60px 120px rgba(0, 0, 0, 0.06);
+    /* Inner highlights and shadows */
+    inset 0 1px 0 var(--card-edge-light),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05),
+    /* Card edge thickness - bottom and right (light from top-left) */ 0 1.5px 0
+      0 var(--card-edge-dark),
+    1.5px 0 0 0 var(--card-edge-dark),
+    1.5px 1.5px 0 0 var(--card-edge-darker),
+    /* Soft edge glow */ 0 2px 1px -1px rgba(0, 0, 0, 0.12),
+    /* Contact shadow */ 0 3px 6px rgba(0, 0, 0, 0.16),
+    0 6px 12px rgba(0, 0, 0, 0.12),
+    /* Floating shadow */ 0 12px 24px rgba(0, 0, 0, 0.1),
+    0 24px 48px rgba(0, 0, 0, 0.08);
 }
 
 /* Light reflection from light source + B: Glossy surface gradient */
@@ -510,7 +509,11 @@ button {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
-  opacity: 0.8;
+  opacity: 0.75;
+  /* Deboss effect - shadow on top, highlight below */
+  filter: drop-shadow(0 -1px 0 var(--icon-shadow-color))
+    drop-shadow(0 1px 0 var(--icon-highlight-color));
+  transition: filter var(--transition-duration) ease;
 }
 
 /* Full width for Resume */
