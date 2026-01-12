@@ -149,24 +149,24 @@ export const CONFIG = {
       // Body: white/cream, Ears: light gray (subtle), Nose: pink/beige
       COLORS: {
         MORNING: {
-          body: "rgba(255, 252, 248, 0.95)",
-          accent: "rgba(210, 205, 200, 0.5)",
-          nose: "rgba(235, 190, 180, 0.85)",
+          body: "#FFFCF8",
+          accent: "#D2CDC8",
+          nose: "#EBBEB4",
         },
         NOON: {
-          body: "rgba(255, 253, 250, 0.9)",
-          accent: "rgba(205, 200, 195, 0.45)",
-          nose: "rgba(230, 185, 175, 0.8)",
+          body: "#FFFDFA",
+          accent: "#CDCBC3",
+          nose: "#E6B9AF",
         },
         EVENING: {
-          body: "rgba(252, 245, 238, 0.9)",
-          accent: "rgba(200, 190, 180, 0.5)",
-          nose: "rgba(225, 175, 165, 0.85)",
+          body: "#FCF5EE",
+          accent: "#C8BEB4",
+          nose: "#E1AFA5",
         },
         NIGHT: {
-          body: "rgba(220, 225, 235, 0.85)",
-          accent: "rgba(190, 195, 205, 0.5)",
-          nose: "rgba(195, 175, 180, 0.75)",
+          body: "#DCE1EB",
+          accent: "#BEC3CD",
+          nose: "#C3AFB4",
         },
       },
     },
