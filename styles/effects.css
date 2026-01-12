@@ -1,0 +1,81 @@
+/**
+ * Effects Styles
+ * Shimmer, fresnel, and glare effects for the card
+ */
+
+/* Shimmer overlay element - wider and controlled by time period */
+.card-face .shimmer-effect {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  /* Wider gradient band with variable opacity */
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 255, 255, calc(var(--shimmer-intensity, 0.2) * 0.2)) 38%,
+    rgba(255, 255, 255, calc(var(--shimmer-intensity, 0.2) * 0.6)) 45%,
+    rgba(255, 255, 255, var(--shimmer-intensity, 0.2)) 50%,
+    rgba(255, 255, 255, calc(var(--shimmer-intensity, 0.2) * 0.6)) 55%,
+    rgba(255, 255, 255, calc(var(--shimmer-intensity, 0.2) * 0.2)) 62%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  transform: translateX(-100%) rotate(25deg);
+}
+
+/* Trigger shimmer on hint animation - synced with 1.2s flipHint */
+.card.hint .card-face .shimmer-effect {
+  animation: shimmerRoundTrip 1.2s ease;
+}
+
+/* Trigger shimmer on flip - synced with 0.6s flip transition */
+.card.flipping .card-face .shimmer-effect {
+  animation: shimmer 0.6s ease;
+}
+
+/* E: Fresnel effect - edges appear brighter (realistic light scattering) */
+.card-face .fresnel-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  /* Radial gradient: transparent center, bright edges - controlled by CSS variable */
+  background: var(
+    --fresnel-gradient,
+    radial-gradient(
+      ellipse 70% 60% at 50% 50%,
+      transparent 0%,
+      transparent 60%,
+      rgba(255, 255, 255, 0.06) 80%,
+      rgba(255, 255, 255, 0.12) 95%,
+      rgba(255, 255, 255, 0.18) 100%
+    )
+  );
+  transition: background 0.5s ease;
+}
+
+/* F: Mouse-tracking glare effect */
+.card-face .card-glare {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 15;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  mix-blend-mode: overlay;
+}
+
+.card-container:hover .card-glare {
+  opacity: 1;
+}

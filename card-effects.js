@@ -5,6 +5,10 @@
  * Simulates physical card behavior like tilting, light reflection, and holographic effects.
  */
 
+import { createLogger } from "./utils/logger.js";
+
+const logger = createLogger("CardEffects");
+
 /**
  * Configuration for card effects
  */
@@ -108,7 +112,7 @@ class CardEffects {
     // Watch for flip state changes
     this.observeFlipState();
 
-    console.log("[CardEffects] Initialized", {
+    logger.log("Initialized", {
       isTouchDevice: this.isTouchDevice,
     });
   }
@@ -363,14 +367,33 @@ class CardEffects {
   }
 }
 
-// Initialize when DOM is ready
+/**
+ * Card effects instance (module-scoped, not global)
+ * @type {CardEffects|null}
+ */
+let cardEffects = null;
+
+/**
+ * Initialize card effects when DOM is ready
+ * @returns {CardEffects|null} The created CardEffects instance
+ */
 function initCardEffects() {
   const card = document.querySelector(".card");
   const container = document.querySelector(".card-container");
 
   if (card && container) {
-    window.cardEffects = new CardEffects(card, container);
+    cardEffects = new CardEffects(card, container);
+    return cardEffects;
   }
+  return null;
+}
+
+/**
+ * Get the current card effects instance
+ * @returns {CardEffects|null}
+ */
+function getCardEffects() {
+  return cardEffects;
 }
 
 // Auto-initialize
@@ -380,4 +403,4 @@ if (document.readyState === "loading") {
   initCardEffects();
 }
 
-export { CardEffects, initCardEffects };
+export { CardEffects, initCardEffects, getCardEffects };

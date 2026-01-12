@@ -10,8 +10,11 @@
  */
 
 import { getTimePeriod, getTimeTransition } from "./time.js";
-import { getColorPalette, applyPaletteToCss } from "./colors.js";
+import { getColorPalette, applyPaletteToCss } from "./colors/index.js";
 import { BackgroundRenderer } from "./renderer/index.js";
+import { createLogger } from "../utils/logger.js";
+
+const logger = createLogger("Background");
 
 // Global state
 let renderer = null;
@@ -26,7 +29,7 @@ let currentState = {
  * @returns {Object} API for controlling the background
  */
 export async function initBackground() {
-  console.log("[Background] Initializing dynamic background system...");
+  logger.log(" Initializing dynamic background system...");
 
   // Create and initialize renderer
   renderer = new BackgroundRenderer();
@@ -41,7 +44,7 @@ export async function initBackground() {
   // Setup periodic updates
   startPeriodicUpdates();
 
-  console.log("[Background] Background system initialized", {
+  logger.log(" Background system initialized", {
     timePeriod: currentState.timePeriod,
   });
 
@@ -92,7 +95,7 @@ function updateConditions() {
   }
 
   if (changed) {
-    console.log("[Background] Conditions updated", { timePeriod });
+    logger.log(" Conditions updated", { timePeriod });
   }
 }
 
@@ -121,7 +124,7 @@ function stopPeriodicUpdates() {
  */
 export function setDebugConditions(options = {}) {
   if (!renderer) {
-    console.warn("[Background] Renderer not initialized");
+    logger.warn("Renderer not initialized");
     return;
   }
 
@@ -137,7 +140,7 @@ export function setDebugConditions(options = {}) {
   applyPaletteToCss(palette);
   renderer.updateConditions(timePeriod, palette);
 
-  console.log("[Background] Debug conditions set", options);
+  logger.log(" Debug conditions set", options);
 }
 
 // Export constants for external use

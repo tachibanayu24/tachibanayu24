@@ -1,0 +1,162 @@
+/**
+ * Card Styles
+ * Card container, faces, and flip functionality
+ */
+
+/* Card Container for 3D Flip */
+.card-container {
+  perspective: 1000px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Neumorphic Card with Glassmorphism */
+.card {
+  position: relative;
+  width: 100%;
+  display: grid;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease-in-out;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Hint animation to show card is flippable */
+.card.hint {
+  animation: flipHint 1.2s ease-in-out;
+}
+
+.card.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  background:
+    /* A: Enhanced noise texture - finer grain for satin finish */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E"),
+    /* B: Subtle brushed metal effect */
+    repeating-linear-gradient(
+        90deg,
+        transparent 0px,
+        transparent 2px,
+        rgba(255, 255, 255, 0.008) 2px,
+        rgba(255, 255, 255, 0.008) 4px
+      ),
+    /* Base glass background */ var(--card-bg-glass);
+  border-radius: 24px;
+  padding: 2.5rem 2rem;
+  position: relative;
+  transition:
+    background var(--transition-duration) ease,
+    box-shadow var(--transition-duration) ease;
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+  /* Enhanced plastic card thickness effect with bevel */
+  box-shadow:
+    /* Inner bevel - top highlight */
+    inset 0 2px 1px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    /* Card edge thickness - layered for depth */ 0 1px 0 0
+      var(--card-edge-dark),
+    0 2px 0 0 var(--card-edge-darker),
+    1px 0 0 0 var(--card-edge-dark),
+    2px 0 0 0 var(--card-edge-darker),
+    1px 1px 0 0 var(--card-edge-dark),
+    2px 2px 0 0 var(--card-edge-darker),
+    /* Soft bevel glow */ 0 3px 2px -1px rgba(0, 0, 0, 0.15),
+    /* Contact shadow */ 0 4px 8px rgba(0, 0, 0, 0.18),
+    0 8px 16px rgba(0, 0, 0, 0.14),
+    /* Floating shadow */ 0 16px 32px rgba(0, 0, 0, 0.12),
+    0 32px 64px rgba(0, 0, 0, 0.08);
+}
+
+/* Light reflection from light source + B: Glossy surface gradient */
+.card-face::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    /* B: Glossy gradient - subtle shine from top to bottom */
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0.04) 30%,
+      transparent 50%,
+      rgba(0, 0, 0, 0.02) 80%,
+      rgba(0, 0, 0, 0.04) 100%
+    ),
+    /* Light reflection from celestial position */
+    var(
+        --card-highlight,
+        radial-gradient(
+          ellipse 120% 80% at 50% 0%,
+          rgba(255, 255, 255, 0.25) 0%,
+          transparent 60%
+        )
+      );
+  transition: background 0.5s ease;
+}
+
+/* Edge highlight + Oil slick (rainbow) effect */
+.card-face::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 2;
+  /* Edge highlight - bright line on top and left edges */
+  border-top: 2px solid var(--edge-highlight-top, rgba(255, 255, 255, 0.4));
+  border-left: 2px solid var(--edge-highlight-left, rgba(255, 255, 255, 0.3));
+  border-right: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  /* Oil slick rainbow effect - dynamically set by colors.js per time period */
+  background: var(--oilslick-gradient, transparent);
+  mix-blend-mode: overlay;
+  transition:
+    background 0.5s ease,
+    border-color 0.5s ease;
+}
+
+/* Both faces occupy the same grid cell - height auto-adjusts to the taller one */
+.card-front,
+.card-back {
+  grid-area: 1 / 1;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+  pointer-events: none;
+}
+
+/* Enable/disable pointer events based on flip state */
+.card.flipped .card-front {
+  pointer-events: none;
+}
+
+.card.flipped .card-back {
+  pointer-events: auto;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .card-face {
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+  }
+}

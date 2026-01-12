@@ -134,8 +134,7 @@ class DebugPanel {
       <div style="${SECTION_STYLES}">
         <span style="${LABEL_STYLES}">Card Actions</span>
         <div style="${BUTTON_GROUP_STYLES}">
-          <button id="debug-flip" style="${BUTTON_STYLES}">Flip</button>
-          <button id="debug-hint" style="${BUTTON_STYLES}">Hint Anim</button>
+          <button id="debug-hint" style="${BUTTON_STYLES}">Hint Anime</button>
         </div>
       </div>
 
@@ -169,16 +168,6 @@ class DebugPanel {
     // Close button
     this.panel.querySelector("#debug-close").addEventListener("click", () => {
       this.panel.style.display = "none";
-    });
-
-    // Flip button
-    this.panel.querySelector("#debug-flip").addEventListener("click", () => {
-      const card = document.querySelector(".card");
-      if (card) {
-        card.classList.add("flipping");
-        card.classList.toggle("flipped");
-        setTimeout(() => card.classList.remove("flipping"), 600);
-      }
     });
 
     // Hint animation button

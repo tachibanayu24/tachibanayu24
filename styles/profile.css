@@ -1,0 +1,275 @@
+/**
+ * Profile Styles
+ * Avatar, name, bio, company, and back side sections
+ */
+
+/* Profile Section */
+.profile {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.avatar-wrapper {
+  display: inline-block;
+  padding: 6px;
+  border-radius: 50%;
+  background: var(--button-bg);
+  /* Neumorphic effect - raised ring */
+  box-shadow:
+    /* Outer shadows */
+    5px 5px 10px var(--shadow-dark),
+    -5px -5px 10px var(--shadow-light),
+    /* Inner recess for photo well */ inset 2px 2px 4px var(--shadow-dark),
+    inset -1px -1px 3px var(--shadow-light);
+  margin-bottom: 1.25rem;
+  transition:
+    background var(--transition-duration) ease,
+    box-shadow var(--transition-duration) ease;
+  /* Holographic accent on outer edge */
+  border: 2px solid transparent;
+  background-image:
+    linear-gradient(var(--button-bg), var(--button-bg)),
+    /* Subtle holographic tint - shifts with view angle */
+    conic-gradient(
+        from var(--holo-angle, 0deg),
+        rgba(255, 120, 180, 0.15),
+        rgba(255, 200, 120, 0.2),
+        rgba(150, 255, 180, 0.2),
+        rgba(120, 200, 255, 0.2),
+        rgba(180, 120, 255, 0.15),
+        rgba(255, 120, 180, 0.15)
+      );
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  position: relative;
+}
+
+/* Inner highlight ring for extra depth */
+.avatar-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  /* Subtle inner shadow on photo */
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+/* Avatar reflection/gloss effect - follows mouse */
+.avatar-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+  /* Glossy reflection - position controlled by JS via --glare-x, --glare-y */
+  background: radial-gradient(
+    circle at var(--glare-x, 30%) var(--glare-y, 30%),
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(255, 255, 255, 0.1) 20%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card-container:hover .avatar-wrapper::after {
+  opacity: 1;
+}
+
+.name {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+  transition: color var(--transition-duration) ease;
+  /* Enhanced emboss effect - raised metallic text */
+  text-shadow:
+    /* Primary highlight (top-left light) */
+    var(--text-highlight-offset) var(--text-highlight-color),
+    /* Primary shadow (bottom-right) */ var(--text-shadow-offset)
+      var(--text-shadow-color),
+    /* Secondary depth layer */ 0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+.bio {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  transition: color var(--transition-duration) ease;
+  /* D: Laser engraved effect (subtle) */
+  text-shadow:
+    var(--text-highlight-offset-subtle) var(--text-highlight-color-subtle),
+    var(--text-shadow-offset-subtle) var(--text-shadow-color-subtle);
+}
+
+.bio a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 500;
+  transition:
+    opacity 0.2s,
+    color var(--transition-duration) ease;
+  /* Inherit text effect (subtle) */
+  text-shadow:
+    var(--text-highlight-offset-subtle) var(--text-highlight-color-subtle),
+    var(--text-shadow-offset-subtle) var(--text-shadow-color-subtle);
+}
+
+.bio a:hover {
+  opacity: 0.7;
+}
+
+.bio a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Company */
+.company {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  transition: color var(--transition-duration) ease;
+  /* D: Laser engraved effect (subtle) */
+  text-shadow:
+    var(--text-highlight-offset-subtle) var(--text-highlight-color-subtle),
+    var(--text-shadow-offset-subtle) var(--text-shadow-color-subtle);
+}
+
+.company a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 500;
+  transition:
+    opacity 0.2s,
+    color var(--transition-duration) ease;
+  /* Inherit text effect (subtle) */
+  text-shadow:
+    var(--text-highlight-offset-subtle) var(--text-highlight-color-subtle),
+    var(--text-shadow-offset-subtle) var(--text-shadow-color-subtle);
+}
+
+.company a:hover {
+  opacity: 0.7;
+}
+
+.company a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Divider */
+.divider {
+  position: relative;
+  z-index: 3;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--shadow-dark),
+    transparent
+  );
+  margin: 1.25rem 0;
+  border-radius: 1px;
+}
+
+/* Back Side Styles */
+.back-section {
+  position: relative;
+  z-index: 3;
+  margin-bottom: 1.25rem;
+}
+
+.back-section-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  transition: color var(--transition-duration) ease;
+  /* D: Laser engraved effect (subtle) */
+  text-shadow:
+    var(--text-highlight-offset-subtle) var(--text-highlight-color-subtle),
+    var(--text-shadow-offset-subtle) var(--text-shadow-color-subtle);
+}
+
+.back-section-content {
+  color: var(--text);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  transition: color var(--transition-duration) ease;
+  /* D: Laser engraved effect (subtle) */
+  text-shadow:
+    var(--text-highlight-offset-subtle) var(--text-highlight-color-subtle),
+    var(--text-shadow-offset-subtle) var(--text-shadow-color-subtle);
+}
+
+.favorites-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.favorite-tag {
+  background: var(--button-bg);
+  color: var(--text);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  box-shadow:
+    2px 2px 4px var(--shadow-dark),
+    -2px -2px 4px var(--shadow-light);
+  transition:
+    background var(--transition-duration) ease,
+    color var(--transition-duration) ease,
+    box-shadow var(--transition-duration) ease;
+  /* E: UV print effect (subtle) */
+  text-shadow:
+    var(--text-highlight-offset-subtle) var(--text-highlight-color-subtle),
+    var(--text-shadow-offset-subtle) var(--text-shadow-color-subtle);
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .name {
+    font-size: 1.5rem;
+  }
+
+  .back-section-content {
+    font-size: 0.8rem;
+  }
+
+  .favorite-tag {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+  }
+}
