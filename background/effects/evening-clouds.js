@@ -7,7 +7,7 @@
 
 import { TIME_PERIOD } from "../time.js";
 import { CONFIG } from "../config.js";
-import { BaseEffect } from "./base-effect.js";
+import { BaseEffect, getScreenFactor } from "./base-effect.js";
 
 /**
  * @typedef {Object} EveningRay
@@ -61,14 +61,7 @@ export class EveningClouds extends BaseEffect {
     if (!this.isActive || !palette) return;
 
     const w = window.innerWidth;
-    const { MOBILE_BREAKPOINT, MOBILE_MIN_OPACITY_FACTOR } = CONFIG.SCREEN;
-
-    // Reduce opacity on narrow screens, but keep minimum visibility
-    const rawFactor = w / MOBILE_BREAKPOINT;
-    const screenFactor = Math.max(
-      MOBILE_MIN_OPACITY_FACTOR,
-      Math.min(1, rawFactor),
-    );
+    const screenFactor = getScreenFactor(w);
 
     for (const ray of this.rays) {
       // More dynamic breathing effect

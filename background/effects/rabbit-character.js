@@ -657,4 +657,14 @@ export class RabbitCharacter {
       ctx.restore();
     }
   }
+
+  /**
+   * Clean up resources
+   */
+  destroy() {
+    if (this.hitArea && this.hitArea.parentNode) {
+      this.hitArea.parentNode.removeChild(this.hitArea);
+      this.hitArea = null;
+    }
+  }
 }

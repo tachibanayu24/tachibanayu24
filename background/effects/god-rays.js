@@ -7,7 +7,7 @@
 
 import { TIME_PERIOD } from "../time.js";
 import { CONFIG } from "../config.js";
-import { BaseEffect } from "./base-effect.js";
+import { BaseEffect, getScreenFactor } from "./base-effect.js";
 
 // Warm sunlight colors - slightly more golden for visibility
 const LIGHT_COLOR = "255, 240, 180";
@@ -74,14 +74,7 @@ export class GodRays extends BaseEffect {
 
     const w = window.innerWidth;
     const h = window.innerHeight;
-    const { MOBILE_BREAKPOINT, MOBILE_MIN_OPACITY_FACTOR } = CONFIG.SCREEN;
-
-    // Reduce opacity on narrow screens, but keep minimum visibility
-    const rawFactor = w / MOBILE_BREAKPOINT;
-    const screenFactor = Math.max(
-      MOBILE_MIN_OPACITY_FACTOR,
-      Math.min(1, rawFactor),
-    );
+    const screenFactor = getScreenFactor(w);
 
     for (const ray of this.rays) {
       // More dynamic opacity breathing

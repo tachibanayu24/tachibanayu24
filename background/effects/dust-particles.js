@@ -7,7 +7,7 @@
 
 import { TIME_PERIOD } from "../time.js";
 import { CONFIG } from "../config.js";
-import { BaseEffect } from "./base-effect.js";
+import { BaseEffect, getScreenFactor } from "./base-effect.js";
 
 /**
  * Single light streak falling from above
@@ -61,15 +61,7 @@ class LightStreak {
   }
 
   draw(ctx) {
-    const { MOBILE_BREAKPOINT, MOBILE_MIN_OPACITY_FACTOR } = CONFIG.SCREEN;
-    const w = window.innerWidth;
-
-    // Reduce opacity on narrow screens, but keep minimum visibility
-    const rawFactor = w / MOBILE_BREAKPOINT;
-    const screenFactor = Math.max(
-      MOBILE_MIN_OPACITY_FACTOR,
-      Math.min(1, rawFactor),
-    );
+    const screenFactor = getScreenFactor();
 
     // Gentle fade in/out
     const fade =

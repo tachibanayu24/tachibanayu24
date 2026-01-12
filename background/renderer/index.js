@@ -304,6 +304,11 @@ export class BackgroundRenderer {
       this.rabbitCanvas.parentNode.removeChild(this.rabbitCanvas);
     }
 
+    // Clean up rabbit character hitArea
+    if (this.rabbitCharacter && this.rabbitCharacter.destroy) {
+      this.rabbitCharacter.destroy();
+    }
+
     this.canvas = null;
     this.ctx = null;
     this.overlayCanvas = null;

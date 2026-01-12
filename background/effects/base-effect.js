@@ -5,6 +5,19 @@
  * Provides common functionality for effect lifecycle management.
  */
 
+import { CONFIG } from "../config.js";
+
+/**
+ * Calculate screen factor for responsive opacity adjustments
+ * @param {number} [width] - Screen width (defaults to window.innerWidth)
+ * @returns {number} Screen factor between MOBILE_MIN_OPACITY_FACTOR and 1
+ */
+export function getScreenFactor(width = window.innerWidth) {
+  const { MOBILE_BREAKPOINT, MOBILE_MIN_OPACITY_FACTOR } = CONFIG.SCREEN;
+  const rawFactor = width / MOBILE_BREAKPOINT;
+  return Math.max(MOBILE_MIN_OPACITY_FACTOR, Math.min(1, rawFactor));
+}
+
 /**
  * Base class for time-specific effects
  * @abstract

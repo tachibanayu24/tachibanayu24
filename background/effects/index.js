@@ -4,7 +4,6 @@
  * Re-exports all time-specific visual effects.
  */
 
-export { BaseEffect } from "./base-effect.js";
 export { MorningMist } from "./morning-mist.js";
 export { GodRays } from "./god-rays.js";
 export { DustParticles } from "./dust-particles.js";

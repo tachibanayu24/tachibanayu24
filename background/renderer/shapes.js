@@ -138,7 +138,7 @@ function drawCircle(ctx, size, color) {
  */
 function drawPolygon(ctx, size, sides, color) {
   ctx.beginPath();
-  for (let i = 0; i <= sides; i++) {
+  for (let i = 0; i < sides; i++) {
     const angle = (i / sides) * Math.PI * 2;
     const x = Math.cos(angle) * size;
     const y = Math.sin(angle) * size;

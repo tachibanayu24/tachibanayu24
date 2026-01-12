@@ -190,6 +190,11 @@ function interpolateColor(color1, color2, factor) {
  * @returns {{r: number, g: number, b: number, a: number}} RGBA components
  */
 function parseRgbaColor(rgba) {
+  // Handle null/undefined
+  if (!rgba || typeof rgba !== "string") {
+    return { r: 0, g: 0, b: 0, a: 1 };
+  }
+
   // Handle hex colors
   if (rgba.startsWith("#")) {
     const rgb = hexToRgb(rgba);
@@ -366,8 +371,6 @@ export function applyPaletteToCss(palette) {
   // Glass border - adapt to time period
   const borderColor = hexToRgba(palette.cardBg, 0.3);
   root.style.setProperty("--glass-border", borderColor);
-  // Glass shadow - soft drop shadow
-  root.style.setProperty("--glass-shadow", "rgba(0, 0, 0, 0.1)");
 
   // Card edge colors for plastic thickness effect
   const cardBgRgb = hexToRgb(palette.cardBg);
@@ -552,5 +555,45 @@ export function applyPaletteToCss(palette) {
       iconDebossConfig[palette.timePeriod] || iconDebossConfig.NOON;
     root.style.setProperty("--icon-shadow-color", iconConfig.shadow);
     root.style.setProperty("--icon-highlight-color", iconConfig.highlight);
+
+    // Fresnel effect per time period (edge glow)
+    const fresnelConfig = {
+      MORNING: `radial-gradient(
+        ellipse 70% 60% at 50% 50%,
+        transparent 0%,
+        transparent 60%,
+        rgba(255, 255, 245, 0.06) 80%,
+        rgba(255, 255, 245, 0.12) 95%,
+        rgba(255, 255, 245, 0.18) 100%
+      )`,
+      NOON: `radial-gradient(
+        ellipse 70% 60% at 50% 50%,
+        transparent 0%,
+        transparent 60%,
+        rgba(255, 255, 255, 0.06) 80%,
+        rgba(255, 255, 255, 0.12) 95%,
+        rgba(255, 255, 255, 0.18) 100%
+      )`,
+      EVENING: `radial-gradient(
+        ellipse 70% 60% at 50% 50%,
+        transparent 0%,
+        transparent 60%,
+        rgba(255, 240, 230, 0.05) 80%,
+        rgba(255, 240, 230, 0.1) 95%,
+        rgba(255, 240, 230, 0.15) 100%
+      )`,
+      NIGHT: `radial-gradient(
+        ellipse 70% 60% at 50% 50%,
+        transparent 0%,
+        transparent 60%,
+        rgba(100, 120, 160, 0.04) 80%,
+        rgba(100, 120, 160, 0.08) 95%,
+        rgba(100, 120, 160, 0.12) 100%
+      )`,
+    };
+    root.style.setProperty(
+      "--fresnel-gradient",
+      fresnelConfig[palette.timePeriod] || fresnelConfig.NOON,
+    );
   }
 }
