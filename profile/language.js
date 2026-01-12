@@ -43,15 +43,6 @@ export function getCurrentLang() {
 }
 
 /**
- * Set the current language
- * @param {'en'|'ja'} lang
- */
-export function setCurrentLang(lang) {
-  currentLang = lang;
-  setStoredLang(lang);
-}
-
-/**
  * Toggle the current language
  * @returns {'en'|'ja'} The new language
  */

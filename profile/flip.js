@@ -11,14 +11,6 @@
 let isHintAnimating = false;
 
 /**
- * Check if hint animation is currently playing
- * @returns {boolean}
- */
-export function isHintActive() {
-  return isHintAnimating;
-}
-
-/**
  * Setup card flip functionality (tap anywhere on card to flip)
  * @param {HTMLElement} card - Card element
  */

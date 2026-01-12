@@ -49,11 +49,3 @@ export function createLogger(namespace) {
     },
   };
 }
-
-/**
- * Default logger instance
- */
-export const log = isDebugMode() ? console.log.bind(console) : () => {};
-
-export const warn = console.warn.bind(console);
-export const error = console.error.bind(console);

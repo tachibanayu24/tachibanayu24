@@ -137,7 +137,6 @@ class CardEffects {
    */
   handleMouseEnter() {
     this.isActive = true;
-    this.card.style.transition = "transform 0.1s ease-out";
     this.startAnimation();
   }
 
@@ -147,11 +146,6 @@ class CardEffects {
   handleMouseLeave() {
     this.isActive = false;
     this.target = { x: 0.5, y: 0.5, rotateX: 0, rotateY: 0 };
-
-    // Smooth return to neutral
-    this.card.style.transition = "transform 0.5s ease-out";
-
-    // Reset glare
     this.updateGlare(0.5, 0.5, 0);
   }
 
@@ -175,7 +169,6 @@ class CardEffects {
     if (e.touches.length !== 1) return;
 
     this.isActive = true;
-    this.card.style.transition = "transform 0.1s ease-out";
     this.startAnimation();
 
     const touch = e.touches[0];
