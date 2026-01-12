@@ -104,8 +104,16 @@ button {
 
 .card-face {
   background:
-    /* A: Subtle noise texture for plastic surface feel */
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E"),
+    /* A: Enhanced noise texture - finer grain for satin finish */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E"),
+    /* B: Subtle brushed metal effect */
+    repeating-linear-gradient(
+        90deg,
+        transparent 0px,
+        transparent 2px,
+        rgba(255, 255, 255, 0.008) 2px,
+        rgba(255, 255, 255, 0.008) 4px
+      ),
     /* Base glass background */ var(--card-bg-glass);
   border-radius: 24px;
   padding: 2.5rem 2rem;
@@ -119,20 +127,23 @@ button {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   overflow: hidden;
-  /* Plastic card thickness effect */
+  /* Enhanced plastic card thickness effect with bevel */
   box-shadow:
-    /* Inner highlights and shadows */
-    inset 0 1px 0 var(--card-edge-light),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.05),
-    /* Card edge thickness - bottom and right (light from top-left) */ 0 1.5px 0
-      0 var(--card-edge-dark),
-    1.5px 0 0 0 var(--card-edge-dark),
-    1.5px 1.5px 0 0 var(--card-edge-darker),
-    /* Soft edge glow */ 0 2px 1px -1px rgba(0, 0, 0, 0.12),
-    /* Contact shadow */ 0 3px 6px rgba(0, 0, 0, 0.16),
-    0 6px 12px rgba(0, 0, 0, 0.12),
-    /* Floating shadow */ 0 12px 24px rgba(0, 0, 0, 0.1),
-    0 24px 48px rgba(0, 0, 0, 0.08);
+    /* Inner bevel - top highlight */
+    inset 0 2px 1px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    /* Card edge thickness - layered for depth */ 0 1px 0 0
+      var(--card-edge-dark),
+    0 2px 0 0 var(--card-edge-darker),
+    1px 0 0 0 var(--card-edge-dark),
+    2px 0 0 0 var(--card-edge-darker),
+    1px 1px 0 0 var(--card-edge-dark),
+    2px 2px 0 0 var(--card-edge-darker),
+    /* Soft bevel glow */ 0 3px 2px -1px rgba(0, 0, 0, 0.15),
+    /* Contact shadow */ 0 4px 8px rgba(0, 0, 0, 0.18),
+    0 8px 16px rgba(0, 0, 0, 0.14),
+    /* Floating shadow */ 0 16px 32px rgba(0, 0, 0, 0.12),
+    0 32px 64px rgba(0, 0, 0, 0.08);
 }
 
 /* Light reflection from light source + B: Glossy surface gradient */
@@ -326,13 +337,47 @@ button {
   padding: 6px;
   border-radius: 50%;
   background: var(--button-bg);
+  /* Neumorphic effect - raised ring */
   box-shadow:
-    6px 6px 12px var(--shadow-dark),
-    -6px -6px 12px var(--shadow-light);
+    /* Outer shadows */
+    5px 5px 10px var(--shadow-dark),
+    -5px -5px 10px var(--shadow-light),
+    /* Inner recess for photo well */ inset 2px 2px 4px var(--shadow-dark),
+    inset -1px -1px 3px var(--shadow-light);
   margin-bottom: 1.25rem;
   transition:
     background var(--transition-duration) ease,
     box-shadow var(--transition-duration) ease;
+  /* Holographic accent on outer edge */
+  border: 2px solid transparent;
+  background-image:
+    linear-gradient(var(--button-bg), var(--button-bg)),
+    /* Subtle holographic tint - shifts with view angle */
+    conic-gradient(
+        from var(--holo-angle, 0deg),
+        rgba(255, 120, 180, 0.15),
+        rgba(255, 200, 120, 0.2),
+        rgba(150, 255, 180, 0.2),
+        rgba(120, 200, 255, 0.2),
+        rgba(180, 120, 255, 0.15),
+        rgba(255, 120, 180, 0.15)
+      );
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  position: relative;
+}
+
+/* Inner highlight ring for extra depth */
+.avatar-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  pointer-events: none;
 }
 
 .avatar {
@@ -341,6 +386,34 @@ button {
   border-radius: 50%;
   object-fit: cover;
   display: block;
+  /* Subtle inner shadow on photo */
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+/* Avatar reflection/gloss effect - follows mouse */
+.avatar-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+  /* Glossy reflection - position controlled by JS via --glare-x, --glare-y */
+  background: radial-gradient(
+    circle at var(--glare-x, 30%) var(--glare-y, 30%),
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(255, 255, 255, 0.1) 20%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card-container:hover .avatar-wrapper::after {
+  opacity: 1;
 }
 
 .name {
@@ -350,10 +423,13 @@ button {
   margin-bottom: 0.75rem;
   color: var(--text);
   transition: color var(--transition-duration) ease;
-  /* A: Emboss effect - raised text with light from above */
+  /* Enhanced emboss effect - raised metallic text */
   text-shadow:
+    /* Primary highlight (top-left light) */
     var(--text-highlight-offset) var(--text-highlight-color),
-    var(--text-shadow-offset) var(--text-shadow-color);
+    /* Primary shadow (bottom-right) */ var(--text-shadow-offset)
+      var(--text-shadow-color),
+    /* Secondary depth layer */ 0 3px 6px rgba(0, 0, 0, 0.08);
 }
 
 .bio {
@@ -466,7 +542,7 @@ button {
   gap: 0.875rem;
 }
 
-/* Neumorphic Link Button */
+/* Neumorphic Link Button - realistic raised button */
 .link {
   display: flex;
   align-items: center;
@@ -480,11 +556,17 @@ button {
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.03em;
+  position: relative;
+  /* Enhanced shadow with inner bevel */
   box-shadow:
-    4px 4px 8px var(--shadow-dark),
-    -4px -4px 8px var(--shadow-light);
+    /* Inner top highlight */
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    /* Inner bottom shadow */ inset 0 -1px 0 rgba(0, 0, 0, 0.05),
+    /* Outer shadows */ 4px 4px 8px var(--shadow-dark),
+    -4px -4px 8px var(--shadow-light),
+    /* Bottom edge thickness */ 0 2px 0 rgba(0, 0, 0, 0.04);
   transition:
-    all 0.2s ease,
+    all 0.15s ease,
     background var(--transition-duration) ease,
     box-shadow var(--transition-duration) ease;
   /* E: UV print effect (subtle) */
@@ -494,16 +576,23 @@ button {
 }
 
 .link:hover {
+  /* Slightly raised on hover */
   box-shadow:
-    2px 2px 4px var(--shadow-dark),
-    -2px -2px 4px var(--shadow-light);
-  transform: translateY(1px);
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05),
+    3px 3px 6px var(--shadow-dark),
+    -3px -3px 6px var(--shadow-light),
+    0 1px 0 rgba(0, 0, 0, 0.03);
+  transform: translateY(-1px);
 }
 
 .link:active {
+  /* Pressed state - fully inset */
   box-shadow:
-    inset 2px 2px 4px var(--shadow-dark),
-    inset -2px -2px 4px var(--shadow-light);
+    inset 3px 3px 6px var(--shadow-dark),
+    inset -2px -2px 4px var(--shadow-light),
+    inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  transform: translateY(1px);
 }
 
 .link:focus-visible {
@@ -606,38 +695,38 @@ button {
   }
 }
 
-/* Shimmer effect - one-way sweep for flip */
+/* Shimmer effect - one-way sweep for flip (synced with 0.6s flip) */
 @keyframes shimmer {
   0% {
     opacity: 0;
-    transform: translateX(-100%) rotate(25deg);
+    transform: translateX(-80%) rotate(20deg);
   }
-  15% {
-    opacity: 1;
+  20% {
+    opacity: 0.8;
   }
-  85% {
-    opacity: 1;
+  80% {
+    opacity: 0.8;
   }
   100% {
     opacity: 0;
-    transform: translateX(100%) rotate(25deg);
+    transform: translateX(80%) rotate(20deg);
   }
 }
 
-/* Shimmer effect - round-trip for hint animation */
+/* Shimmer effect - round-trip for hint animation (synced with 1.2s hint) */
 @keyframes shimmerRoundTrip {
   0%,
   100% {
     opacity: 0;
-    transform: translateX(-50%) rotate(25deg);
+    transform: translateX(-40%) rotate(20deg);
   }
-  30% {
-    opacity: 1;
-    transform: translateX(0%) rotate(25deg);
+  25% {
+    opacity: 0.6;
+    transform: translateX(5%) rotate(20deg);
   }
-  70% {
-    opacity: 1;
-    transform: translateX(-10%) rotate(25deg);
+  55% {
+    opacity: 0.6;
+    transform: translateX(-5%) rotate(20deg);
   }
 }
 
@@ -665,14 +754,14 @@ button {
   transform: translateX(-100%) rotate(25deg);
 }
 
-/* Trigger shimmer on hint animation - round trip matching card motion */
+/* Trigger shimmer on hint animation - synced with 1.2s flipHint */
 .card.hint .card-face .shimmer-effect {
-  animation: shimmerRoundTrip 0.8s ease;
+  animation: shimmerRoundTrip 1.2s ease;
 }
 
-/* Trigger shimmer on flip - one-way sweep */
+/* Trigger shimmer on flip - synced with 0.6s flip transition */
 .card.flipping .card-face .shimmer-effect {
-  animation: shimmer 0.6s ease-in-out;
+  animation: shimmer 0.6s ease;
 }
 
 /* E: Fresnel effect - edges appear brighter (realistic light scattering) */
@@ -698,4 +787,22 @@ button {
     )
   );
   transition: background 0.5s ease;
+}
+
+/* F: Mouse-tracking glare effect */
+.card-face .card-glare {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 15;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  mix-blend-mode: overlay;
+}
+
+.card-container:hover .card-glare {
+  opacity: 1;
 }
