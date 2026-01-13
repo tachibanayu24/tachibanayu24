@@ -17,14 +17,10 @@ const CARD_EFFECTS_CONFIG = {
   maxTilt: 6,
   // Tilt easing speed (lower = smoother)
   tiltSpeed: 0.06,
-  // Light reflection intensity
-  lightIntensity: 0.35,
   // Whether to enable effects on touch devices
   enableOnTouch: true,
   // Perspective distance
   perspective: 1000,
-  // Glare element size multiplier
-  glareSize: 1.5,
 };
 
 /**
@@ -54,33 +50,8 @@ class CardEffects {
     this.handleTouchEnd = this.handleTouchEnd.bind(this);
     this.animate = this.animate.bind(this);
 
-    // Create effect elements
-    this.createEffectElements();
-
     // Initialize
     this.init();
-  }
-
-  /**
-   * Create DOM elements for effects
-   */
-  createEffectElements() {
-    const frontFace = this.card.querySelector(".card-front");
-    const backFace = this.card.querySelector(".card-back");
-
-    // Create glare/light reflection element for front
-    this.glareFront = document.createElement("div");
-    this.glareFront.className = "card-glare";
-    if (frontFace) {
-      frontFace.appendChild(this.glareFront);
-    }
-
-    // Create glare element for back
-    this.glareBack = document.createElement("div");
-    this.glareBack.className = "card-glare";
-    if (backFace) {
-      backFace.appendChild(this.glareBack);
-    }
   }
 
   /**
@@ -146,7 +117,6 @@ class CardEffects {
   handleMouseLeave() {
     this.isActive = false;
     this.target = { x: 0.5, y: 0.5, rotateX: 0, rotateY: 0 };
-    this.updateGlare(0.5, 0.5, 0);
   }
 
   /**
@@ -240,11 +210,6 @@ class CardEffects {
     // Apply transform
     this.applyTransform();
 
-    // Update effects
-    const intensity = this.isActive ? CARD_EFFECTS_CONFIG.lightIntensity : 0;
-    this.updateGlare(this.current.x, this.current.y, intensity);
-    this.updateHoloRing(this.current.x, this.current.y);
-
     // Continue animation if active or not yet settled
     const isSettled =
       Math.abs(this.target.rotateX - this.current.rotateX) < 0.01 &&
@@ -285,61 +250,6 @@ class CardEffects {
   }
 
   /**
-   * Update glare/light reflection effect
-   */
-  updateGlare(x, y, intensity) {
-    // Position glare based on "light source" opposite to mouse
-    const glareX = x * 100;
-    const glareY = y * 100;
-
-    // Calculate distance from center for intensity falloff
-    const distanceFromCenter = Math.sqrt(
-      Math.pow(x - 0.5, 2) + Math.pow(y - 0.5, 2),
-    );
-    const adjustedIntensity = intensity * (1 - distanceFromCenter * 0.5);
-
-    const glareStyle = `
-      radial-gradient(
-        ellipse 80% 50% at ${glareX}% ${glareY}%,
-        rgba(255, 255, 255, ${adjustedIntensity * 0.8}) 0%,
-        rgba(255, 255, 255, ${adjustedIntensity * 0.4}) 20%,
-        rgba(255, 255, 255, ${adjustedIntensity * 0.1}) 40%,
-        transparent 70%
-      )
-    `;
-
-    if (this.glareFront) {
-      this.glareFront.style.background = glareStyle;
-      this.glareFront.style.opacity = this.isFlipped ? "0" : "1";
-    }
-
-    if (this.glareBack) {
-      this.glareBack.style.background = glareStyle;
-      this.glareBack.style.opacity = this.isFlipped ? "1" : "0";
-    }
-  }
-
-  /**
-   * Update holographic ring reflection angle based on mouse position
-   */
-  updateHoloRing(x, y) {
-    // Calculate angle from center to mouse position
-    // This simulates light source direction
-    const angle = Math.atan2(y - 0.5, x - 0.5) * (180 / Math.PI);
-    // Offset by 180 to put highlight opposite to "light source"
-    const highlightAngle = angle + 180;
-
-    // Update CSS variable on the card
-    this.card.style.setProperty("--holo-angle", `${highlightAngle}deg`);
-
-    // Update avatar glare position (light comes from mouse direction)
-    const glareX = x * 100;
-    const glareY = y * 100;
-    this.card.style.setProperty("--glare-x", `${glareX}%`);
-    this.card.style.setProperty("--glare-y", `${glareY}%`);
-  }
-
-  /**
    * Cleanup
    */
   destroy() {
@@ -353,10 +263,6 @@ class CardEffects {
     if (this.animationFrame) {
       cancelAnimationFrame(this.animationFrame);
     }
-
-    // Remove created elements
-    this.glareFront?.remove();
-    this.glareBack?.remove();
   }
 }
 
