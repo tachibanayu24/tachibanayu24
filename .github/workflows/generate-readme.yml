@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "me.json"
+      - "public/me.json"
   workflow_dispatch: # Allow manual trigger
 
 jobs:
