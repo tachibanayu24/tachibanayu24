@@ -43,80 +43,21 @@ tachibanayu24 の名刺とかに QR コードとして入れたりするリン�
 
 ---
 
-## 技術スタック
-
-### フレームワーク
-
-- **Astro** - 静的サイトジェネレーター
-  - SEO最適化のため、ビルド時に `public/me.json` からメタタグ・構造化データ・コンテンツを生成
-  - 完全な静的HTML出力でクローラー対応
-
-### ホスティング
-
-- **GitHub Pages** - 静的サイトホスティング
-- **GitHub Actions** - 自動ビルド＆デプロイ
-
----
-
 ## コンテンツ管理
 
 ### me.json
 
-プロフィール情報は `public/me.json` で一元管理。スキーマは `public/me.schema.json` で定義。
+プロフィール情報は `me.json` で一元管理。スキーマは `me.schema.json` で定義。
 
-**単一の情報源**として、以下のすべてを自動生成：
+### README 自動生成
 
-- index.html（SEO対応メタタグ、構造化データ、初期コンテンツ）
-- README.md / README.ja.md
-
-### SEO対策
-
-**静的HTML生成**により以下を実装：
-
-- `<title>` に「立花 優斗」を含む
-- `<meta name="description">` に日本語名を含む
-- Open Graph / Twitter Card メタタグ
-- JSON-LD構造化データ（Schema.org Person型）
-- sitemap-index.xml 自動生成
-- robots.txt 配置
-
-### 自動生成フロー
-
-#### README生成
-
-`public/me.json` を更新して main ブランチに push すると、GitHub Actions により `README.md` と `README.ja.md` が自動再生成される。
+`me.json` を更新して main ブランチに push すると、GitHub Actions により `README.md` と `README.ja.md` が自動再生成される。
 
 - ワークフロー: `.github/workflows/generate-readme.yml`
 - スクリプト: `scripts/generate-readme.js`
-
-#### サイトデプロイ
-
-main ブランチに push すると、GitHub Actions が自動的にビルドしてデプロイ。
-
-- ワークフロー: `.github/workflows/deploy.yml`
-- 実行内容：
-  1. Astro ビルド（`npm run build`）
-  2. `public/me.json` から静的HTML生成
-  3. GitHub Pages にデプロイ
 
 ---
 
 ## 開発者向け
 
-### 開発コマンド
-
-```bash
-# 開発サーバー起動（ポート4321）
-npm run dev
-
-# 本番ビルド
-npm run build
-
-# ビルド結果のプレビュー
-npm run preview
-```
-
-### デバッグモード
-
 - `#debug` を URL に付与するとデバッグパネルが表示され、時間帯を手動切替可能
-- 例: `http://localhost:4321/#debug`

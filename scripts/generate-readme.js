@@ -12,10 +12,8 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootDir = join(__dirname, "..");
 
-// Read me.json (now in public/)
-const meJson = JSON.parse(
-  readFileSync(join(rootDir, "public/me.json"), "utf-8"),
-);
+// Read me.json
+const meJson = JSON.parse(readFileSync(join(rootDir, "me.json"), "utf-8"));
 
 // Generate README content for a specific language
 function generateReadme(data, lang) {
