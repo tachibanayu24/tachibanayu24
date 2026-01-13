@@ -1,0 +1,46 @@
+# Yuto Tachibana (立花 優斗)
+
+> Software Engineer based in Tokyo, Japan. Personal profile and link collection.
+
+## About
+
+Yuto Tachibana began his career in 2018 at NTT COMWARE, where he was engaged in new businesses with cutting-edge technologies for government agencies. Then he joined several startups as an engineering manager or the head of development, where he had led 0-to-1 product creation, organizational building, and growth initiatives. In 2022, he became the tech lead and contributed to business development at a newly established joint venture of DeNA. In 2025, Yuto joined Delight Ventures. Now he serves as a temporary CTO for portfolio companies, providing support for value creation and implementing AI solutions for fund management.
+
+## Current Positions
+
+### Full-time
+- Delight Ventures, Inc. - https://www.delight-ventures.com/en/team/yuto-tachibana
+
+### Contract / Advisor
+- Algomatic Co., Ltd. - https://algomatic.jp/company
+- Workside, Inc. - https://onn-hr.com/aboutus
+- Kazetuchi Inc. - https://kztc.jp/
+
+## Connect
+
+- Facebook: https://www.facebook.com/tachibanayu24
+- LinkedIn: https://www.linkedin.com/in/yuto-tachibana
+- GitHub: https://github.com/tachibanayu24
+- X: https://x.com/tachibanayu24
+- Note: https://note.com/tachibanayu24
+- Blog: https://blog.tachibanayu24.com
+- Wantedly: https://www.wantedly.com/id/tachibanayu24
+- Qiita: https://qiita.com/tachibanayu24
+- Zenn: https://zenn.dev/tachibanayu24
+- Resume: https://resume.tachibanayu24.workers.dev/
+
+## Data Format
+
+This site's profile data is available in structured JSON format at:
+- https://tachibanayu24.com/me.json
+
+The JSON schema is defined at:
+- https://tachibanayu24.com/me.schema.json
+
+## Interests
+
+Startups, Fitness, Sauna, Cooking, Rabbits, Shogi, Real Estate, Stock Market, Comedy, AI in Large Industries
+
+## Language
+
+This site supports both English and Japanese. Content is managed through me.json with language-specific fields.

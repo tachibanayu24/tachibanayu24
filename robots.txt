@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tachibanayu24.com/sitemap.xml

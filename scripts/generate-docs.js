@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Generate README.md and README.ja.md from me.json
+ * Generate README.md, README.ja.md, and llms.txt from me.json
  * This script is run by GitHub Actions when me.json is updated
  */
 
@@ -68,3 +68,71 @@ console.log("README.md generated successfully!");
 const readmeJa = generateReadme(meJson, "ja");
 writeFileSync(join(rootDir, "README.ja.md"), readmeJa);
 console.log("README.ja.md generated successfully!");
+
+// Generate llms.txt
+function generateLlmsTxt(data) {
+  const { fulltime, contract } = data.companies;
+
+  // Full-time companies
+  const fulltimeSection = fulltime.list
+    .map((c) => `- ${c.name} - ${c.url}`)
+    .join("\n");
+
+  // Contract/Advisor companies
+  const contractSection = contract.list
+    .map((c) => `- ${c.name} - ${c.url}`)
+    .join("\n");
+
+  // Links
+  const linksSection = data.links
+    .map((link) => `- ${link.name}: ${link.url}`)
+    .join("\n");
+
+  // About content (use English version)
+  const aboutContent = data.backside?.about?.content?.en || "";
+
+  // Favorites (use English version)
+  const favorites = data.backside?.favorites?.list?.en || [];
+  const favoritesText = favorites.join(", ");
+
+  return `# ${data.name.en} (${data.name.ja})
+
+> Software Engineer based in Tokyo, Japan. Personal profile and link collection.
+
+## About
+
+${aboutContent}
+
+## Current Positions
+
+### Full-time
+${fulltimeSection}
+
+### Contract / Advisor
+${contractSection}
+
+## Connect
+
+${linksSection}
+
+## Data Format
+
+This site's profile data is available in structured JSON format at:
+- https://tachibanayu24.com/me.json
+
+The JSON schema is defined at:
+- https://tachibanayu24.com/me.schema.json
+
+## Interests
+
+${favoritesText}
+
+## Language
+
+This site supports both English and Japanese. Content is managed through me.json with language-specific fields.
+`;
+}
+
+const llmsTxt = generateLlmsTxt(meJson);
+writeFileSync(join(rootDir, "llms.txt"), llmsTxt);
+console.log("llms.txt generated successfully!");
