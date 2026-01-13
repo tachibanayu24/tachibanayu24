@@ -116,33 +116,6 @@
   font-size: 0.9rem;
   line-height: 1.6;
   transition: color var(--transition-duration) ease;
-  /* D: Laser engraved effect (subtle) */
-  text-shadow:
-    var(--text-highlight-offset-subtle) var(--text-highlight-color-subtle),
-    var(--text-shadow-offset-subtle) var(--text-shadow-color-subtle);
-}
-
-.bio a {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  font-weight: 500;
-  transition:
-    opacity 0.2s,
-    color var(--transition-duration) ease;
-  /* Inherit text effect (subtle) */
-  text-shadow:
-    var(--text-highlight-offset-subtle) var(--text-highlight-color-subtle),
-    var(--text-shadow-offset-subtle) var(--text-shadow-color-subtle);
-}
-
-.bio a:hover {
-  opacity: 0.7;
-}
-
-.bio a:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
 }
 
 /* Company */
@@ -151,33 +124,6 @@
   font-size: 0.8rem;
   color: var(--text-muted);
   transition: color var(--transition-duration) ease;
-  /* D: Laser engraved effect (subtle) */
-  text-shadow:
-    var(--text-highlight-offset-subtle) var(--text-highlight-color-subtle),
-    var(--text-shadow-offset-subtle) var(--text-shadow-color-subtle);
-}
-
-.company a {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  font-weight: 500;
-  transition:
-    opacity 0.2s,
-    color var(--transition-duration) ease;
-  /* Inherit text effect (subtle) */
-  text-shadow:
-    var(--text-highlight-offset-subtle) var(--text-highlight-color-subtle),
-    var(--text-shadow-offset-subtle) var(--text-shadow-color-subtle);
-}
-
-.company a:hover {
-  opacity: 0.7;
-}
-
-.company a:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
 }
 
 /* Divider */
@@ -210,10 +156,6 @@
   margin-bottom: 0.75rem;
   font-weight: 600;
   transition: color var(--transition-duration) ease;
-  /* D: Laser engraved effect (subtle) */
-  text-shadow:
-    var(--text-highlight-offset-subtle) var(--text-highlight-color-subtle),
-    var(--text-shadow-offset-subtle) var(--text-shadow-color-subtle);
 }
 
 .back-section-content {
@@ -221,10 +163,6 @@
   font-size: 0.85rem;
   line-height: 1.6;
   transition: color var(--transition-duration) ease;
-  /* D: Laser engraved effect (subtle) */
-  text-shadow:
-    var(--text-highlight-offset-subtle) var(--text-highlight-color-subtle),
-    var(--text-shadow-offset-subtle) var(--text-shadow-color-subtle);
 }
 
 .favorites-list {
@@ -247,10 +185,6 @@
     background var(--transition-duration) ease,
     color var(--transition-duration) ease,
     box-shadow var(--transition-duration) ease;
-  /* E: UV print effect (subtle) */
-  text-shadow:
-    var(--text-highlight-offset-subtle) var(--text-highlight-color-subtle),
-    var(--text-shadow-offset-subtle) var(--text-shadow-color-subtle);
 }
 
 /* Mobile */

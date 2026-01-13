@@ -80,6 +80,34 @@ button {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Utility Classes */
+/* Subtle text engraving effect - used across multiple text elements */
+.text-engraved {
+  text-shadow:
+    var(--text-highlight-offset-subtle) var(--text-highlight-color-subtle),
+    var(--text-shadow-offset-subtle) var(--text-shadow-color-subtle);
+}
+
+/* Common link styling */
+.text-link {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 500;
+  transition:
+    opacity 0.2s,
+    color var(--transition-duration) ease;
+}
+
+.text-link:hover {
+  opacity: 0.7;
+}
+
+.text-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 /* States */
 .loading {
   text-align: center;

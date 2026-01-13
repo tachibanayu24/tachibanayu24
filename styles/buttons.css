@@ -3,18 +3,14 @@
  * Language toggle, link buttons, and links grid
  */
 
-/* Language Toggle */
-.lang-toggle {
+/* Card Action Button - Base styles for card corner buttons */
+.card-action-btn {
   position: absolute;
   top: 1rem;
-  right: 1rem;
   z-index: 3;
   border: none;
   background: var(--button-bg);
   color: var(--text-muted);
-  font-size: 0.65rem;
-  font-weight: 600;
-  padding: 0.4rem 0.6rem;
   border-radius: 6px;
   cursor: pointer;
   transition:
@@ -25,25 +21,57 @@
   box-shadow:
     2px 2px 4px var(--shadow-dark),
     -2px -2px 4px var(--shadow-light);
+}
+
+.card-action-btn:hover {
+  color: var(--text);
+}
+
+.card-action-btn:active {
+  box-shadow:
+    inset 2px 2px 4px var(--shadow-dark),
+    inset -2px -2px 4px var(--shadow-light);
+}
+
+.card-action-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Language Toggle - Text button variant */
+.lang-toggle {
+  right: 1rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.4rem 0.6rem;
   /* Text effect (subtle) */
   text-shadow:
     var(--text-highlight-offset-subtle) var(--text-highlight-color-subtle),
     var(--text-shadow-offset-subtle) var(--text-shadow-color-subtle);
 }
 
-.lang-toggle:hover {
-  color: var(--text);
+/* Download JSON Button - Icon button variant */
+.download-json-btn {
+  left: 1rem;
+  padding: 0.5rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.lang-toggle:active {
-  box-shadow:
-    inset 2px 2px 4px var(--shadow-dark),
-    inset -2px -2px 4px var(--shadow-light);
+.download-json-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
 }
 
-.lang-toggle:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+.download-json-btn:hover {
+  transform: scale(1.05);
+}
+
+.download-json-btn:active {
+  transform: scale(0.98);
 }
 
 /* Links Section */
@@ -58,10 +86,6 @@
   text-align: center;
   font-weight: 600;
   transition: color var(--transition-duration) ease;
-  /* D: Laser engraved effect (subtle) */
-  text-shadow:
-    var(--text-highlight-offset-subtle) var(--text-highlight-color-subtle),
-    var(--text-shadow-offset-subtle) var(--text-shadow-color-subtle);
 }
 
 .links-grid {
@@ -99,10 +123,6 @@
     all 0.15s ease,
     background var(--transition-duration) ease,
     box-shadow var(--transition-duration) ease;
-  /* E: UV print effect (subtle) */
-  text-shadow:
-    var(--text-highlight-offset-subtle) var(--text-highlight-color-subtle),
-    var(--text-shadow-offset-subtle) var(--text-shadow-color-subtle);
 }
 
 .link:hover {

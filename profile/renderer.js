@@ -37,14 +37,16 @@ export async function render() {
   const fulltimeLabel = fulltime.label[lang];
   const fulltimeLinks = fulltime.list
     .map(
-      (c) => `<a href="${c.url}" target="_blank" rel="noopener">${c.name}</a>`,
+      (c) =>
+        `<a href="${c.url}" class="text-link text-engraved" target="_blank" rel="noopener">${c.name}</a>`,
     )
     .join(" / ");
 
   const contractLabel = contract.label[lang];
   const contractLinks = contract.list
     .map(
-      (c) => `<a href="${c.url}" target="_blank" rel="noopener">${c.name}</a>`,
+      (c) =>
+        `<a href="${c.url}" class="text-link text-engraved" target="_blank" rel="noopener">${c.name}</a>`,
     )
     .join(" / ");
 
@@ -61,7 +63,7 @@ export async function render() {
   // Render links with icons
   const linksHtml = profileData.links
     .map((link, index) => {
-      return `<a href="${link.url}" class="link" target="_blank" rel="noopener">
+      return `<a href="${link.url}" class="link text-engraved" target="_blank" rel="noopener">
         <span class="link-icon">${icons[index]}</span>
         ${link.name}
       </a>`;
@@ -108,7 +110,7 @@ function renderBackside(lang) {
   }
   if (favoritesListEl && backside.favorites) {
     favoritesListEl.innerHTML = backside.favorites.list[lang]
-      .map((item) => `<span class="favorite-tag">${item}</span>`)
+      .map((item) => `<span class="favorite-tag text-engraved">${item}</span>`)
       .join("");
   }
 }
