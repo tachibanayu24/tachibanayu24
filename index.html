@@ -1,67 +1,5 @@
----
-// Load profile data
-import meData from '../../public/me.json';
-
-const lang = 'ja'; // Default language for SSR
-
-// Generate metadata
-const title = `${meData.name.ja} (${meData.name.en}) - Software Engineer from Tokyo`;
-const description = `${meData.name.ja} (${meData.name.en}) is a Software Engineer based in Tokyo, Japan. Connect with me on social media, read my blog, and explore my work.`;
-const author = `${meData.name.en}, ${meData.name.ja}`;
-
-// Generate company HTML
-const fulltimeLabel = meData.companies.fulltime.label[lang];
-const fulltimeLinks = meData.companies.fulltime.list
-  .map((c) => `<a href="${c.url}" class="text-link text-engraved" target="_blank" rel="noopener">${c.name}</a>`)
-  .join(' / ');
-
-const contractLabel = meData.companies.contract.label[lang];
-const contractLinks = meData.companies.contract.list
-  .map((c) => `<a href="${c.url}" class="text-link text-engraved" target="_blank" rel="noopener">${c.name}</a>`)
-  .join(' / ');
-
-const companyHtml = `${fulltimeLabel}<br>${fulltimeLinks}<br><br>${contractLabel}<br>${contractLinks}`;
-
-// Bio with line breaks
-const bioHtml = meData.bio[lang].split('\n').join('<br>');
-
-// Links title
-const linksTitle = lang === 'ja' ? 'SNSなど' : 'Connect with me';
-
-// Structured Data (JSON-LD)
-const structuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: meData.name.en,
-  alternateName: [
-    meData.name.ja,
-    meData.name.ja.replace(' ', ''),
-    'tachibanayu24',
-  ],
-  url: 'https://tachibanayu24.com',
-  image: 'https://tachibanayu24.com/images/me.jpg',
-  jobTitle: 'Software Engineer',
-  worksFor: {
-    '@type': 'Organization',
-    name: meData.companies.fulltime.list[0].name,
-    url: meData.companies.fulltime.list[0].url,
-  },
-  affiliation: meData.companies.contract.list.map((c) => ({
-    '@type': 'Organization',
-    name: c.name,
-    url: c.url,
-  })),
-  sameAs: meData.links.map((link) => link.url),
-};
-
-// Favorites
-const favoritesHtml = meData.backside.favorites.list[lang]
-  .map((item) => `<span class="favorite-tag text-engraved">${item}</span>`)
-  .join('');
----
-
 <!doctype html>
-<html lang="ja">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta
@@ -77,9 +15,12 @@ const favoritesHtml = meData.backside.favorites.list[lang]
       id="apple-status-bar"
       content="default"
     />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    <meta name="author" content={author} />
+    <title>Yuto Tachibana (立花 優斗) - Software Engineer from Tokyo</title>
+    <meta
+      name="description"
+      content="Yuto Tachibana (立花 優斗) is a Software Engineer based in Tokyo, Japan. Connect with me on social media, read my blog, and explore my work."
+    />
+    <meta name="author" content="Yuto Tachibana, 立花 優斗" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://tachibanayu24.com/" />
     <link
@@ -90,28 +31,80 @@ const favoritesHtml = meData.backside.favorites.list[lang]
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://tachibanayu24.com/" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta
+      property="og:title"
+      content="Yuto Tachibana (立花 優斗) - Software Engineer from Tokyo"
+    />
+    <meta
+      property="og:description"
+      content="Yuto Tachibana (立花 優斗) is a Software Engineer based in Tokyo, Japan. Connect with me on social media, read my blog, and explore my work."
+    />
     <meta
       property="og:image"
       content="https://tachibanayu24.com/images/me.jpg"
     />
-    <meta property="og:locale" content="ja_JP" />
-    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ja_JP" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@tachibanayu24" />
     <meta name="twitter:creator" content="@tachibanayu24" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
+    <meta
+      name="twitter:title"
+      content="Yuto Tachibana (立花 優斗) - Software Engineer from Tokyo"
+    />
+    <meta
+      name="twitter:description"
+      content="Yuto Tachibana (立花 優斗) is a Software Engineer based in Tokyo, Japan. Connect with me on social media, read my blog, and explore my work."
+    />
     <meta
       name="twitter:image"
       content="https://tachibanayu24.com/images/me.jpg"
     />
 
     <!-- Structured Data -->
-    <script type="application/ld+json" set:html={JSON.stringify(structuredData, null, 2)} />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Yuto Tachibana",
+        "alternateName": ["立花 優斗", "立花優斗", "tachibanayu24"],
+        "url": "https://tachibanayu24.com",
+        "image": "https://tachibanayu24.com/images/me.jpg",
+        "jobTitle": "Software Engineer",
+        "worksFor": {
+          "@type": "Organization",
+          "name": "Delight Ventures, Inc.",
+          "url": "https://www.delight-ventures.com/"
+        },
+        "affiliation": [
+          {
+            "@type": "Organization",
+            "name": "Algomatic Co., Ltd.",
+            "url": "https://algomatic.jp/"
+          },
+          {
+            "@type": "Organization",
+            "name": "Workside, Inc.",
+            "url": "https://onn-hr.com/"
+          },
+          {
+            "@type": "Organization",
+            "name": "Kazetuchi Inc.",
+            "url": "https://kztc.jp/"
+          }
+        ],
+        "sameAs": [
+          "https://github.com/tachibanayu24",
+          "https://x.com/tachibanayu24",
+          "https://www.linkedin.com/in/yuto-tachibana",
+          "https://note.com/tachibanayu24",
+          "https://zenn.dev/tachibanayu24",
+          "https://qiita.com/tachibanayu24"
+        ]
+      }
+    </script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -122,12 +115,12 @@ const favoritesHtml = meData.backside.favorites.list[lang]
     />
 
     <!-- Styles -->
-    <link rel="stylesheet" href="/styles/index.css" />
+    <link rel="stylesheet" href="styles/index.css" />
 
     <!-- Dynamic Background System -->
-    <script type="module" src="/background/index.js"></script>
+    <script type="module" src="./background/index.js"></script>
 
-    <script type="module" src="/background/debug.js"></script>
+    <script type="module" src="./background/debug.js"></script>
   </head>
   <body>
     <div class="container">
@@ -152,17 +145,19 @@ const favoritesHtml = meData.backside.favorites.list[lang]
             <div class="profile">
               <div class="avatar-wrapper">
                 <img
-                  src="/images/me.jpg"
+                  src="./images/me.jpg"
                   alt="Yuto Tachibana (立花 優斗)"
                   class="avatar"
                 />
               </div>
-              <h1 class="name" id="name">{meData.name.ja} ({meData.name.en})</h1>
-              <div class="bio text-engraved" id="bio" set:html={bioHtml}></div>
-              <div class="company text-engraved" id="company" set:html={companyHtml}></div>
+              <h1 class="name" id="name">Yuto Tachibana</h1>
+              <div class="bio text-engraved" id="bio">
+                <span class="loading">Loading...</span>
+              </div>
+              <div class="company text-engraved" id="company"></div>
             </div>
             <div class="divider"></div>
-            <p class="links-title text-engraved">{linksTitle}</p>
+            <p class="links-title text-engraved">Connect with me</p>
             <div class="links-grid" id="links">
               <span class="loading">Loading...</span>
             </div>
@@ -188,7 +183,7 @@ const favoritesHtml = meData.backside.favorites.list[lang]
             <div class="profile">
               <div class="avatar-wrapper">
                 <img
-                  src="/images/hokori.jpg"
+                  src="./images/hokori.jpg"
                   alt="Hokori the rabbit"
                   class="avatar"
                 />
@@ -197,26 +192,26 @@ const favoritesHtml = meData.backside.favorites.list[lang]
 
             <div class="back-section">
               <h2 class="back-section-title text-engraved" id="about-label">
-                {meData.backside.about.label[lang]}
+                About
               </h2>
               <p
                 class="back-section-content text-engraved"
                 id="about-content"
-              >{meData.backside.about.content[lang]}</p>
+              ></p>
             </div>
 
             <div class="back-section">
               <h2 class="back-section-title text-engraved" id="favorites-label">
-                {meData.backside.favorites.label[lang]}
+                Favorites
               </h2>
-              <div class="favorites-list" id="favorites-list" set:html={favoritesHtml}></div>
+              <div class="favorites-list" id="favorites-list"></div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <script type="module" src="/profile/index.js"></script>
-    <script type="module" src="/card-effects.js"></script>
+    <script type="module" src="./profile/index.js"></script>
+    <script type="module" src="./card-effects.js"></script>
   </body>
 </html>

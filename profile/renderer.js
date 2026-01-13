@@ -21,10 +21,10 @@ export async function render() {
   // Update HTML lang attribute for SEO and accessibility
   document.documentElement.lang = lang;
 
-  // Render name (bilingual format)
+  // Render name
   const nameEl = document.getElementById("name");
   if (nameEl) {
-    nameEl.textContent = `${profileData.name.ja} (${profileData.name.en})`;
+    nameEl.textContent = profileData.name[lang];
   }
 
   // Render bio
