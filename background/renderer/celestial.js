@@ -7,9 +7,6 @@
 
 import { CONFIG } from "../config.js";
 
-// Pre-compiled regex for opacity replacement
-const OPACITY_REGEX = /[\d.]+\)$/;
-
 /**
  * Draw ambient light effect from celestial body (sun/moon)
  * @param {CanvasRenderingContext2D} ctx - Canvas context
@@ -97,10 +94,15 @@ export function drawCelestial(ctx, palette, width, height) {
 
 /**
  * Replace opacity value in rgba color string
+ * Optimized with string operations instead of regex for better performance
  * @param {string} color - rgba color string
  * @param {number} opacity - New opacity value
  * @returns {string} Modified color string
  */
 function replaceOpacity(color, opacity) {
-  return color.replace(OPACITY_REGEX, `${opacity})`);
+  // Find the last comma before the closing parenthesis
+  // rgba(r, g, b, a) -> replace only the 'a' part
+  const lastParen = color.lastIndexOf(")");
+  const lastComma = color.lastIndexOf(",", lastParen);
+  return color.substring(0, lastComma + 1) + ` ${opacity})`;
 }

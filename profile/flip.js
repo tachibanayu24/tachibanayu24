@@ -11,6 +11,18 @@
 let isHintAnimating = false;
 
 /**
+ * Flag to track if flip animation is in progress
+ * @type {boolean}
+ */
+let isFlipping = false;
+
+/**
+ * Timeout ID for flip animation cleanup
+ * @type {number|null}
+ */
+let flipTimeoutId = null;
+
+/**
  * Setup card flip functionality (tap anywhere on card to flip)
  * @param {HTMLElement} card - Card element
  */
@@ -23,14 +35,25 @@ export function setupFlipToggle(card) {
     if (e.target.closest("a, button")) return;
     // Don't flip during hint animation
     if (isHintAnimating) return;
+    // Don't flip during flip animation (prevent race condition)
+    if (isFlipping) return;
+
+    isFlipping = true;
+
+    // Clear any existing timeout (defensive)
+    if (flipTimeoutId !== null) {
+      clearTimeout(flipTimeoutId);
+    }
 
     // Add flipping class for shimmer effect
     card.classList.add("flipping");
     card.classList.toggle("flipped");
 
     // Remove flipping class after animation completes
-    setTimeout(() => {
+    flipTimeoutId = setTimeout(() => {
       card.classList.remove("flipping");
+      isFlipping = false;
+      flipTimeoutId = null;
     }, 600);
   });
 

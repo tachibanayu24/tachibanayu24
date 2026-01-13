@@ -272,11 +272,24 @@ export class ParticleSystem {
 
   /**
    * Handle canvas resize
+   * Adjusts existing particle positions to maintain visual continuity
    */
   resize() {
+    const oldWidth = this.width;
+    const oldHeight = this.height;
+
     // Update cached dimensions
     this.width = window.innerWidth;
     this.height = window.innerHeight;
-    this.init(this.timePeriod);
+
+    // Adjust existing particle positions proportionally
+    // This prevents visual discontinuity (particles jumping to new positions)
+    for (const layer of Object.values(this.layers)) {
+      for (const orb of layer) {
+        // Scale positions based on new canvas dimensions
+        orb.x = (orb.x / oldWidth) * this.width;
+        orb.y = (orb.y / oldHeight) * this.height;
+      }
+    }
   }
 }

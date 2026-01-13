@@ -85,11 +85,12 @@ export class RabbitCharacter {
     this.updateHitAreaPosition();
 
     // Handle click/touch on hit area
-    this.hitArea.addEventListener("click", (e) => {
+    this.handleClick = (e) => {
       e.preventDefault();
       e.stopPropagation();
       this.onClick();
-    });
+    };
+    this.hitArea.addEventListener("click", this.handleClick);
   }
 
   /**
@@ -547,6 +548,7 @@ export class RabbitCharacter {
    */
   destroy() {
     if (this.hitArea && this.hitArea.parentNode) {
+      this.hitArea.removeEventListener("click", this.handleClick);
       this.hitArea.parentNode.removeChild(this.hitArea);
       this.hitArea = null;
     }

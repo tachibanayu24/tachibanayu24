@@ -1,8 +1,9 @@
 /**
  * Background Animation System - Debug Panel
  *
- * Temporary debug panel for testing different conditions.
- * DELETE THIS FILE when done testing.
+ * This file provides a debug panel for testing different time periods and conditions.
+ * The panel is only shown when accessing the page with #debug in the URL.
+ * Use Ctrl+Shift+D to toggle the panel visibility.
  */
 
 import { setDebugConditions, TIME_PERIOD } from "./index.js";
