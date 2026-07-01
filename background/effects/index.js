@@ -9,4 +9,3 @@ export { GodRays } from "./god-rays.js";
 export { DustParticles } from "./dust-particles.js";
 export { EveningClouds } from "./evening-clouds.js";
 export { FireflySystem } from "./firefly.js";
-export { RabbitCharacter } from "./rabbit/index.js";

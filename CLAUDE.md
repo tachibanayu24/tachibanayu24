@@ -55,8 +55,7 @@ background/
     ├── god-rays.js         # 昼：太陽光線
     ├── dust-particles.js   # 昼：光の粒子
     ├── evening-clouds.js   # 夕：雲
-    ├── firefly.js          # 夜：蛍
-    └── rabbit-character.js # うさぎキャラクター（常時表示）
+    └── firefly.js          # 夜：蛍
 ```
 
 **時間帯と演出:**
@@ -69,11 +68,10 @@ background/
 
 ### レイヤー構造
 
-3つの Canvas レイヤー:
+2つの Canvas レイヤー:
 
 1. `bg-canvas` (z-index: -2) - グラデーション、太陽/月、図形、パーティクル
 2. `overlay-canvas` (z-index: -1) - 時間帯別エフェクト
-3. `rabbit-canvas` (z-index: 50) - うさぎキャラクター（カードの前面）
 
 ### README 自動生成
 
