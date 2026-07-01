@@ -4,7 +4,7 @@
   "title": "Personal Profile",
   "description": "Schema for personal profile data with multilingual support",
   "type": "object",
-  "required": ["name", "companies", "bio", "links", "backside"],
+  "required": ["name", "role", "companies", "bio", "links", "backside"],
   "properties": {
     "$schema": {
       "type": "string",
@@ -14,9 +14,13 @@
       "$ref": "#/$defs/localizedString",
       "description": "Full name in each language"
     },
+    "role": {
+      "$ref": "#/$defs/localizedString",
+      "description": "Headline / role shown under the name (e.g., 'Engineering Capitalist')"
+    },
     "companies": {
       "type": "object",
-      "required": ["fulltime", "contract"],
+      "required": ["fulltime"],
       "properties": {
         "fulltime": {
           "$ref": "#/$defs/companyGroup",
@@ -24,7 +28,7 @@
         },
         "contract": {
           "$ref": "#/$defs/companyGroup",
-          "description": "Contract / Advisor positions"
+          "description": "Contract / Advisor positions (optional)"
         }
       },
       "additionalProperties": false

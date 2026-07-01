@@ -26,15 +26,18 @@ function generateReadme(data, lang) {
   // Bio section
   const bioSection = data.bio[lang].split("\n").join("  \n");
 
-  // Companies section
+  // Companies section (contract/advisor is optional)
   const { fulltime, contract } = data.companies;
   const fulltimeLinks = fulltime.list
     .map((c) => `[${c.name}](${c.url})`)
     .join(" / ");
-  const contractLinks = contract.list
-    .map((c) => `[${c.name}](${c.url})`)
-    .join(" / ");
-  const companySection = `${fulltime.label[lang]}\n${fulltimeLinks}\n\n${contract.label[lang]}\n${contractLinks}`;
+  let companySection = `${fulltime.label[lang]}\n${fulltimeLinks}`;
+  if (contract) {
+    const contractLinks = contract.list
+      .map((c) => `[${c.name}](${c.url})`)
+      .join(" / ");
+    companySection += `\n\n${contract.label[lang]}\n${contractLinks}`;
+  }
 
   // Links section
   const linksSection = data.links
@@ -73,15 +76,17 @@ console.log("README.ja.md generated successfully!");
 function generateLlmsTxt(data) {
   const { fulltime, contract } = data.companies;
 
-  // Full-time companies
+  // Positions (contract/advisor is optional)
   const fulltimeSection = fulltime.list
     .map((c) => `- ${c.name} - ${c.url}`)
     .join("\n");
-
-  // Contract/Advisor companies
-  const contractSection = contract.list
-    .map((c) => `- ${c.name} - ${c.url}`)
-    .join("\n");
+  let positionsSection = `### Full-time\n${fulltimeSection}`;
+  if (contract) {
+    const contractSection = contract.list
+      .map((c) => `- ${c.name} - ${c.url}`)
+      .join("\n");
+    positionsSection += `\n\n### Contract / Advisor\n${contractSection}`;
+  }
 
   // Links
   const linksSection = data.links
@@ -97,7 +102,7 @@ function generateLlmsTxt(data) {
 
   return `# ${data.name.en} (${data.name.ja})
 
-> Software Engineer based in Tokyo, Japan. Personal profile and link collection.
+> Engineering Capitalist based in Tokyo, Japan — an engineer who builds and invests. Personal profile and link collection.
 
 ## About
 
@@ -105,11 +110,7 @@ ${aboutContent}
 
 ## Current Positions
 
-### Full-time
-${fulltimeSection}
-
-### Contract / Advisor
-${contractSection}
+${positionsSection}
 
 ## Connect
 

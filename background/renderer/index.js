@@ -12,7 +12,6 @@ import {
   DustParticles,
   EveningClouds,
   FireflySystem,
-  RabbitCharacter,
 } from "../effects/index.js";
 import {
   createCanvas,
@@ -38,8 +37,6 @@ export class BackgroundRenderer {
     this.ctx = null;
     this.overlayCanvas = null;
     this.overlayCtx = null;
-    this.rabbitCanvas = null;
-    this.rabbitCtx = null;
     this.particleSystem = null;
     this.animationId = null;
     this.lastTime = 0;
@@ -61,9 +58,6 @@ export class BackgroundRenderer {
     this.dustParticles = null;
     this.eveningClouds = null;
     this.fireflySystem = null;
-
-    // Rabbit character (always visible)
-    this.rabbitCharacter = null;
 
     // Resize debounce timer
     this.resizeTimer = null;
@@ -91,7 +85,6 @@ export class BackgroundRenderer {
     // Remove existing canvases
     removeExistingCanvas("bg-canvas");
     removeExistingCanvas("overlay-canvas");
-    removeExistingCanvas("rabbit-canvas");
 
     // Create background canvas (behind content)
     const bg = createCanvas("bg-canvas", -2);
@@ -103,15 +96,9 @@ export class BackgroundRenderer {
     this.overlayCanvas = overlay.canvas;
     this.overlayCtx = overlay.ctx;
 
-    // Create rabbit canvas (in front of card)
-    const rabbit = createCanvas("rabbit-canvas", 50);
-    this.rabbitCanvas = rabbit.canvas;
-    this.rabbitCtx = rabbit.ctx;
-
     // Insert canvases
     document.body.insertBefore(this.canvas, document.body.firstChild);
     document.body.appendChild(this.overlayCanvas);
-    document.body.appendChild(this.rabbitCanvas);
 
     // Set size
     this.resize();
@@ -123,7 +110,6 @@ export class BackgroundRenderer {
     this.dustParticles = new DustParticles();
     this.eveningClouds = new EveningClouds();
     this.fireflySystem = new FireflySystem();
-    this.rabbitCharacter = new RabbitCharacter();
   }
 
   /**
@@ -162,7 +148,6 @@ export class BackgroundRenderer {
       this.dustParticles.resize();
       this.eveningClouds.resize();
       this.fireflySystem.resize();
-      this.rabbitCharacter.resize();
       initShapes(this.shapesState, this.width, this.height);
     }, 150);
   }
@@ -175,7 +160,6 @@ export class BackgroundRenderer {
     this.height = window.innerHeight;
     resizeCanvas(this.canvas, this.ctx, this.width, this.height);
     resizeCanvas(this.overlayCanvas, this.overlayCtx, this.width, this.height);
-    resizeCanvas(this.rabbitCanvas, this.rabbitCtx, this.width, this.height);
   }
 
   /**
@@ -197,7 +181,6 @@ export class BackgroundRenderer {
     this.dustParticles.setTimePeriod(timePeriod);
     this.eveningClouds.setTimePeriod(timePeriod);
     this.fireflySystem.setTimePeriod(timePeriod);
-    this.rabbitCharacter.setTimePeriod(timePeriod);
   }
 
   /**
@@ -214,7 +197,6 @@ export class BackgroundRenderer {
     // Clear canvases
     clearCanvas(this.ctx, this.width, this.height);
     clearCanvas(this.overlayCtx, this.width, this.height);
-    clearCanvas(this.rabbitCtx, this.width, this.height);
 
     // Draw background layers
     drawGradient(
@@ -254,10 +236,6 @@ export class BackgroundRenderer {
 
     this.fireflySystem.update(deltaTime);
     this.fireflySystem.draw(this.overlayCtx);
-
-    // Draw rabbit character (always visible, in front of card)
-    this.rabbitCharacter.update(deltaTime);
-    this.rabbitCharacter.draw(this.rabbitCtx);
 
     // Continue animation
     this.animationId = requestAnimationFrame(this.animate);
@@ -310,27 +288,15 @@ export class BackgroundRenderer {
       this.overlayCanvas.parentNode.removeChild(this.overlayCanvas);
     }
 
-    if (this.rabbitCanvas && this.rabbitCanvas.parentNode) {
-      this.rabbitCanvas.parentNode.removeChild(this.rabbitCanvas);
-    }
-
-    // Clean up rabbit character hitArea
-    if (this.rabbitCharacter && this.rabbitCharacter.destroy) {
-      this.rabbitCharacter.destroy();
-    }
-
     this.canvas = null;
     this.ctx = null;
     this.overlayCanvas = null;
     this.overlayCtx = null;
-    this.rabbitCanvas = null;
-    this.rabbitCtx = null;
     this.particleSystem = null;
     this.morningMist = null;
     this.godRays = null;
     this.dustParticles = null;
     this.eveningClouds = null;
     this.fireflySystem = null;
-    this.rabbitCharacter = null;
   }
 }
