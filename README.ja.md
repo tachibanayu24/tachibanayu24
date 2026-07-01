@@ -3,7 +3,7 @@
 [English](./README.md) | [Website](https://tachibanayu24.com/)
 
 Social mediaから気軽に繋がってください！  
-ご面談はMessengerかXのDMよりご相談ください。
+ご連絡はMessengerかXのDMでお願いします。
 
 フルタイム
 [Delight Ventures, Inc.](https://www.delight-ventures.com/en/team/yuto-tachibana)

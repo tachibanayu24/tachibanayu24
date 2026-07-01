@@ -27,6 +27,12 @@ export async function render() {
     nameEl.textContent = profileData.name[lang];
   }
 
+  // Render role
+  const roleEl = document.getElementById("role");
+  if (roleEl && profileData.role) {
+    roleEl.textContent = profileData.role[lang];
+  }
+
   // Render bio
   const bioHtml = profileData.bio[lang].split("\n").join("<br>");
   document.getElementById("bio").innerHTML = bioHtml;

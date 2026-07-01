@@ -97,7 +97,7 @@ function generateLlmsTxt(data) {
 
   return `# ${data.name.en} (${data.name.ja})
 
-> Software Engineer based in Tokyo, Japan. Personal profile and link collection.
+> Engineering Capitalist based in Tokyo, Japan — an engineer who builds and invests. Personal profile and link collection.
 
 ## About
 
