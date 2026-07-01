@@ -128,10 +128,11 @@
   transition: color var(--transition-duration) ease;
 }
 
-/* Company */
+/* Company / affiliation (sits directly under the role) */
 .company {
-  margin-top: 1rem;
-  font-size: 0.8rem;
+  margin-top: -0.4rem;
+  margin-bottom: 0.9rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
   transition: color var(--transition-duration) ease;
 }

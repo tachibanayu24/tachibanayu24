@@ -24,26 +24,6 @@
           "url": "https://www.delight-ventures.com/en/team/yuto-tachibana"
         }
       ]
-    },
-    "contract": {
-      "label": {
-        "en": "Contract / Advisor",
-        "ja": "パートタイム / アドバイザー"
-      },
-      "list": [
-        {
-          "name": "Algomatic Co., Ltd.",
-          "url": "https://algomatic.jp/company"
-        },
-        {
-          "name": "Workside, Inc.",
-          "url": "https://onn-hr.com/aboutus"
-        },
-        {
-          "name": "Kazetuchi Inc.",
-          "url": "https://kztc.jp/"
-        }
-      ]
     }
   },
   "links": [

@@ -37,27 +37,23 @@ export async function render() {
   const bioHtml = profileData.bio[lang].split("\n").join("<br>");
   document.getElementById("bio").innerHTML = bioHtml;
 
-  // Render companies (fulltime and contract)
+  // Render affiliation under the title (fulltime company, shown without a label)
   const { fulltime, contract } = profileData.companies;
 
-  const fulltimeLabel = fulltime.label[lang];
-  const fulltimeLinks = fulltime.list
-    .map(
-      (c) =>
-        `<a href="${c.url}" class="text-link text-engraved" target="_blank" rel="noopener">${c.name}</a>`,
-    )
-    .join(" / ");
+  const renderCompanyLinks = (list) =>
+    list
+      .map(
+        (c) =>
+          `<a href="${c.url}" class="text-link text-engraved" target="_blank" rel="noopener">${c.name}</a>`,
+      )
+      .join(" / ");
 
-  const contractLabel = contract.label[lang];
-  const contractLinks = contract.list
-    .map(
-      (c) =>
-        `<a href="${c.url}" class="text-link text-engraved" target="_blank" rel="noopener">${c.name}</a>`,
-    )
-    .join(" / ");
+  let companyHtml = renderCompanyLinks(fulltime.list);
+  if (contract) {
+    companyHtml += `<br><br>${contract.label[lang]}<br>${renderCompanyLinks(contract.list)}`;
+  }
 
-  document.getElementById("company").innerHTML =
-    `${fulltimeLabel}<br>${fulltimeLinks}<br><br>${contractLabel}<br>${contractLinks}`;
+  document.getElementById("company").innerHTML = companyHtml;
 
   // Fetch all icons in parallel
   const iconPromises = profileData.links.map((link) => {

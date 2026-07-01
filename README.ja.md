@@ -8,9 +8,6 @@ Social mediaから気軽に繋がってください！
 フルタイム
 [Delight Ventures, Inc.](https://www.delight-ventures.com/en/team/yuto-tachibana)
 
-パートタイム / アドバイザー
-[Algomatic Co., Ltd.](https://algomatic.jp/company) / [Workside, Inc.](https://onn-hr.com/aboutus) / [Kazetuchi Inc.](https://kztc.jp/)
-
 SNSなどはこちら <img width="20" src="https://raw.githubusercontent.com/tachibanayu24/tachibanayu24/main/images/wave.gif" />
 
 - [Facebook](https://www.facebook.com/tachibanayu24)

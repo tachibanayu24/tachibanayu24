@@ -20,7 +20,7 @@
     },
     "companies": {
       "type": "object",
-      "required": ["fulltime", "contract"],
+      "required": ["fulltime"],
       "properties": {
         "fulltime": {
           "$ref": "#/$defs/companyGroup",
@@ -28,7 +28,7 @@
         },
         "contract": {
           "$ref": "#/$defs/companyGroup",
-          "description": "Contract / Advisor positions"
+          "description": "Contract / Advisor positions (optional)"
         }
       },
       "additionalProperties": false
