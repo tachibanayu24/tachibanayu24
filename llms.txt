@@ -4,7 +4,7 @@
 
 ## About
 
-Yuto Tachibana began his career in 2018 at NTT COMWARE, where he was engaged in new businesses with cutting-edge technologies for government agencies. Then he joined several startups as an engineering manager or the head of development, where he led 0-to-1 product creation, organizational building, and growth initiatives. In 2022, he became the tech lead and contributed to business development at a newly established joint venture of DeNA. In 2025, Yuto joined Delight Ventures, where he supports portfolio companies' value creation and implements AI across fund operations. Alongside this, he has begun taking part in investing—working with founders in areas where technology is the deciding edge, and bringing his ability to build to the table.
+Yuto Tachibana began his career at NTT COMWARE, working on new businesses applying cutting-edge technology for government agencies. He then joined several startups as an engineering manager and head of development, leading 0-to-1 product creation, team building, and growth. In 2022, he served as tech lead and worked on business development at a newly established DeNA joint venture. In 2025, he joined Delight Ventures. Today he works hands-on as a CTO for portfolio companies while also investing himself. As an engineer-turned-capitalist, he builds businesses together with founders—from hypothesis to implementation.
 
 ## Current Positions
 
@@ -34,7 +34,7 @@ The JSON schema is defined at:
 
 ## Interests
 
-Startups, Fitness, Sauna, Cooking, Rabbits, Shogi, Real Estate, Stock Market, Comedy, AI in Large Industries
+Startups, Fitness, Sauna, Cooking, Rabbits, Shogi, Real Estate, Stock Market, Comedy, AI in Large Industries, AI-native funds
 
 ## Language
 

@@ -85,14 +85,14 @@
         "ja": "経歴"
       },
       "content": {
-        "en": "Yuto Tachibana began his career in 2018 at NTT COMWARE, where he was engaged in new businesses with cutting-edge technologies for government agencies. Then he joined several startups as an engineering manager or the head of development, where he led 0-to-1 product creation, organizational building, and growth initiatives. In 2022, he became the tech lead and contributed to business development at a newly established joint venture of DeNA. In 2025, Yuto joined Delight Ventures, where he supports portfolio companies' value creation and implements AI across fund operations. Alongside this, he has begun taking part in investing—working with founders in areas where technology is the deciding edge, and bringing his ability to build to the table.",
-        "ja": "2018年にNTTコムウェアへ新卒入社し、先端技術を応用した官公庁向け新規事業を推進。その後、複数スタートアップでエンジニアリングマネージャー／開発責任者として、0→1開発・組織づくり・グロースをリード。2022年にDeNAの新設ジョイントベンチャーでテックリードや事業開発を担い、2025年よりデライト・ベンチャーズに参画。投資先へのバリューアップ支援やファンド運営へのAI実装を進めている。あわせて投資にも携わりはじめ、技術で勝負が決まる領域を中心に、作れる強みを活かして起業家に伴走している。"
+        "en": "Yuto Tachibana began his career at NTT COMWARE, working on new businesses applying cutting-edge technology for government agencies. He then joined several startups as an engineering manager and head of development, leading 0-to-1 product creation, team building, and growth. In 2022, he served as tech lead and worked on business development at a newly established DeNA joint venture. In 2025, he joined Delight Ventures. Today he works hands-on as a CTO for portfolio companies while also investing himself. As an engineer-turned-capitalist, he builds businesses together with founders—from hypothesis to implementation.",
+        "ja": "NTTコムウェアへ新卒入社し、先端技術を応用した官公庁向け新規事業を推進。その後、複数スタートアップでエンジニアリングマネージャー／開発責任者として、0→1開発・組織づくり・グロースをリード。2022年にDeNAの新設ジョイントベンチャーでテックリードや事業開発を担い、2025年よりデライト・ベンチャーズに参画。現在は投資先にハンズオンでCTOとして入りながら、自らも投資に携わる。エンジニア出身のキャピタリストとして、仮説から実装まで、起業家と共に事業をつくる。"
       }
     },
     "favorites": {
       "label": {
-        "en": "Things I Love",
-        "ja": "好きなもの"
+        "en": "Interests",
+        "ja": "関心"
       },
       "list": {
         "en": [
@@ -105,7 +105,8 @@
           "Real Estate",
           "Stock Market",
           "Comedy",
-          "AI in Large Industries"
+          "AI in Large Industries",
+          "AI-native funds"
         ],
         "ja": [
           "スタートアップ",
@@ -117,7 +118,8 @@
           "不動産（マンション）",
           "株式市場",
           "お笑い",
-          "巨大産業へのAI実装"
+          "巨大産業へのAI実装",
+          "AIネイティブファンド"
         ]
       }
     }
