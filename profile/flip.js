@@ -23,55 +23,20 @@ let isFlipping = false;
 let flipTimeoutId = null;
 
 /**
- * Timeout ID for the pending (debounced) single-click flip.
- * Cancelled if the click turns out to be part of a double/triple-click
- * (word/paragraph text selection) rather than a tap-to-flip.
- * @type {number|null}
- */
-let pendingFlipTimeoutId = null;
-
-/**
- * Delay before a single click actually flips the card, giving a following
- * click (making it a double/triple-click for text selection) a chance to
- * cancel it first.
- * @type {number}
- */
-const FLIP_DEBOUNCE_MS = 300;
-
-/**
  * Setup card flip functionality (tap anywhere on card to flip)
  * @param {HTMLElement} card - Card element
  */
 export function setupFlipToggle(card) {
   if (!card) return;
 
-  // Flip on card tap/click
+  // Card text is non-selectable, so a click anywhere is always a flip intent —
+  // no need to disambiguate it from drag-select or double/triple-click.
   card.addEventListener("click", (e) => {
-    // Don't flip if clicking on interactive elements
+    // Don't flip when interacting with links/buttons (language toggle, view JSON)
     if (e.target.closest("a, button")) return;
-
-    // A 2nd/3rd click in a double/triple-click means the user is selecting a
-    // word or paragraph, not tapping to flip — cancel the pending flip from
-    // the first click and let the browser's text selection proceed.
-    if (e.detail > 1) {
-      if (pendingFlipTimeoutId !== null) {
-        clearTimeout(pendingFlipTimeoutId);
-        pendingFlipTimeoutId = null;
-      }
-      return;
-    }
-
-    // Don't flip if the click ended a drag-to-select gesture
-    if (window.getSelection()?.toString().length > 0) return;
-    // Don't flip during hint animation
+    // Don't flip during the intro hint animation
     if (isHintAnimating) return;
-
-    // Defer the flip briefly so a following click (turning this into a
-    // double-click) can still cancel it before anything visibly happens.
-    pendingFlipTimeoutId = setTimeout(() => {
-      pendingFlipTimeoutId = null;
-      flip(card);
-    }, FLIP_DEBOUNCE_MS);
+    flip(card);
   });
 
   // Show hint animation on first visit

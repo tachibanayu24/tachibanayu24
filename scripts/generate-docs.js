@@ -250,6 +250,10 @@ function generateHtml(template, data, lang, icons) {
     FAVORITES_LIST_HTML: buildFavoritesHtml(data.backside.favorites.list[lang]),
     LANG_TOGGLE_LABEL: lang.toUpperCase(),
     LANG_TOGGLE_ARIA: lang === "ja" ? "Switch language" : "言語を切り替え",
+    VIEW_JSON_ARIA:
+      lang === "ja"
+        ? "プロフィールデータ (JSON) を表示"
+        : "View profile data (JSON)",
   });
 }
 

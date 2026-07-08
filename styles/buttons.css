@@ -53,27 +53,28 @@
     var(--text-shadow-offset-subtle) var(--text-shadow-color-subtle);
 }
 
-/* Download JSON Button - Icon button variant */
-.download-json-btn {
+/* View JSON Button - Icon link that opens /me.json in a new tab */
+.view-json-btn {
   left: 1rem;
   padding: 0.5rem;
   line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
 }
 
-.download-json-btn svg {
+.view-json-btn svg {
   width: 16px;
   height: 16px;
   fill: currentColor;
 }
 
-.download-json-btn:hover {
+.view-json-btn:hover {
   transform: scale(1.05);
 }
 
-.download-json-btn:active {
+.view-json-btn:active {
   transform: scale(0.98);
 }
 
