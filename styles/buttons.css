@@ -21,6 +21,9 @@
   box-shadow:
     2px 2px 4px var(--shadow-dark),
     -2px -2px 4px var(--shadow-light);
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .card-action-btn:hover {
@@ -111,6 +114,9 @@
   font-weight: 600;
   letter-spacing: 0.03em;
   position: relative;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
   /* Enhanced shadow with inner bevel */
   box-shadow:
     /* Inner top highlight */

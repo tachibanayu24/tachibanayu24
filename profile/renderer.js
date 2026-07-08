@@ -45,9 +45,8 @@ export async function render() {
   );
 
   // Render affiliation under the title (fulltime company, shown without a label)
-  document.getElementById("company").innerHTML = buildCompanyHtml(
-    profileData.companies,
-  );
+  const companyHtml = buildCompanyHtml(profileData.companies);
+  document.getElementById("company").innerHTML = companyHtml;
 
   // Fetch all icons in parallel
   const iconPromises = profileData.links.map((link) => {
@@ -63,7 +62,12 @@ export async function render() {
   );
 
   // Render backside content
-  renderBackside(lang);
+  renderBackside(
+    lang,
+    profileData.name[lang],
+    profileData.role?.[lang],
+    companyHtml,
+  );
 
   // Update language toggle active state
   const toggleBtn = document.getElementById("lang-toggle");
@@ -75,12 +79,23 @@ export async function render() {
 /**
  * Render backside content with current language
  * @param {'en'|'ja'} lang - Current language
+ * @param {string} name - Localized name (mirrored from the front face)
+ * @param {string|undefined} role - Localized role (mirrored from the front face)
+ * @param {string} companyHtml - Affiliation HTML (mirrored from the front face)
  */
-function renderBackside(lang) {
+function renderBackside(lang, name, role, companyHtml) {
   const profileData = getProfileData();
   if (!profileData?.backside) return;
 
   const { backside } = profileData;
+
+  // Name / role / affiliation (same as the front face, shown again on the back)
+  const nameBackEl = document.getElementById("name-back");
+  if (nameBackEl) nameBackEl.textContent = name;
+  const roleBackEl = document.getElementById("role-back");
+  if (roleBackEl && role) roleBackEl.textContent = role;
+  const companyBackEl = document.getElementById("company-back");
+  if (companyBackEl) companyBackEl.innerHTML = companyHtml;
 
   // About
   const aboutLabelEl = document.getElementById("about-label");
