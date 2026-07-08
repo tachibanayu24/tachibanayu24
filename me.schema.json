@@ -114,11 +114,6 @@
           "type": "array",
           "items": { "type": "string" },
           "description": "Professional topics for schema.org knowsAbout"
-        },
-        "affiliation": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/company" },
-          "description": "Affiliated organizations for schema.org affiliation"
         }
       },
       "additionalProperties": false

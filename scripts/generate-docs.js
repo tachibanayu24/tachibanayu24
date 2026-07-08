@@ -186,14 +186,16 @@ function generateJsonLd(data, lang) {
       name: fulltime.name,
       url: fulltime.url,
     },
-    affiliation: (seo.affiliation || []).map((a) => ({
-      "@type": "Organization",
-      name: a.name,
-      url: a.url,
-    })),
     sameAs: data.links.map((link) => link.url),
     knowsAbout: seo.knowsAbout || [],
   };
+  if (seo.affiliation?.length) {
+    jsonLd.affiliation = seo.affiliation.map((a) => ({
+      "@type": "Organization",
+      name: a.name,
+      url: a.url,
+    }));
+  }
   return JSON.stringify(jsonLd, null, 2);
 }
 
