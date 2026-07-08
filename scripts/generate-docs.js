@@ -166,7 +166,7 @@ function generateJsonLd(data, lang) {
         ? "https://tachibanayu24.com/"
         : "https://tachibanayu24.com/en/",
     image: "https://tachibanayu24.com/images/me.jpg",
-    description: seo.description ? seo.description[lang] : "",
+    description: data.backside.about.content[lang],
     inLanguage: lang,
     jobTitle: data.role[lang],
     worksFor: {
@@ -234,7 +234,7 @@ function generateHtml(template, data, lang, icons) {
   return renderTemplate(template, {
     HTML_LANG: lang,
     TITLE: computeTitle(data, lang),
-    DESCRIPTION: data.seo.description[lang],
+    DESCRIPTION: data.backside.about.content[lang],
     CANONICAL: canonical,
     OG_LOCALE: lang === "ja" ? "ja_JP" : "en_US",
     OG_LOCALE_ALT: lang === "ja" ? "en_US" : "ja_JP",

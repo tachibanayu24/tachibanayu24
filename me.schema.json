@@ -95,12 +95,8 @@
     },
     "seo": {
       "type": "object",
-      "description": "SEO / structured-data only fields. Drives JSON-LD and meta description; not shown on the card.",
+      "description": "SEO / structured-data only fields, additive to backside.about.content (used directly as meta/JSON-LD description). Not shown on the card.",
       "properties": {
-        "description": {
-          "$ref": "#/$defs/localizedString",
-          "description": "Meta description and JSON-LD description, per language"
-        },
         "alternateName": {
           "type": "array",
           "items": { "type": "string" },

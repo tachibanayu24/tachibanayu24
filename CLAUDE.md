@@ -33,7 +33,7 @@ URL に `#debug` を付与するとデバッグパネルが表示され、時間
 
 ### コンテンツ管理
 
-- `me.json` - プロフィール情報の一元管理（多言語対応: en/ja）。`seo` ブロックが JSON-LD と meta description の一元ソース
+- `me.json` - プロフィール情報の一元管理（多言語対応: en/ja）。meta description と JSON-LD の description は `backside.about.content` をそのまま使う（別文言を持たず陳腐化を防ぐ）。`seo` ブロックは about.content で表現できない構造化データ専用フィールド（alternateName, knowsAbout）のみ
 - `me.schema.json` - JSON スキーマ定義
 - `index.template.html` - HTML のソーステンプレート（`{{TOKEN}}` をビルド時に言語別置換）。**`index.html` / `en/index.html` は生成物なので直接編集しない**
 - `profile/` - プロフィール描画（`renderer.js`）、共有 HTML ビルダー（`templates.js`、ビルドと共有し構造ドリフトを防止）、言語（`language.js`）、カードフリップ（`flip.js`）、アイコン（`icons.js`）、エントリ（`index.js`）
