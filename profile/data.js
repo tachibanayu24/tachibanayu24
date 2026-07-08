@@ -26,7 +26,7 @@
 /**
  * @typedef {Object} ProfileData
  * @property {{en: string, ja: string}} name - Multilingual name
- * @property {{fulltime: {label: {en: string, ja: string}, list: Company[]}, contract: {label: {en: string, ja: string}, list: Company[]}}} companies - Company info
+ * @property {{fulltime: {label: {en: string, ja: string}, list: Company[]}}} companies - Company info
  * @property {{en: string, ja: string}} bio - Multilingual bio
  * @property {Link[]} links - Social links
  * @property {BacksideData} backside - Card backside data

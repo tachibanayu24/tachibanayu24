@@ -34,18 +34,12 @@ function generateReadme(data, lang) {
   // Bio section
   const bioSection = data.bio[lang].split("\n").join("  \n");
 
-  // Companies section (contract/advisor is optional)
-  const { fulltime, contract } = data.companies;
+  // Companies section
+  const { fulltime } = data.companies;
   const fulltimeLinks = fulltime.list
     .map((c) => `[${c.name}](${c.url})`)
     .join(" / ");
-  let companySection = `${fulltime.label[lang]}\n${fulltimeLinks}`;
-  if (contract) {
-    const contractLinks = contract.list
-      .map((c) => `[${c.name}](${c.url})`)
-      .join(" / ");
-    companySection += `\n\n${contract.label[lang]}\n${contractLinks}`;
-  }
+  const companySection = `${fulltime.label[lang]}\n${fulltimeLinks}`;
 
   // Links section
   const linksSection = data.links
@@ -82,19 +76,13 @@ console.log("README.ja.md generated successfully!");
 
 // Generate llms.txt
 function generateLlmsTxt(data) {
-  const { fulltime, contract } = data.companies;
+  const { fulltime } = data.companies;
 
-  // Positions (contract/advisor is optional)
+  // Positions
   const fulltimeSection = fulltime.list
     .map((c) => `- ${c.name} - ${c.url}`)
     .join("\n");
-  let positionsSection = `### Full-time\n${fulltimeSection}`;
-  if (contract) {
-    const contractSection = contract.list
-      .map((c) => `- ${c.name} - ${c.url}`)
-      .join("\n");
-    positionsSection += `\n\n### Contract / Advisor\n${contractSection}`;
-  }
+  const positionsSection = `### Full-time\n${fulltimeSection}`;
 
   // Links
   const linksSection = data.links

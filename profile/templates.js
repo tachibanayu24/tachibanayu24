@@ -20,26 +20,16 @@ export function buildBioHtml(bioText) {
 
 /**
  * Build affiliation HTML shown under the title.
- * @param {{fulltime: {list: {name: string, url: string}[]}, contract?: {label: {en: string, ja: string}, list: {name: string, url: string}[]}}} companies
- * @param {'en'|'ja'} lang
+ * @param {{fulltime: {list: {name: string, url: string}[]}}} companies
  * @returns {string}
  */
-export function buildCompanyHtml(companies, lang) {
-  const { fulltime, contract } = companies;
-
-  const renderCompanyLinks = (list) =>
-    list
-      .map(
-        (c) =>
-          `<a href="${c.url}" class="text-link text-engraved" target="_blank" rel="noopener">${c.name}</a>`,
-      )
-      .join(" / ");
-
-  let companyHtml = renderCompanyLinks(fulltime.list);
-  if (contract) {
-    companyHtml += `<br><br>${contract.label[lang]}<br>${renderCompanyLinks(contract.list)}`;
-  }
-  return companyHtml;
+export function buildCompanyHtml(companies) {
+  return companies.fulltime.list
+    .map(
+      (c) =>
+        `<a href="${c.url}" class="text-link text-engraved" target="_blank" rel="noopener">${c.name}</a>`,
+    )
+    .join(" / ");
 }
 
 /**

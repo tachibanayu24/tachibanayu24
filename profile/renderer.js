@@ -47,7 +47,6 @@ export async function render() {
   // Render affiliation under the title (fulltime company, shown without a label)
   document.getElementById("company").innerHTML = buildCompanyHtml(
     profileData.companies,
-    lang,
   );
 
   // Fetch all icons in parallel

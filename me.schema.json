@@ -25,10 +25,6 @@
         "fulltime": {
           "$ref": "#/$defs/companyGroup",
           "description": "Full-time employment"
-        },
-        "contract": {
-          "$ref": "#/$defs/companyGroup",
-          "description": "Contract / Advisor positions (optional)"
         }
       },
       "additionalProperties": false
