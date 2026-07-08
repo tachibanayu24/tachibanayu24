@@ -92,7 +92,7 @@ class CardEffects {
    * Observe card flip state changes
    */
   observeFlipState() {
-    const observer = new MutationObserver((mutations) => {
+    this.observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === "class") {
           this.isFlipped = this.card.classList.contains("flipped");
@@ -100,7 +100,7 @@ class CardEffects {
       });
     });
 
-    observer.observe(this.card, { attributes: true });
+    this.observer.observe(this.card, { attributes: true });
   }
 
   /**
@@ -263,6 +263,11 @@ class CardEffects {
     if (this.animationFrame) {
       cancelAnimationFrame(this.animationFrame);
     }
+
+    if (this.observer) {
+      this.observer.disconnect();
+      this.observer = null;
+    }
   }
 }
 
@@ -277,6 +282,11 @@ let cardEffects = null;
  * @returns {CardEffects|null} The created CardEffects instance
  */
 function initCardEffects() {
+  // Skip the mouse/touch tilt entirely when the user prefers reduced motion.
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+    return null;
+  }
+
   const card = document.querySelector(".card");
   const container = document.querySelector(".card-container");
 

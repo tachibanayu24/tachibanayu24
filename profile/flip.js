@@ -39,7 +39,7 @@ export function setupFlipToggle(card) {
     flip(card);
   });
 
-  // Show hint animation on first visit
+  // Play the flip hint on load (skipped when the user prefers reduced motion)
   showFlipHint(card);
 }
 
@@ -75,6 +75,14 @@ function flip(card) {
  * @param {HTMLElement} card - Card element
  */
 function showFlipHint(card) {
+  // Reduced motion: skip the intro hint. This also avoids leaving
+  // isHintAnimating stuck true — the hint animation is disabled via CSS, so its
+  // animationend would never fire to clear the flag (which would block flips).
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+    isHintAnimating = false;
+    return;
+  }
+
   // Block interactions during fadeIn + hint animation
   isHintAnimating = true;
 

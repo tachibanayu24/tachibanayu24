@@ -54,7 +54,10 @@
     />
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content="profile" />
+    <meta property="profile:first_name" content="Yuto" />
+    <meta property="profile:last_name" content="Tachibana" />
+    <meta property="profile:username" content="tachibanayu24" />
     <meta property="og:url" content="{{CANONICAL}}" />
     <meta property="og:title" content="{{TITLE}}" />
     <meta property="og:description" content="{{DESCRIPTION}}" />
@@ -95,7 +98,11 @@
     <!-- Dynamic Background System -->
     <script type="module" src="/background/index.js"></script>
 
-    <script type="module" src="/background/debug.js"></script>
+    <script type="module">
+      // Only load the debug panel when explicitly requested via #debug, so
+      // normal visitors don't pay the fetch/parse cost.
+      if (location.hash === "#debug") import("/background/debug.js");
+    </script>
   </head>
   <body>
     <div class="container">
@@ -147,7 +154,7 @@
               <div class="bio text-engraved" id="bio">{{BIO_HTML}}</div>
             </div>
             <div class="divider"></div>
-            <p class="links-title text-engraved">Connect with me</p>
+            <p class="links-title text-engraved">{{CONNECT_LABEL}}</p>
             <div class="links-grid" id="links">{{LINKS_HTML}}</div>
           </div>
 
@@ -186,7 +193,7 @@
               <div class="avatar-wrapper">
                 <img
                   src="/images/hokori.jpg"
-                  alt="Hokori the rabbit"
+                  alt="{{BACK_AVATAR_ALT}}"
                   class="avatar"
                 />
               </div>
