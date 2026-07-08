@@ -7,6 +7,12 @@
 import { getProfileData } from "./data.js";
 import { getCurrentLang, updateLanguageToggleState } from "./language.js";
 import { fetchIcon, getIconSlug } from "./icons.js";
+import {
+  buildBioHtml,
+  buildCompanyHtml,
+  buildLinksHtml,
+  buildFavoritesHtml,
+} from "./templates.js";
 
 /**
  * Render profile with current language
@@ -34,26 +40,15 @@ export async function render() {
   }
 
   // Render bio
-  const bioHtml = profileData.bio[lang].split("\n").join("<br>");
-  document.getElementById("bio").innerHTML = bioHtml;
+  document.getElementById("bio").innerHTML = buildBioHtml(
+    profileData.bio[lang],
+  );
 
   // Render affiliation under the title (fulltime company, shown without a label)
-  const { fulltime, contract } = profileData.companies;
-
-  const renderCompanyLinks = (list) =>
-    list
-      .map(
-        (c) =>
-          `<a href="${c.url}" class="text-link text-engraved" target="_blank" rel="noopener">${c.name}</a>`,
-      )
-      .join(" / ");
-
-  let companyHtml = renderCompanyLinks(fulltime.list);
-  if (contract) {
-    companyHtml += `<br><br>${contract.label[lang]}<br>${renderCompanyLinks(contract.list)}`;
-  }
-
-  document.getElementById("company").innerHTML = companyHtml;
+  document.getElementById("company").innerHTML = buildCompanyHtml(
+    profileData.companies,
+    lang,
+  );
 
   // Fetch all icons in parallel
   const iconPromises = profileData.links.map((link) => {
@@ -63,16 +58,10 @@ export async function render() {
   const icons = await Promise.all(iconPromises);
 
   // Render links with icons
-  const linksHtml = profileData.links
-    .map((link, index) => {
-      return `<a href="${link.url}" class="link text-engraved" target="_blank" rel="noopener">
-        <span class="link-icon">${icons[index]}</span>
-        ${link.name}
-      </a>`;
-    })
-    .join("");
-
-  document.getElementById("links").innerHTML = linksHtml;
+  document.getElementById("links").innerHTML = buildLinksHtml(
+    profileData.links,
+    icons,
+  );
 
   // Render backside content
   renderBackside(lang);
@@ -111,8 +100,8 @@ function renderBackside(lang) {
     favoritesLabelEl.textContent = backside.favorites.label[lang];
   }
   if (favoritesListEl && backside.favorites) {
-    favoritesListEl.innerHTML = backside.favorites.list[lang]
-      .map((item) => `<span class="favorite-tag text-engraved">${item}</span>`)
-      .join("");
+    favoritesListEl.innerHTML = buildFavoritesHtml(
+      backside.favorites.list[lang],
+    );
   }
 }

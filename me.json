@@ -123,5 +123,25 @@
         ]
       }
     }
+  },
+  "seo": {
+    "description": {
+      "en": "Yuto Tachibana (立花 優斗) is an Engineering Capitalist in Tokyo — an engineer who builds and invests. At Delight Ventures he backs portfolio companies hands-on while investing himself, building with founders from hypothesis to implementation.",
+      "ja": "立花優斗（Engineering Capitalist）。東京拠点で、つくる人でありながら投資する人。デライト・ベンチャーズで投資先にハンズオンで伴走しつつ、自らも投資に携わる。仮説から実装まで、起業家と共に事業をつくる。"
+    },
+    "alternateName": ["立花優斗", "tachibanayu24"],
+    "knowsAbout": [
+      "Startups",
+      "Software Engineering",
+      "Artificial Intelligence",
+      "Venture Capital",
+      "Venture Building",
+      "Product Development"
+    ],
+    "affiliation": [
+      { "name": "Algomatic Co., Ltd.", "url": "https://algomatic.jp/company" },
+      { "name": "Workside, Inc.", "url": "https://onn-hr.com/aboutus" },
+      { "name": "Kazetuchi Inc.", "url": "https://kztc.jp/" }
+    ]
   }
 }

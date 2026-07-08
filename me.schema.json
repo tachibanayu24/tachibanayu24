@@ -96,6 +96,32 @@
         "$ref": "#/$defs/link"
       },
       "minItems": 1
+    },
+    "seo": {
+      "type": "object",
+      "description": "SEO / structured-data only fields. Drives JSON-LD and meta description; not shown on the card.",
+      "properties": {
+        "description": {
+          "$ref": "#/$defs/localizedString",
+          "description": "Meta description and JSON-LD description, per language"
+        },
+        "alternateName": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Additional names for schema.org alternateName"
+        },
+        "knowsAbout": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Professional topics for schema.org knowsAbout"
+        },
+        "affiliation": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/company" },
+          "description": "Affiliated organizations for schema.org affiliation"
+        }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": false,

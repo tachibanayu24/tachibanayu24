@@ -33,7 +33,7 @@
  */
 
 /** @type {string} */
-const ME_JSON_URL = "./me.json";
+const ME_JSON_URL = "/me.json";
 
 /**
  * Profile data loaded from me.json

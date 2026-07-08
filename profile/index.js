@@ -8,7 +8,8 @@
 import { loadProfileData } from "./data.js";
 import { render } from "./renderer.js";
 import {
-  toggleLang,
+  getOtherLang,
+  getLangUrl,
   updateLanguageToggleState,
   getCurrentLang,
 } from "./language.js";
@@ -24,8 +25,8 @@ function setupLanguageToggle() {
 
   const handleToggle = (e) => {
     e.stopPropagation(); // Prevent card flip when clicking language toggle
-    toggleLang();
-    render();
+    // Language is per-URL; navigate to the other language's page.
+    location.assign(getLangUrl(getOtherLang()));
   };
 
   if (toggleBtn) {
@@ -73,7 +74,7 @@ async function setupDownloadButtons() {
     }
 
     try {
-      const response = await fetch("./me.json");
+      const response = await fetch("/me.json");
       const data = await response.json();
       const blob = new Blob([JSON.stringify(data, null, 2)], {
         type: "application/json",
@@ -110,9 +111,15 @@ async function setupDownloadButtons() {
  * @returns {Promise<void>}
  */
 async function loadContent() {
+  // Prerendered pages already contain content in the correct language, so skip
+  // re-rendering (and the icon CDN fetches) entirely. loadProfileData()/render()
+  // remain as a fallback for the non-prerendered (dev/template) case.
+  const prerendered = document.documentElement.hasAttribute("data-prerendered");
   try {
-    await loadProfileData();
-    await render();
+    if (!prerendered) {
+      await loadProfileData();
+      await render();
+    }
     setupLanguageToggle();
     setupDownloadButtons();
     setupFlipToggle(document.querySelector(".card"));

@@ -1,0 +1,192 @@
+<!doctype html>
+<!--
+  Do NOT edit index.html or en/index.html directly — they are generated.
+  Edit this template (index.template.html), then run:
+  node scripts/generate-docs.js
+-->
+<html lang="{{HTML_LANG}}" data-prerendered>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" id="theme-color" content="#e8eef3" />
+    <!-- PWA / Mobile Web App -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      id="apple-status-bar"
+      content="default"
+    />
+    <title>{{TITLE}}</title>
+    <meta name="description" content="{{DESCRIPTION}}" />
+    <meta name="author" content="Yuto Tachibana, 立花 優斗" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="{{CANONICAL}}" />
+    <link rel="alternate" hreflang="ja" href="https://tachibanayu24.com/" />
+    <link rel="alternate" hreflang="en" href="https://tachibanayu24.com/en/" />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href="https://tachibanayu24.com/"
+    />
+
+    <!-- SEO & Crawlability -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <link
+      rel="alternate"
+      type="text/plain"
+      href="/llms.txt"
+      title="LLM-friendly site information"
+    />
+    <link
+      rel="alternate"
+      type="application/json"
+      href="/me.json"
+      title="Profile data (JSON)"
+    />
+
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%%22 y=%2250%%22 style=%22dominant-baseline:central;text-anchor:middle;font-size:90px;%22>🐰</text></svg>"
+    />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{CANONICAL}}" />
+    <meta property="og:title" content="{{TITLE}}" />
+    <meta property="og:description" content="{{DESCRIPTION}}" />
+    <meta
+      property="og:image"
+      content="https://tachibanayu24.com/images/me.jpg"
+    />
+    <meta property="og:locale" content="{{OG_LOCALE}}" />
+    <meta property="og:locale:alternate" content="{{OG_LOCALE_ALT}}" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@tachibanayu24" />
+    <meta name="twitter:creator" content="@tachibanayu24" />
+    <meta name="twitter:title" content="{{TITLE}}" />
+    <meta name="twitter:description" content="{{DESCRIPTION}}" />
+    <meta
+      name="twitter:image"
+      content="https://tachibanayu24.com/images/me.jpg"
+    />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {{JSONLD}}
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/styles/index.css" />
+
+    <!-- Dynamic Background System -->
+    <script type="module" src="/background/index.js"></script>
+
+    <script type="module" src="/background/debug.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="card-container">
+        <div class="card">
+          <!-- Front Side -->
+          <div class="card-face card-front">
+            <div class="shimmer-effect"></div>
+            <div class="fresnel-effect"></div>
+            <button
+              class="card-action-btn lang-toggle"
+              id="lang-toggle"
+              aria-label="{{LANG_TOGGLE_ARIA}}"
+            >
+              {{LANG_TOGGLE_LABEL}}
+            </button>
+            <button
+              class="card-action-btn download-json-btn"
+              id="download-json-front"
+              aria-label="Download profile JSON"
+            ></button>
+            <div class="profile">
+              <div class="avatar-wrapper">
+                <img
+                  src="/images/me.jpg"
+                  alt="Yuto Tachibana (立花 優斗)"
+                  class="avatar"
+                />
+              </div>
+              <h1 class="name" id="name">{{NAME}}</h1>
+              <p class="role text-engraved" id="role">{{ROLE}}</p>
+              <div class="company text-engraved" id="company">
+                {{COMPANY_HTML}}
+              </div>
+              <div class="bio text-engraved" id="bio">{{BIO_HTML}}</div>
+            </div>
+            <div class="divider"></div>
+            <p class="links-title text-engraved">Connect with me</p>
+            <div class="links-grid" id="links">{{LINKS_HTML}}</div>
+          </div>
+
+          <!-- Back Side -->
+          <div class="card-face card-back">
+            <div class="shimmer-effect"></div>
+            <div class="fresnel-effect"></div>
+            <button
+              class="card-action-btn lang-toggle"
+              id="lang-toggle-back"
+              aria-label="{{LANG_TOGGLE_ARIA}}"
+            >
+              {{LANG_TOGGLE_LABEL}}
+            </button>
+            <button
+              class="card-action-btn download-json-btn"
+              id="download-json-back"
+              aria-label="Download profile JSON"
+            ></button>
+
+            <div class="profile">
+              <div class="avatar-wrapper">
+                <img
+                  src="/images/hokori.jpg"
+                  alt="Hokori the rabbit"
+                  class="avatar"
+                />
+              </div>
+            </div>
+
+            <div class="back-section">
+              <h2 class="back-section-title text-engraved" id="about-label">
+                {{ABOUT_LABEL}}
+              </h2>
+              <p class="back-section-content text-engraved" id="about-content">
+                {{ABOUT_CONTENT}}
+              </p>
+            </div>
+
+            <div class="back-section">
+              <h2 class="back-section-title text-engraved" id="favorites-label">
+                {{FAVORITES_LABEL}}
+              </h2>
+              <div class="favorites-list" id="favorites-list">
+                {{FAVORITES_LIST_HTML}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/profile/index.js"></script>
+    <script type="module" src="/card-effects.js"></script>
+  </body>
+</html>
