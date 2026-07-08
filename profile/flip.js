@@ -33,6 +33,8 @@ export function setupFlipToggle(card) {
   card.addEventListener("click", (e) => {
     // Don't flip if clicking on interactive elements
     if (e.target.closest("a, button")) return;
+    // Don't flip if the click ended a text-selection drag
+    if (window.getSelection()?.toString().length > 0) return;
     // Don't flip during hint animation
     if (isHintAnimating) return;
     // Don't flip during flip animation (prevent race condition)
