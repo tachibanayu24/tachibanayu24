@@ -15,6 +15,7 @@ import {
   buildCompanyHtml,
   buildLinksHtml,
   buildFavoritesHtml,
+  escapeHtml,
 } from "../profile/templates.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -98,7 +99,7 @@ function generateLlmsTxt(data) {
 
   return `# ${data.name.en} (${data.name.ja})
 
-> Engineering Capitalist based in Tokyo, Japan — an engineer who builds and invests. Personal profile and link collection.
+> ${data.seo?.tagline ?? ""}
 
 ## About
 
@@ -159,6 +160,9 @@ function generateJsonLd(data, lang) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Person",
+    // Stable @id shared by both language pages so search/AI engines consolidate
+    // "/" and "/en/" into one entity instead of two separate people.
+    "@id": "https://tachibanayu24.com/#person",
     name: data.name.en,
     alternateName: [data.name.ja, ...(seo.alternateName || [])],
     url:
@@ -167,24 +171,19 @@ function generateJsonLd(data, lang) {
         : "https://tachibanayu24.com/en/",
     image: "https://tachibanayu24.com/images/me.jpg",
     description: data.backside.about.content[lang],
-    inLanguage: lang,
     jobTitle: data.role[lang],
     worksFor: {
       "@type": "Organization",
       name: fulltime.name,
-      url: fulltime.url,
+      // Organization identity URL = org homepage, not the person's team page.
+      url: new URL(fulltime.url).origin + "/",
     },
     sameAs: data.links.map((link) => link.url),
     knowsAbout: seo.knowsAbout || [],
   };
-  if (seo.affiliation?.length) {
-    jsonLd.affiliation = seo.affiliation.map((a) => ({
-      "@type": "Organization",
-      name: a.name,
-      url: a.url,
-    }));
-  }
-  return JSON.stringify(jsonLd, null, 2);
+  // Escape "<" so a literal "</script>" in any value cannot break out of the
+  // inline <script type="application/ld+json"> element.
+  return JSON.stringify(jsonLd, null, 2).replaceAll("<", "\\u003c");
 }
 
 /**
@@ -198,9 +197,9 @@ async function fetchAllIcons(links) {
     links.map((link) => fetchIcon(getIconSlug(link.icon), link.icon)),
   );
   links.forEach((link, i) => {
-    const usedPlaceholder =
-      getIconSlug(link.icon) &&
-      icons[i].includes('<circle cx="12" cy="12" r="10"');
+    // Unconditional check: any icon that fell back to the generic circle
+    // placeholder (including unknown/null slugs) aborts the build.
+    const usedPlaceholder = icons[i].includes('<circle cx="12" cy="12" r="10"');
     if (usedPlaceholder) {
       throw new Error(
         `Icon fetch failed for "${link.icon}" — aborting build to avoid baking a placeholder icon.`,
@@ -216,7 +215,9 @@ async function fetchAllIcons(links) {
 function renderTemplate(template, tokens) {
   let out = template;
   for (const [key, value] of Object.entries(tokens)) {
-    out = out.replaceAll(`{{${key}}}`, value);
+    // Function replacement bypasses special `$` patterns ($$, $&, $`, $') in the
+    // value and stops a value containing "{{OTHER}}" from being re-expanded.
+    out = out.replaceAll(`{{${key}}}`, () => value);
   }
   return out;
 }
@@ -233,27 +234,31 @@ function generateHtml(template, data, lang, icons) {
       : "https://tachibanayu24.com/en/";
   return renderTemplate(template, {
     HTML_LANG: lang,
-    TITLE: computeTitle(data, lang),
-    DESCRIPTION: data.backside.about.content[lang],
+    TITLE: escapeHtml(computeTitle(data, lang)),
+    DESCRIPTION: escapeHtml(data.backside.about.content[lang]),
     CANONICAL: canonical,
     OG_LOCALE: lang === "ja" ? "ja_JP" : "en_US",
     OG_LOCALE_ALT: lang === "ja" ? "en_US" : "ja_JP",
     JSONLD: generateJsonLd(data, lang),
-    NAME: data.name[lang],
-    ROLE: data.role[lang],
-    COMPANY_HTML: buildCompanyHtml(data.companies, lang),
+    NAME: escapeHtml(data.name[lang]),
+    ROLE: escapeHtml(data.role[lang]),
+    COMPANY_HTML: buildCompanyHtml(data.companies),
     BIO_HTML: buildBioHtml(data.bio[lang]),
     LINKS_HTML: buildLinksHtml(data.links, icons),
-    ABOUT_LABEL: data.backside.about.label[lang],
-    ABOUT_CONTENT: data.backside.about.content[lang],
-    FAVORITES_LABEL: data.backside.favorites.label[lang],
+    ABOUT_LABEL: escapeHtml(data.backside.about.label[lang]),
+    ABOUT_CONTENT: escapeHtml(data.backside.about.content[lang]),
+    FAVORITES_LABEL: escapeHtml(data.backside.favorites.label[lang]),
     FAVORITES_LIST_HTML: buildFavoritesHtml(data.backside.favorites.list[lang]),
     LANG_TOGGLE_LABEL: lang.toUpperCase(),
-    LANG_TOGGLE_ARIA: lang === "ja" ? "Switch language" : "言語を切り替え",
-    VIEW_JSON_ARIA:
+    // aria-label in the page's own language, naming the destination language.
+    LANG_TOGGLE_ARIA: lang === "ja" ? "英語に切り替える" : "Switch to Japanese",
+    VIEW_JSON_ARIA: escapeHtml(
       lang === "ja"
         ? "プロフィールデータ (JSON) を表示"
         : "View profile data (JSON)",
+    ),
+    BACK_AVATAR_ALT: lang === "ja" ? "うさぎのほこり" : "Hokori the rabbit",
+    CONNECT_LABEL: lang === "ja" ? "つながる" : "Connect with me",
   });
 }
 

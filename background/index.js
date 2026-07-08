@@ -16,6 +16,18 @@ import { createLogger } from "../utils/logger.js";
 
 const logger = createLogger("Background");
 
+/**
+ * Whether the user asked the OS to minimize non-essential motion.
+ * @returns {boolean}
+ */
+function prefersReducedMotion() {
+  return (
+    typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
 // Global state
 let renderer = null;
 let updateInterval = null;
@@ -86,17 +98,22 @@ function updateConditions() {
     palette,
   };
 
+  // Skip work when the time period is unchanged. Otherwise the 60s tick would
+  // re-init the renderer every minute, reshuffling all particles to fresh
+  // random positions (a visible teleport) even though the scene is identical.
+  if (!changed) return;
+
   // Apply CSS variables for neumorphic elements
   applyPaletteToCss(palette);
 
   // Update renderer
   if (renderer) {
     renderer.updateConditions(timePeriod, palette);
+    // Reduced-motion users run a single static frame, so redraw once here.
+    if (prefersReducedMotion()) renderer.renderStaticFrame();
   }
 
-  if (changed) {
-    logger.log(" Conditions updated", { timePeriod });
-  }
+  logger.log(" Conditions updated", { timePeriod });
 }
 
 /**

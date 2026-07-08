@@ -5,7 +5,10 @@
  */
 
 /** @type {string} */
-const SIMPLE_ICONS_CDN = "https://cdn.jsdelivr.net/npm/simple-icons@v16/icons";
+// Pinned to an exact version (not a floating major) so the baked icon bytes are
+// reproducible across builds; bump deliberately when upgrading Simple Icons.
+const SIMPLE_ICONS_CDN =
+  "https://cdn.jsdelivr.net/npm/simple-icons@16.25.0/icons";
 
 /**
  * Map icon identifiers to Simple Icons slugs
@@ -44,7 +47,9 @@ const iconCache = {};
  * @returns {string|null} Simple Icons slug or null
  */
 export function getIconSlug(key) {
-  return iconSlugs[key] !== undefined ? iconSlugs[key] : iconSlugs.blog;
+  // Unknown keys return null (→ generic-circle placeholder), which the build's
+  // fetchAllIcons treats as a hard error instead of silently shipping a wrong glyph.
+  return iconSlugs[key] !== undefined ? iconSlugs[key] : null;
 }
 
 /**

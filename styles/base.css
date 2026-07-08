@@ -10,7 +10,6 @@
   --card-bg-glass: rgba(232, 238, 243, 0.075);
   --button-bg: rgba(232, 238, 243, 0.45);
   --glass-border: rgba(232, 238, 243, 0.3);
-  --card-edge-light: rgba(255, 255, 255, 0.25);
   --card-edge-dark: rgba(160, 165, 175, 0.5);
   --card-edge-darker: rgba(140, 145, 155, 0.6);
   --text: #2d3748;
@@ -193,5 +192,23 @@ button {
   55% {
     opacity: 0.6;
     transform: translateX(-5%) rotate(20deg);
+  }
+}
+
+/* Respect users who prefer reduced motion: no card flip spin, intro fade,
+   hint sweep, or shimmer. The JS also skips the flip hint, disables the card
+   tilt, and paints a single static background frame. */
+@media (prefers-reduced-motion: reduce) {
+  .card-container {
+    animation: none;
+  }
+  .card {
+    transition: none;
+  }
+  .card.hint {
+    animation: none;
+  }
+  .shimmer-effect {
+    animation: none;
   }
 }

@@ -194,6 +194,16 @@ export class BackgroundRenderer {
     const deltaTime = this.lastTime === 0 || rawDelta > 100 ? 16 : rawDelta;
     this.lastTime = currentTime;
 
+    this.drawFrame(deltaTime);
+
+    // Continue animation
+    this.animationId = requestAnimationFrame(this.animate);
+  }
+
+  /**
+   * Draw one composited frame, advancing particle/effect state by deltaTime.
+   */
+  drawFrame(deltaTime) {
     // Clear canvases
     clearCanvas(this.ctx, this.width, this.height);
     clearCanvas(this.overlayCtx, this.width, this.height);
@@ -236,9 +246,25 @@ export class BackgroundRenderer {
 
     this.fireflySystem.update(deltaTime);
     this.fireflySystem.draw(this.overlayCtx);
+  }
 
-    // Continue animation
-    this.animationId = requestAnimationFrame(this.animate);
+  /**
+   * Render a single static frame without starting the animation loop.
+   * Used when the user prefers reduced motion.
+   */
+  renderStaticFrame() {
+    this.drawFrame(16);
+  }
+
+  /**
+   * Whether the user asked the OS to minimize non-essential motion.
+   */
+  prefersReducedMotion() {
+    return (
+      typeof window !== "undefined" &&
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
   }
 
   /**
@@ -246,6 +272,12 @@ export class BackgroundRenderer {
    */
   start() {
     if (this.isRunning) return;
+
+    // Reduced-motion: paint one static frame and never enter the rAF loop.
+    if (this.prefersReducedMotion()) {
+      this.renderStaticFrame();
+      return;
+    }
 
     this.isRunning = true;
     this.lastTime = performance.now();
@@ -277,6 +309,10 @@ export class BackgroundRenderer {
    */
   destroy() {
     this.pause();
+    if (this.resizeTimer) {
+      clearTimeout(this.resizeTimer);
+      this.resizeTimer = null;
+    }
     window.removeEventListener("resize", this.handleResize);
     document.removeEventListener("visibilitychange", this.handleVisibility);
 

@@ -143,10 +143,8 @@ export function applyPaletteToCss(palette) {
 
   // Card edge colors for plastic thickness effect
   const cardBgRgb = hexToRgb(palette.cardBg);
-  const edgeLight = `rgba(${Math.min(255, cardBgRgb.r + 40)}, ${Math.min(255, cardBgRgb.g + 40)}, ${Math.min(255, cardBgRgb.b + 40)}, 0.25)`;
   const edgeDark = `rgba(${Math.max(0, cardBgRgb.r - 40)}, ${Math.max(0, cardBgRgb.g - 40)}, ${Math.max(0, cardBgRgb.b - 40)}, 0.5)`;
   const edgeDarker = `rgba(${Math.max(0, cardBgRgb.r - 60)}, ${Math.max(0, cardBgRgb.g - 60)}, ${Math.max(0, cardBgRgb.b - 60)}, 0.6)`;
-  root.style.setProperty("--card-edge-light", edgeLight);
   root.style.setProperty("--card-edge-dark", edgeDark);
   root.style.setProperty("--card-edge-darker", edgeDarker);
 
@@ -188,9 +186,8 @@ export function applyPaletteToCss(palette) {
       `rgba(255, 255, 255, ${leftEdgeOpacity})`,
     );
 
-    // Oil slick angle follows light direction
+    // Oil slick angle follows light direction (baked into --oilslick-gradient below)
     const oilslickAngle = Math.atan2(y - 0.5, x - 0.5) * (180 / Math.PI) + 90;
-    root.style.setProperty("--oilslick-angle", `${oilslickAngle}deg`);
 
     // Shimmer intensity per time period (brighter backgrounds need stronger shimmer)
     const shimmerIntensity = {
