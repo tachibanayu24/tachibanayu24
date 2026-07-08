@@ -29,36 +29,45 @@ let flipTimeoutId = null;
 export function setupFlipToggle(card) {
   if (!card) return;
 
-  // Flip on card tap/click
+  // Card text is non-selectable, so a click anywhere is always a flip intent —
+  // no need to disambiguate it from drag-select or double/triple-click.
   card.addEventListener("click", (e) => {
-    // Don't flip if clicking on interactive elements
+    // Don't flip when interacting with links/buttons (language toggle, view JSON)
     if (e.target.closest("a, button")) return;
-    // Don't flip during hint animation
+    // Don't flip during the intro hint animation
     if (isHintAnimating) return;
-    // Don't flip during flip animation (prevent race condition)
-    if (isFlipping) return;
-
-    isFlipping = true;
-
-    // Clear any existing timeout (defensive)
-    if (flipTimeoutId !== null) {
-      clearTimeout(flipTimeoutId);
-    }
-
-    // Add flipping class for shimmer effect
-    card.classList.add("flipping");
-    card.classList.toggle("flipped");
-
-    // Remove flipping class after animation completes
-    flipTimeoutId = setTimeout(() => {
-      card.classList.remove("flipping");
-      isFlipping = false;
-      flipTimeoutId = null;
-    }, 600);
+    flip(card);
   });
 
   // Show hint animation on first visit
   showFlipHint(card);
+}
+
+/**
+ * Toggle the card's flipped state.
+ * @param {HTMLElement} card - Card element
+ */
+function flip(card) {
+  // Don't flip during flip animation (prevent race condition)
+  if (isFlipping) return;
+
+  isFlipping = true;
+
+  // Clear any existing timeout (defensive)
+  if (flipTimeoutId !== null) {
+    clearTimeout(flipTimeoutId);
+  }
+
+  // Add flipping class for shimmer effect
+  card.classList.add("flipping");
+  card.classList.toggle("flipped");
+
+  // Remove flipping class after animation completes
+  flipTimeoutId = setTimeout(() => {
+    card.classList.remove("flipping");
+    isFlipping = false;
+    flipTimeoutId = null;
+  }, 600);
 }
 
 /**

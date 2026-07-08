@@ -25,10 +25,6 @@
         "fulltime": {
           "$ref": "#/$defs/companyGroup",
           "description": "Full-time employment"
-        },
-        "contract": {
-          "$ref": "#/$defs/companyGroup",
-          "description": "Contract / Advisor positions (optional)"
         }
       },
       "additionalProperties": false
@@ -96,6 +92,23 @@
         "$ref": "#/$defs/link"
       },
       "minItems": 1
+    },
+    "seo": {
+      "type": "object",
+      "description": "SEO / structured-data only fields, additive to backside.about.content (used directly as meta/JSON-LD description). Not shown on the card.",
+      "properties": {
+        "alternateName": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Additional names for schema.org alternateName"
+        },
+        "knowsAbout": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Professional topics for schema.org knowsAbout"
+        }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": false,

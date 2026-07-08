@@ -7,29 +7,37 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 tachibanayu24.com - 個人プロフィールサイト。名刺のQRコードとして使用されるリンク集。
 フレームワークなしの静的サイト（Pure HTML/CSS/JavaScript）。GitHub Pages でホスティング。
 
+SEO/AEO のため、本文は `me.json` からビルド時にプリレンダー（SSG）される。多言語は別URLで配信: `/` = 日本語、`/en/` = 英語（hreflang で相互リンク）。言語トグルは URL 遷移（`/` ⇄ `/en/`）で切り替わる。
+
 ## 開発
 
-ビルドツールなし。ブラウザで `index.html` を直接開くか、ローカルサーバーを使用。
+バンドラなし。`me.json`（＋ `index.template.html`）からビルドスクリプトで HTML 等を生成する。
 
 ```bash
-# ローカルサーバー起動（任意のHTTPサーバーで可）
+# me.json / テンプレート更新後、生成物（index.html, en/index.html, sitemap.xml,
+# README×2, llms.txt）を再生成
+node scripts/generate-docs.js
+
+# ローカルサーバー起動（アセットは root-absolute パスなので repo root から配信）
 python -m http.server 8000
-# または
-npx serve .
 ```
+
+> アセット参照は `/styles/...` `/profile/...` などの root-absolute パス（`/en/` 配下からも解決させるため）。そのため `file://` での直接オープンは不可。必ず repo root から HTTP サーバーで配信する。
 
 ### デバッグモード
 
 URL に `#debug` を付与するとデバッグパネルが表示され、時間帯を手動で切り替えられる。
-例: `http://localhost:8000/#debug`
+例: `http://localhost:8000/#debug`（英語版は `http://localhost:8000/en/#debug`）
 
 ## アーキテクチャ
 
 ### コンテンツ管理
 
-- `me.json` - プロフィール情報の一元管理（多言語対応: en/ja）
+- `me.json` - プロフィール情報の一元管理（多言語対応: en/ja）。meta description と JSON-LD の description は `backside.about.content` をそのまま使う（別文言を持たず陳腐化を防ぐ）。`seo` ブロックは about.content で表現できない構造化データ専用フィールド（alternateName, knowsAbout）のみ
 - `me.schema.json` - JSON スキーマ定義
-- `script.js` - プロフィール読み込み・レンダリング、カードフリップ、言語切り替え
+- `index.template.html` - HTML のソーステンプレート（`{{TOKEN}}` をビルド時に言語別置換）。**`index.html` / `en/index.html` は生成物なので直接編集しない**
+- `profile/` - プロフィール描画（`renderer.js`）、共有 HTML ビルダー（`templates.js`、ビルドと共有し構造ドリフトを防止）、言語（`language.js`）、カードフリップ（`flip.js`）、アイコン（`icons.js`）、エントリ（`index.js`）
+- `card-effects.js` - カードの 3D チルト等の演出
 
 ### 背景アニメーションシステム (`background/`)
 
@@ -74,9 +82,12 @@ background/
 1. `bg-canvas` (z-index: -2) - グラデーション、太陽/月、図形、パーティクル
 2. `overlay-canvas` (z-index: -1) - 時間帯別エフェクト
 
-### README 自動生成
+### サイト・ドキュメント自動生成
 
-`me.json` を更新して main に push すると、GitHub Actions で `README.md` / `README.ja.md` が自動再生成される。
+`me.json` / `index.template.html` / 共有モジュール（`profile/templates.js`, `profile/icons.js`）を更新して main に push すると、GitHub Actions で以下が自動再生成・コミットされる。
 
-- ワークフロー: `.github/workflows/generate-readme.yml`
-- スクリプト: `scripts/generate-readme.js`
+- 生成物: `index.html`（ja）, `en/index.html`（en）, `sitemap.xml`, `README.md`, `README.ja.md`, `llms.txt`
+- ワークフロー: `.github/workflows/generate-docs.yml`
+- スクリプト: `scripts/generate-docs.js`
+
+リンクアイコンはビルド時に Simple Icons から取得してインライン SVG として焼き込む（実行時の外部 CDN 依存なし）。`sitemap.xml` の `lastmod` は `me.json` のコミット日を使う（内容非変更の手動実行で無駄な差分を出さないため）。

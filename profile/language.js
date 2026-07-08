@@ -1,41 +1,19 @@
 /**
  * Profile - Language Module
  *
- * Handles language switching and storage.
+ * With prerendered per-language URLs, the document's <html lang> is the single
+ * source of truth. There is no in-page language switching and no localStorage —
+ * the language toggle navigates between / (Japanese) and /en/ (English).
  */
 
 /**
- * Get stored language from localStorage
- * @returns {string|null} Stored language or null
- */
-function getStoredLang() {
-  try {
-    return localStorage.getItem("lang");
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Store language preference in localStorage
- * @param {string} lang - Language code ('en' or 'ja')
- */
-function setStoredLang(lang) {
-  try {
-    localStorage.setItem("lang", lang);
-  } catch {
-    // Ignore storage errors in private browsing
-  }
-}
-
-/**
- * Current language state
+ * Current language, derived from the prerendered document.
  * @type {'en'|'ja'}
  */
-let currentLang = getStoredLang() || "en";
+let currentLang = document.documentElement.lang === "ja" ? "ja" : "en";
 
 /**
- * Get the current language
+ * Get the current language.
  * @returns {'en'|'ja'}
  */
 export function getCurrentLang() {
@@ -43,17 +21,27 @@ export function getCurrentLang() {
 }
 
 /**
- * Toggle the current language
- * @returns {'en'|'ja'} The new language
+ * Get the other language (the toggle target).
+ * @returns {'en'|'ja'}
  */
-export function toggleLang() {
-  currentLang = currentLang === "en" ? "ja" : "en";
-  setStoredLang(currentLang);
-  return currentLang;
+export function getOtherLang() {
+  return currentLang === "ja" ? "en" : "ja";
 }
 
 /**
- * Update language toggle button text and aria-label
+ * Map a language to its page URL.
+ * @param {'en'|'ja'} lang
+ * @returns {string}
+ */
+export function getLangUrl(lang) {
+  return lang === "ja" ? "/" : "/en/";
+}
+
+/**
+ * Update language toggle button text and aria-label.
+ * The button shows the current language and switches to the other.
+ * Prerendered pages already bake the correct label; this is used by the
+ * non-prerendered fallback path.
  * @param {HTMLElement|null} toggleBtn - Language toggle button element
  */
 export function updateLanguageToggleState(toggleBtn) {

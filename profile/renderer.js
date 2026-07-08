@@ -7,6 +7,12 @@
 import { getProfileData } from "./data.js";
 import { getCurrentLang, updateLanguageToggleState } from "./language.js";
 import { fetchIcon, getIconSlug } from "./icons.js";
+import {
+  buildBioHtml,
+  buildCompanyHtml,
+  buildLinksHtml,
+  buildFavoritesHtml,
+} from "./templates.js";
 
 /**
  * Render profile with current language
@@ -34,25 +40,12 @@ export async function render() {
   }
 
   // Render bio
-  const bioHtml = profileData.bio[lang].split("\n").join("<br>");
-  document.getElementById("bio").innerHTML = bioHtml;
+  document.getElementById("bio").innerHTML = buildBioHtml(
+    profileData.bio[lang],
+  );
 
   // Render affiliation under the title (fulltime company, shown without a label)
-  const { fulltime, contract } = profileData.companies;
-
-  const renderCompanyLinks = (list) =>
-    list
-      .map(
-        (c) =>
-          `<a href="${c.url}" class="text-link text-engraved" target="_blank" rel="noopener">${c.name}</a>`,
-      )
-      .join(" / ");
-
-  let companyHtml = renderCompanyLinks(fulltime.list);
-  if (contract) {
-    companyHtml += `<br><br>${contract.label[lang]}<br>${renderCompanyLinks(contract.list)}`;
-  }
-
+  const companyHtml = buildCompanyHtml(profileData.companies);
   document.getElementById("company").innerHTML = companyHtml;
 
   // Fetch all icons in parallel
@@ -63,19 +56,18 @@ export async function render() {
   const icons = await Promise.all(iconPromises);
 
   // Render links with icons
-  const linksHtml = profileData.links
-    .map((link, index) => {
-      return `<a href="${link.url}" class="link text-engraved" target="_blank" rel="noopener">
-        <span class="link-icon">${icons[index]}</span>
-        ${link.name}
-      </a>`;
-    })
-    .join("");
-
-  document.getElementById("links").innerHTML = linksHtml;
+  document.getElementById("links").innerHTML = buildLinksHtml(
+    profileData.links,
+    icons,
+  );
 
   // Render backside content
-  renderBackside(lang);
+  renderBackside(
+    lang,
+    profileData.name[lang],
+    profileData.role?.[lang],
+    companyHtml,
+  );
 
   // Update language toggle active state
   const toggleBtn = document.getElementById("lang-toggle");
@@ -87,12 +79,23 @@ export async function render() {
 /**
  * Render backside content with current language
  * @param {'en'|'ja'} lang - Current language
+ * @param {string} name - Localized name (mirrored from the front face)
+ * @param {string|undefined} role - Localized role (mirrored from the front face)
+ * @param {string} companyHtml - Affiliation HTML (mirrored from the front face)
  */
-function renderBackside(lang) {
+function renderBackside(lang, name, role, companyHtml) {
   const profileData = getProfileData();
   if (!profileData?.backside) return;
 
   const { backside } = profileData;
+
+  // Name / role / affiliation (same as the front face, shown again on the back)
+  const nameBackEl = document.getElementById("name-back");
+  if (nameBackEl) nameBackEl.textContent = name;
+  const roleBackEl = document.getElementById("role-back");
+  if (roleBackEl && role) roleBackEl.textContent = role;
+  const companyBackEl = document.getElementById("company-back");
+  if (companyBackEl) companyBackEl.innerHTML = companyHtml;
 
   // About
   const aboutLabelEl = document.getElementById("about-label");
@@ -111,8 +114,8 @@ function renderBackside(lang) {
     favoritesLabelEl.textContent = backside.favorites.label[lang];
   }
   if (favoritesListEl && backside.favorites) {
-    favoritesListEl.innerHTML = backside.favorites.list[lang]
-      .map((item) => `<span class="favorite-tag text-engraved">${item}</span>`)
-      .join("");
+    favoritesListEl.innerHTML = buildFavoritesHtml(
+      backside.favorites.list[lang],
+    );
   }
 }

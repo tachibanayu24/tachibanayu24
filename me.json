@@ -123,5 +123,16 @@
         ]
       }
     }
+  },
+  "seo": {
+    "alternateName": ["立花優斗", "tachibanayu24"],
+    "knowsAbout": [
+      "Startups",
+      "Software Engineering",
+      "Artificial Intelligence",
+      "Venture Capital",
+      "Venture Building",
+      "Product Development"
+    ]
   }
 }
